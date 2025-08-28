@@ -1,0 +1,28 @@
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: backend_nest
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules/
+  postgres:
+    image: bitnami/postgresql
+    container_name: olympia_db
+    env_file:
+      - ./.env
+    environment:
+      NODE_ENV: "development"
+      POSTGRES_ROOT_PASSWORD: "${POSTGRES_ROOT_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+
+    volumes:
+      - data-db:/bitnami/postgresql
+
+volumes:
+  data-db:
