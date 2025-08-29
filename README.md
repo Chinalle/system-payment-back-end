@@ -2,97 +2,220 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<h1 align="center">Olympia - Your Payment System</h1>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  <img src="https://img.shields.io/badge/node-18.x%20alpine-green?logo=node.js" alt="Node Alpine" />
+  <img src="https://img.shields.io/badge/NestJS-Framework-red?logo=nestjs" alt="NestJS" />
+  <img src="https://img.shields.io/badge/Jest-Testing-blue?logo=jest" alt="Jest" />
+  <img src="https://img.shields.io/badge/TypeORM-ORM-orange" alt="TypeORM" />
+  <img src="https://img.shields.io/badge/Postgres-Database-blue?logo=postgresql" alt="Postgres" />
+  <img src="https://img.shields.io/badge/Dockerfile-Build-lightblue?logo=docker" alt="Dockerfile" />
+  <img src="https://img.shields.io/badge/Docker%20Compose-Orchestration-informational?logo=docker" alt="Docker Compose" />
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+<br/>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📌 Description
 
-## Project setup
+Olympia is a backend service built with **NestJS**, **TypeORM** and **Postgres**, designed to provide a scalable and maintainable payment system.  
+It runs inside **Docker containers** for development and production, ensuring consistent environments.
 
-```bash
-$ npm install
+---
+
+## 🛠 Development Flow
+
+We follow a **branch per task** workflow to ensure collaboration and code quality:
+
+1. **Criação de branch por task**  
+    - Cada nova tarefa deve ser desenvolvida em uma branch própria.  
+    - Nomeie no padrão:
+
+```ts
+  feature/nome-da-feature
+  fix/nome-do-fix
+  chore/nome-da-tarefa
 ```
 
-## Compile and run the project
+2. **Solicitar Code Review no GitHub**  
+    - Após finalizar a implementação, abra um **Pull Request (PR)** para a branch principal (`main`).  
+    - Marque os colegas de equipe como revisores.
+
+3. **Merge após aprovação**  
+   - O gerente/revisor responsável fará o **merge** do PR somente após o **Code Review ser aprovado**.
+
+### Git commands
 
 ```bash
-# development
-$ npm run start
+  # Verificar em qual branch você está
+  git branch
 
-# watch mode
-$ npm run start:dev
+  # Atualizar a branch principal (ex: main ou develop)
+  git checkout main
+  git pull origin main
 
-# production mode
-$ npm run start:prod
+  # Criar e mudar para uma nova branch (exemplo: feature/login)
+  git checkout -b <nome_nova_branch>
+
+  # verifica branch atual
+  git branch
+
+  # Adiciona todas as alterações
+  git add .
+
+  # Criar commit
+  git commit -m "feat: implementa login de usuário"
+
+  # Enviar branch para o repositório remoto
+  git push origin feature/login
 ```
 
-## Run tests
+---
+
+## ⚙️ Pre-requirements
+
+- [WSL2](https://learn.microsoft.com/pt-br/windows/wsl/install) ou Linux
+- [Docker](https://docs.docker.com/get-docker/)
+
+---
+
+## 🎨 Code Style & Naming Conventions
+
+Para manter consistência no código, seguimos os seguintes padrões:
+
+### 🔹 Classes
+
+- **PascalCase**
+
+- Exemplo:  
+
+```ts
+  export class UserService {}
+  export class PaymentController {}
+```
+
+## Variáveis e funções
+
+- camelCase
+
+Exemplo:
+
+```ts
+  const userName = "John";
+  function getUserProfile() {}
+```
+
+## 🔹 Constantes
+
+UPPER_SNAKE_CASE
+
+Exemplo:
+
+```ts
+  const MAX_RETRY_COUNT = 3;
+  const API_URL = "https://api.example.com";
+```
+
+## 🔹 Arquivos
+
+kebab-case (minúsculo e separado por -)
+
+Exemplo:
+
+```ts
+  user.controller.ts
+  payment.service.ts
+  auth.module.ts
+```
+
+## 🔹 DTOs (Data Transfer Objects)
+
+Nome do arquivo em kebab-case + .dto.ts
+
+Classe em PascalCase
+
+Exemplo:
+
+```ts
+create-user.dto.ts
+
+export class CreateUserDto {
+  name: string;
+  email: string;
+}
+```
+
+## 🔹 Entidades (TypeORM)
+
+### Classe em PascalCase
+
+- Nome da tabela no singular (recomendado)
+
+Exemplo:
+
+```ts
+  @Entity("user")
+  export class User {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    email: string;
+  }
+```
+
+🔹 Testes
+
+- Arquivos terminam com .spec.ts
+
+Exemplo:
+
+user.service.spec.ts
+payment.controller.spec.ts
+
+## 🚀 Project setup
+
+### Install dependencies
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+### 🐳 Docker setup
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Using Docker Compose, you don’t need to run npm install locally.
+The services (backend + database) will be automatically set up. 
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+  # Build and run services
+  docker compose up --build
+
+  # Access backend container
+  docker exec -it backend_nest sh
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 📦 Compile and run the project
 
-## Resources
+```bash
+  # development
+  npm run start
 
-Check out a few resources that may come in handy when working with NestJS:
+  # watch mode
+  npm run start:dev
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+  # production mode
+  npm run start:prod
+```
 
-## Support
+## Running tests
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+  # unit tests
+  npm run test
 
-## Stay in touch
+  # e2e tests
+  npm run test:e2e
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+  # test coverage
+  npm run test:cov
+```
