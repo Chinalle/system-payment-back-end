@@ -21,6 +21,12 @@
 Olympia is a backend service built with **NestJS**, **TypeORM** and **Postgres**, designed to provide a scalable and maintainable payment system.  
 It runs inside **Docker containers** for development and production, ensuring consistent environments.
 
+## API Documentation
+
+```http
+  http://localhost:3000/api/docs#/
+```
+
 ---
 
 ## 🛠 Development Flow
