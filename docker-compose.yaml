@@ -6,9 +6,12 @@ services:
     container_name: backend_nest
     ports:
       - "3000:3000"
+    depends_on:
+      - postgres
     volumes:
       - .:/app
       - /app/node_modules/
+  
   postgres:
     image: bitnami/postgresql
     container_name: olympia_db
