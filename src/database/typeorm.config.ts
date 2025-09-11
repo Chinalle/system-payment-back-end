@@ -12,8 +12,8 @@ const dataSourceOptions: DataSourceOptions = {
   username: configService.get<string>('POSTGRES_USER'),
   password: configService.get<string>('POSTGRES_PASSWORD'),
   database: configService.get<string>('POSTGRES_DB'),
-  entities: ['dist/src/entities/*.entity.js'],
-  migrations: ['dist/database/migrations/*.js'],
+  entities: ['dist/src/entities/**/*.entity.js'],
+  migrations: ['dist/database/migrations/**/*.js'],
   migrationsTableName: 'migrations',
 };
 

@@ -189,8 +189,8 @@ npm install
 
 ### 🐳 Docker setup
 
-Using Docker Compose, you don’t need to run npm install locally.
-The services (backend + database) will be automatically set up. 
+Com objetivo de não rodar localmente, o Docker instancia dois serviços
+(backend + banco de dados)
 
 ```bash
   # Build and run services
@@ -211,6 +211,18 @@ The services (backend + database) will be automatically set up.
 
   # production mode
   npm run start:prod
+```
+
+## Database ORM
+
+Antes de rodar as migrations abra o terminal do Node do docker
+
+```bash
+  migration:create # cria uma nova migration
+
+  migration:up # roda a última migration
+
+  migration:down # desfaz a última migration
 ```
 
 ## Running tests
