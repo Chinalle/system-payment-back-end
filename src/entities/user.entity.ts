@@ -13,4 +13,7 @@ export class UserEntity {
 
   @Column('text')
   email: string;
+
+  @Column('text')
+  password: string;
 }
