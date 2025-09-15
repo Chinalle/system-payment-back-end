@@ -41,6 +41,12 @@ export class UserRepository implements IUserRepository {
       throw new Error('User with this CPF already exists');
     }
 
+    if (!this.isValidPassword(createUserDTO.passowrd)) {
+      throw new Error(
+        'Password must have at least 8 characters, one uppercase, one lowercase, one number and 1 special character',
+      );
+    }
+
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(createUserDTO.passowrd, salt);
 
@@ -84,6 +90,13 @@ export class UserRepository implements IUserRepository {
 
     await this.userRepository.delete(existentUser.id);
   }
+
+  private isValidPassword = (password: string) => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    return regex.test(password);
+  };
 
   private mapEntityToDTO(userEntity: UserEntity): UserDTO {
     return {

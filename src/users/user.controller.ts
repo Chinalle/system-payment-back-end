@@ -23,7 +23,14 @@ export class UserController {
 
   @Get('email')
   async emailSender(): Promise<void> {
-    await this.mailSender.sendTestEmail('leonidasoliv25@gmail.com');
+    const to: string = 'leonidasoliv25@gmail.com';
+    await this.mailSender.sendConfirmation(
+      to,
+      'testando template de confirmação',
+      'Leonidas Oliveira',
+      `https://api.backend/v1/confirm/{uuid}}`,
+      false,
+    );
   }
 
   @Get()
