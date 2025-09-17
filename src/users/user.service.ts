@@ -9,7 +9,7 @@ export class UserService {
   constructor(
     @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
-  ) {}
+  ) { }
 
   async create(user: CreateUserDTO): Promise<UserDTO> {
     return await this.userRepository.create(user);
@@ -17,5 +17,9 @@ export class UserService {
 
   async findAll(): Promise<UserEntity[]> {
     return await this.userRepository.findAll();
+  }
+
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    return this.userRepository.findByEmail(email);
   }
 }

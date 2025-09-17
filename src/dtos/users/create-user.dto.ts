@@ -31,7 +31,7 @@ export class CreateUserDTO {
 
   @ApiProperty()
   @MinLength(8)
-  passowrd: string;
+  password: string;
 
   @ApiProperty()
   @IsString()

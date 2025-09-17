@@ -21,4 +21,4 @@ import { MailService } from 'src/mailer/mailer.service';
     },
   ],
 })
-export class UserModule {}
+export class UserModule { }
