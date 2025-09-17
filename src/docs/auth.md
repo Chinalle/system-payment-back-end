@@ -138,7 +138,7 @@ Resposta:
 
 ## 🔒 Configurações importantes
 
-* **constants.ts** contém o segredo do JWT (`jwtConstants.secret`).
+* **constants.ts** contém o segredo do JWT (`constants.jwtSecret`) e Refresh Token (`constants.jwtRefreshSecret`).
   ➝ Em produção, use variáveis de ambiente (`process.env.JWT_SECRET`) e nunca deixe segredos hardcoded.
 
 * O `JwtModule` foi configurado no `auth.module.ts` com opções de expiração (`signOptions: { expiresIn: '15m' }`).
@@ -156,7 +156,7 @@ Resposta:
    Adicionar controle de acesso baseado em papéis com decorator `@Roles('admin')`.
 
 3. **Env Vars**
-   Mover `jwtConstants.secret` para `.env`.
+   Mover `constants.jwtSecret` e `constants.jwtRefreshSecret` para `.env`.
 
 4. **Cookies HttpOnly (opcional)**
    Usar cookies seguros em vez de headers, reduzindo riscos de XSS.

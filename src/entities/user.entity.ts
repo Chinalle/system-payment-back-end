@@ -38,6 +38,9 @@ export class UserEntity {
   @Column({ type: 'boolean', name: 'is_active' })
   isActive: boolean;
 
+  @Column({ name: 'current_hashed_refresh_token', type: 'varchar', length: 255, nullable: true })
+  currentHashedRefreshToken?: string | null;
+
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
 

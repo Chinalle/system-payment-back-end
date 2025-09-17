@@ -8,4 +8,5 @@ export interface IUserRepository {
   create(user: Partial<UserEntity>): Promise<UserDTO>;
   softDelete(id: string): Promise<void>;
   hardDelete(id: string): Promise<void>;
+  setCurrentRefreshToken(id: string, refreshToken: string | null): Promise<void>;
 }
