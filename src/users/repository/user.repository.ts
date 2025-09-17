@@ -13,7 +13,7 @@ export class UserRepository implements IUserRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<UserEntity[]> {
     const users = await this.userRepository.find();
@@ -22,6 +22,10 @@ export class UserRepository implements IUserRepository {
 
   async findOne(id: string): Promise<UserEntity | null> {
     return this.userRepository.findOneBy({ id });
+  }
+
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    return this.userRepository.findOneBy({ email });
   }
 
   async create(createUserDTO: CreateUserDTO): Promise<UserDTO> {
@@ -42,7 +46,7 @@ export class UserRepository implements IUserRepository {
     }
 
     const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(createUserDTO.passowrd, salt);
+    const hashedPassword = await bcrypt.hash(createUserDTO.password, salt);
 
     const userData = {
       id: uuidv4(),
