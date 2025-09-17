@@ -1,24 +1,31 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from '../dtos/auth/login.dto';
-import { ThrottlerGuard } from '@nestjs/throttler';
 import { LocalAuthGuard } from './local-auth.guard';
+import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
-    @UseGuards(ThrottlerGuard, LocalAuthGuard)
+  @UseGuards(LocalAuthGuard)
+  @ApiOkResponse({
+    description: 'User authenticated successfully.',
+  })
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
+    const token = this.authService.login(loginDto);
 
-    @ApiOkResponse({
-        description: 'User authenticated successfully.',
-    })
-
-    @Post('login')
-    @HttpCode(HttpStatus.OK)
-    async login(@Request() req: any, @Body() loginDto: LoginDto) {
-        return this.authService.login(req.user);
-    }
+    return { token: token };
+  }
 }

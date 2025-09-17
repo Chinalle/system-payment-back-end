@@ -13,7 +13,7 @@ export class UserRepository implements IUserRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   async findAll(): Promise<UserEntity[]> {
     const users = await this.userRepository.find();
@@ -45,7 +45,7 @@ export class UserRepository implements IUserRepository {
       throw new Error('User with this CPF already exists');
     }
 
-    if (!this.isValidPassword(createUserDTO.passowrd)) {
+    if (!this.isValidPassword(createUserDTO.password)) {
       throw new Error(
         'Password must have at least 8 characters, one uppercase, one lowercase, one number and 1 special character',
       );

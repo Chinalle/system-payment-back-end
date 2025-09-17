@@ -6,6 +6,7 @@ import { UserModule } from './users/user.module';
 import { SeedModule } from './database/seeds/seed.module';
 import { MailerModule } from './mailer/mailer.module';
 import { AuthModule } from './auth/auth.module';
+import { Throttle, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { AuthModule } from './auth/auth.module';
     DatabaseModule,
     UserModule,
     SeedModule,
+    AuthModule,
   ],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
