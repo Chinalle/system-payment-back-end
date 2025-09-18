@@ -20,16 +20,20 @@ export class MailService {
     actionUrl: string,
     isClient: boolean,
   ) {
-    await this.mailerService.sendMail({
-      to,
-      subject,
-      template: isClient
-        ? 'client-confirmation'
-        : 'service-provider-confirmation',
-      context: {
-        name: name,
-        action_url: actionUrl,
-      },
-    });
+    try {
+      await this.mailerService.sendMail({
+        to,
+        subject,
+        template: isClient
+          ? 'client-confirmation'
+          : 'service-provider-confirmation',
+        context: {
+          name: name,
+          action_url: actionUrl,
+        },
+      });
+    } catch (error) {
+      throw new Error(String(error));
+    }
   }
 }

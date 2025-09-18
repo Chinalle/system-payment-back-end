@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -14,11 +15,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
-        entities: ['src/entities/**/*.{.ts,.js}'],
-        migrations: [__dirname + '/migrations/**/*.{.ts,.js}'],
-        synchronize: false,
+
+        entities: [join(__dirname, '../**/**/*entity{.ts,.js}')],
         autoLoadEntities: true,
+
+        migrations: [join(__dirname, '../database/migrations/**/*{.ts,.js}')],
+        migrationsTableName: 'migrations',
+        synchronize: false,
         logging: true,
+        logger: 'file',
       }),
     }),
   ],

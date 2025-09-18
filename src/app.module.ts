@@ -15,7 +15,7 @@ import { APP_GUARD } from '@nestjs/core';
     MailerModule,
     DatabaseModule,
     UserModule,
-    SeedModule,
+    // SeedModule,
     AuthModule,
     ThrottlerModule.forRoot([{
       ttl: 60000,
