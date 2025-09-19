@@ -22,7 +22,7 @@ export class ServicesService {
   async findOne(id: string): Promise<ServiceEntity> {
     const service = await this.serviceRepo.findOneById(id);
     if (!service) {
-      throw new NotFoundException(`Serviço com ID ${id} não encontrado`);
+      throw new NotFoundException(`Service ID ${id} not found`);
     }
     return service;
   }
@@ -34,7 +34,7 @@ export class ServicesService {
   async remove(id: string): Promise<void> {
     const result = await this.serviceRepo.deleteById(id);
     if (result.affected === 0) {
-      throw new NotFoundException(`Serviço com ID ${id} não encontrado`);
+      throw new NotFoundException(`Service ID ${id} not found`);
     }
   }
 }

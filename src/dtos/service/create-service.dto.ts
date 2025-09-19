@@ -17,7 +17,7 @@ export class CreateServiceDto {
   @IsString()
   category: string;
 
-  @ApiProperty({ description: 'Duração estimada em minutos' })
+  @ApiProperty({ description: 'Service duration in minutes' })
   @IsNotEmpty()
   @IsInt()
   @Min(1)

@@ -57,7 +57,7 @@ export class ServiceRepository {
         });
 
         if (!serviceToUpdate) {
-            throw new NotFoundException(`Serviço com ID ${id} não encontrado`);
+            throw new NotFoundException(`Service ID ${id} not found`);
         }
 
         return this.serviceRepository.save(serviceToUpdate);
