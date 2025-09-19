@@ -14,9 +14,11 @@ src/auth/
  ├── auth.controller.ts     # Endpoints de autenticação (login, profile, etc.)
  ├── auth.module.ts         # Registro de módulos e providers (JwtModule, Passport)
  ├── auth.service.ts        # Regras de negócio: valida usuário e gera tokens
- ├── constants.ts           # Configurações (ex: chave secreta do JWT)
+ ├── constants.ts           # Configurações (ex: chave secreta do JWT e Refresh)
  ├── jwt.strategy.ts        # Estratégia Passport para validar tokens JWT
  ├── jwt-auth.guard.ts      # Guard customizado que protege rotas com JWT
+ ├── jwt-refresh.guard.ts   # Guard para proteção das rotas de refresh token
+ ├── jwt-refresh.strategy.ts# Estratégia Passport para validar refresh tokens
  ├── local.strategy.ts      # Estratégia Passport para autenticação local (email/senha)
  └── local-auth.guard.ts    # Guard customizado que protege rotas usando LocalStrategy
 ```
@@ -147,20 +149,84 @@ Resposta:
 
 ---
 
-## 🚀 Melhorias recomendadas
+## � Refresh Token
 
-1. **Refresh Tokens**
-   Implementar `/auth/refresh` para renovar access tokens curtos sem pedir senha novamente.
+O sistema implementa um mecanismo de refresh token para maior segurança:
 
-2. **Roles Guard**
-   Adicionar controle de acesso baseado em papéis com decorator `@Roles('admin')`.
+1. **Como funciona:**
+   * Access Token tem vida curta (15 minutos)
+   * Refresh Token tem vida mais longa (7 dias)
+   * Quando o access token expira, use o refresh token para obter um novo
 
-3. **Env Vars**
-   Mover `constants.jwtSecret` e `constants.jwtRefreshSecret` para `.env`.
+2. **Endpoints:**
+   * `POST /auth/refresh` → Gera novo access token usando refresh token válido
+   * Requer header: `Authorization: Bearer <refresh_token>`
 
-4. **Cookies HttpOnly (opcional)**
-   Usar cookies seguros em vez de headers, reduzindo riscos de XSS.
+3. **Implementação:**
+   * `jwt-refresh.strategy.ts` → Valida refresh tokens
+   * `jwt-refresh.guard.ts` → Protege rota de refresh
+   * Refresh token armazenado no payload do JWT
+
+4. **Segurança:**
+   * Refresh tokens são invalidados no logout
+   * Verificação dupla: token válido + token ativo no sistema
 
 ---
 
-✅ Com isso, o fluxo de autenticação está completo: **login com credenciais → geração de token → acesso a rotas privadas com JWT**.
+## 🛡️ Rate Limiting
+
+O sistema implementa proteção contra excesso de requisições usando `ThrottlerModule`:
+
+```typescript
+ThrottlerModule.forRoot([
+  {
+    ttl: 60000,    // Janela de tempo em millisegundos
+    limit: 10,     // Número máximo de requisições na janela
+  },
+]),
+```
+
+1. **Configuração Global:**
+   * Limite de 10 requisições por minuto por IP
+   * Aplicado globalmente através do `APP_GUARD`
+   * Customizável por rota usando decorators
+
+2. **Decorators Disponíveis:**
+   * `@SkipThrottle()` → Desativa throttling para uma rota
+   * `@Throttle(limit, ttl)` → Define limites específicos
+
+3. **Headers de Resposta:**
+   * `X-RateLimit-Limit`: Limite total de requisições
+   * `X-RateLimit-Remaining`: Requisições restantes
+   * `Retry-After`: Tempo para próxima tentativa (quando bloqueado)
+
+---
+
+## 🚀 Melhorias Recomendadas
+
+1. **Blacklist de Tokens**
+   * Implementar lista negra para tokens revogados
+   * Integrar com Redis para melhor performance
+
+2. **Roles Guard**
+   * Adicionar controle de acesso baseado em papéis
+   * Usar decorator `@Roles('admin')`
+
+3. **Env Vars**
+   * Mover secrets para `.env`
+   * Configurar rate limits por ambiente
+
+4. **Segurança Adicional**
+   * Implementar 2FA
+   * Adicionar CAPTCHA em rotas sensíveis
+   * Usar cookies HttpOnly para tokens
+
+---
+
+✅ Com isso, o sistema oferece uma autenticação robusta com:
+
+* Login seguro
+* Refresh tokens
+* Proteção contra ataques de força bruta
+* Rate limiting
+* Estrutura escalável para futuras melhorias

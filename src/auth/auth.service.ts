@@ -5,7 +5,6 @@ import * as bcrypt from 'bcrypt';
 import { constants } from './constants';
 import { LoginDto } from 'src/dtos/auth/login.dto';
 import { UserEntity } from 'src/entities/user.entity';
-import { AuthPayloadDto } from 'src/dtos/auth/payload-jwt.dto';
 import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
 
 type AuthValidatedUserResponse = Omit<
@@ -40,20 +39,23 @@ export class AuthService {
 
   async login(login: LoginDto, rememberMe: boolean): Promise<LoginResponseDto> {
     const existentUser = await this.userService.findByEmail(login.email);
-    console.log('AuthService: ' + existentUser);
+    console.log('AuthService: ', existentUser);
     if (!existentUser) {
       throw new Error('User Not Found');
     }
 
-    const payload: AuthPayloadDto = {
-      sub: existentUser.id,
-      email: existentUser.email,
-      role: existentUser.role,
-    };
-    const expiresIn = rememberMe ? '7d' : '60m';
-    const token = this.jwtService.sign(payload, { expiresIn });
+    const tokens = await this.getTokens(
+      existentUser.id,
+      existentUser.email,
+      existentUser.role,
+      rememberMe,
+    );
+
+    await this.updateRefreshToken(existentUser.id, tokens.refreshToken);
+
     const response: LoginResponseDto = {
-      token: token,
+      token: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
     };
 
     return response;
@@ -74,6 +76,10 @@ export class AuthService {
       user.currentHashedRefreshToken,
     );
 
+    await this.jwtService.verifyAsync(refreshToken, {
+      secret: constants.jwtRefreshSecret,
+    });
+
     if (!refreshTokenMatches) {
       throw new UnauthorizedException('Access Denied');
     }
@@ -88,11 +94,17 @@ export class AuthService {
     await this.userService.setCurrentRefreshToken(userId, hashedRefreshToken);
   }
 
-  private async getTokens(userId: string, email: string, role: string) {
+  private async getTokens(
+    userId: string,
+    email: string,
+    role: string,
+    rememberMe?: boolean,
+  ) {
+    const expiresIn = rememberMe ? '7d' : '60m';
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         { sub: userId, email, role },
-        { secret: constants.jwtSecret, expiresIn: '15m' },
+        { secret: constants.jwtSecret, expiresIn: expiresIn },
       ),
       this.jwtService.signAsync(
         { sub: userId, email, role },

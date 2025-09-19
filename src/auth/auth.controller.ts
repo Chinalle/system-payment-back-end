@@ -5,6 +5,7 @@ import {
   Request,
   Get,
   Body,
+  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -14,6 +15,7 @@ import { JwtRefreshGuard } from './jwt-refresh.guard';
 import { Throttle } from '@nestjs/throttler';
 import { LoginDto } from '../dtos/auth/login.dto';
 import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
+import { RequestWithRefreshUser } from 'src/dtos/auth/user-tokens.response.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -37,16 +39,24 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('logout')
-  logout(@Request() req: any) {
-    return this.authService.logout(req.user.sub);
+  logout(@Query('user') userId: string) {
+    return this.authService.logout(userId);
   }
 
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
-  refreshTokens(@Request() req: any) {
+  async refreshTokens(@Request() req: RequestWithRefreshUser) {
     console.log('Request', req);
     const userId = req.user.sub;
     const refreshToken = req.user.refreshToken;
-    return this.authService.refreshTokens(userId, refreshToken);
+    if (!userId) {
+      throw new Error('Must have an userId');
+    }
+    if (!refreshToken) {
+      throw new Error('Must have a refresh token');
+    }
+    const tokens = await this.authService.refreshTokens(userId, refreshToken);
+
+    return tokens;
   }
 }
