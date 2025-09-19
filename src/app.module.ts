@@ -5,7 +5,6 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './users/user.module';
 import { SeedModule } from './database/seeds/seed.module';
 import { MailerModule } from './mailer/mailer.module';
-import { ServiceModule } from './service/service.module';
 
 @Module({
   imports: [
@@ -14,7 +13,6 @@ import { ServiceModule } from './service/service.module';
     DatabaseModule,
     UserModule,
     SeedModule,
-    ServiceModule,
   ],
   providers: [AppService],
 })
