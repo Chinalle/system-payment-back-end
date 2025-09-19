@@ -43,5 +43,6 @@ export class User1756509827111 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     this.logger.log('migrating down');
     await queryRunner.query('DROP TABLE IF EXISTS "users";');
+    await queryRunner.dropColumn('users', 'current_hashed_refresh_token');
   }
 }
