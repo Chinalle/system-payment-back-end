@@ -6,23 +6,24 @@ import { constants } from './constants';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
-    Strategy,
-    'jwt-refresh',
+  Strategy,
+  'jwt-refresh',
 ) {
-    constructor() {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: constants.jwtRefreshSecret,
-            passReqToCallback: true,
-        });
-    }
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: constants.jwtRefreshSecret,
+      passReqToCallback: true,
+    });
+  }
 
-    validate(req: Request, payload: any) {
-        const authHeader = req.get('Authorization');
-        if (!authHeader) {
-            throw new UnauthorizedException('Refresh token not found in header');
-        }
-        const refreshToken = authHeader.replace('Bearer', '').trim();
-        return { ...payload, refreshToken };
+  validate(req: Request, payload: any) {
+    const authHeader = req.get('Authorization');
+    console.log('header auth:: ', authHeader);
+    if (!authHeader) {
+      throw new UnauthorizedException('Refresh token not found in header');
     }
+    const refreshToken = authHeader.replace('Bearer', '').trim();
+    return { ...payload, refreshToken };
+  }
 }

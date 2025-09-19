@@ -13,7 +13,7 @@ export class UserRepository implements IUserRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   async findAll(): Promise<UserEntity[]> {
     const users = await this.userRepository.find();
@@ -95,7 +95,10 @@ export class UserRepository implements IUserRepository {
     await this.userRepository.delete(existentUser.id);
   }
 
-  async setCurrentRefreshToken(id: string, refreshToken: string | null): Promise<void> {
+  async setCurrentRefreshToken(
+    id: string,
+    refreshToken: string | null,
+  ): Promise<void> {
     await this.userRepository.update(id, {
       currentHashedRefreshToken: refreshToken,
     });

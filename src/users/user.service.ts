@@ -9,7 +9,7 @@ export class UserService {
   constructor(
     @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
-  ) { }
+  ) {}
 
   async create(user: CreateUserDTO): Promise<UserDTO> {
     return await this.userRepository.create(user);
@@ -23,7 +23,10 @@ export class UserService {
     return this.userRepository.findByEmail(email);
   }
 
-  async setCurrentRefreshToken(id: string, refreshToken: string | null): Promise<void> {
+  async setCurrentRefreshToken(
+    id: string,
+    refreshToken: string | null,
+  ): Promise<void> {
     return this.userRepository.setCurrentRefreshToken(id, refreshToken);
   }
 

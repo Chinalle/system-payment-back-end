@@ -3,33 +3,60 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../users/user.service';
 import * as bcrypt from 'bcrypt';
 import { constants } from './constants';
+import { LoginDto } from 'src/dtos/auth/login.dto';
+import { UserEntity } from 'src/entities/user.entity';
+import { AuthPayloadDto } from 'src/dtos/auth/payload-jwt.dto';
+import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
+
+type AuthValidatedUserResponse = Omit<
+  UserEntity,
+  'password' | 'createdAt' | 'updatedAt'
+>;
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<AuthValidatedUserResponse | null> {
     const user = await this.userService.findByEmail(email);
-    if (user && user.password && (await bcrypt.compare(pass, user.password))) {
-      const { password, ...result } = user;
+    console.log('AuthService - loginDto: ', email);
+    console.log('AuthService - user: ', password);
+    if (
+      user &&
+      user.password &&
+      (await bcrypt.compare(password, user.password))
+    ) {
+      const result: AuthValidatedUserResponse = user;
       return result;
     }
     return null;
   }
 
-  async login(user: any, rememberMe = false) {
-    const payload = {
-      email: user.email,
-      sub: user.id,
-      role: user.role,
+  async login(login: LoginDto, rememberMe: boolean): Promise<LoginResponseDto> {
+    const existentUser = await this.userService.findByEmail(login.email);
+    console.log('AuthService: ' + existentUser);
+    if (!existentUser) {
+      throw new Error('User Not Found');
+    }
+
+    const payload: AuthPayloadDto = {
+      sub: existentUser.id,
+      email: existentUser.email,
+      role: existentUser.role,
     };
     const expiresIn = rememberMe ? '7d' : '60m';
-    return {
-      access_token: this.jwtService.sign(payload, { expiresIn }),
+    const token = this.jwtService.sign(payload, { expiresIn });
+    const response: LoginResponseDto = {
+      token: token,
     };
+
+    return response;
   }
 
   async logout(userId: string) {
