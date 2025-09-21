@@ -1,32 +1,32 @@
-export enum TipoPerfil {
-    CLIENTE = 'cliente',
-    PRESTADOR = 'gerente',
+export enum Role {
+    CLIENT = 'client',
+    PROVIDER = 'manager',
     ADMIN = 'admin',
 }
 
-export enum PerfilPrestador {
-    COLABORADOR = 'colaborador',
+export enum RoleProvider {
+    COLLABORATOR = 'collaborator',
     SUPERVISOR = 'supervisor',
-    COORDENADOR = 'coordenador',
+    COORDINATOR = 'coordinator',
 }
 
-export enum StatusContrato {
-    PENDENTE = 'pendente',
-    EM_ANDAMENTO = 'em_andamento',
-    CONCLUIDO = 'concluido',
-    CANCELADO = 'cancelado',
+export enum StatusContract {
+    PENDING = 'pending',
+    IN_PROGRESS = 'in_progress',
+    COMPLETED = 'completed',
+    CANCELED = 'canceled',
 }
 
-export enum StatusPagamento {
-    PENDENTE = 'pendente',
-    APROVADO = 'aprovado',
-    RECUSADO = 'recusado',
-    CANCELADO = 'cancelado',
+export enum StatusPayment {
+    PENDING = 'pending',
+    APPROVED = 'approved',
+    DECLINED = 'declined',
+    CANCELED = 'canceled',
 }
 
-export enum MetodoPagamento {
-    CARTAO_CREDITO = 'cartao_credito',
-    CARTAO_DEBITO = 'cartao_debito',
+export enum PaymentMethod {
+    CREDIT_CARD = 'credit_card',
+    DEBIT_CARD = 'debit_card',
     PIX = 'pix',
-    BOLETO = 'boleto',
+    PAYMENT_SLIP = 'payment_slip',
 }

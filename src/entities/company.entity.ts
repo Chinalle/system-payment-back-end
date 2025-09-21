@@ -1,13 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 import { User } from './users.entity';
 
-@Entity('empresa')
-export class Empresa {
-    @PrimaryGeneratedColumn('increment')
-    id: number;
+@Entity('company')
+export class Company {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column({ type: 'varchar', length: 45 })
-    nome: string;
+    company_name: string;
 
     @OneToOne(() => User)
     @JoinColumn({ name: 'user_id' })

@@ -1,23 +1,22 @@
-// src/entities/endereco.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('endereco')
-export class Endereco {
-    @PrimaryGeneratedColumn('increment')
-    id: number;
+@Entity('address')
+export class Address {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column({ type: 'varchar', length: 255 })
-    logradouro: string;
+    public_place: string;
 
     @Column({ type: 'varchar', length: 255 })
-    bairro: string;
+    district: string;
 
     @Column({ type: 'varchar', length: 45 })
-    numero: string;
+    house_number: string;
 
     @Column({ type: 'varchar', length: 255 })
-    cidade: string;
+    city: string;
 
     @Column({ type: 'varchar', length: 255 })
-    uf: string;
+    state: string;
 }
