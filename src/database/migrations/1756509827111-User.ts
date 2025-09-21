@@ -27,6 +27,12 @@ export class User1756509827111 implements MigrationInterface {
           { name: 'adress', type: 'text', isNullable: true },
           { name: 'role', type: 'text', isNullable: true },
           { name: 'is_active', type: 'boolean', default: true },
+          {
+            name: 'current_hashed_refresh_token',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
+          },
           { name: 'created_at', type: 'timestamptz', default: 'now()' },
           { name: 'updated_at', type: 'timestamptz', default: 'now()' },
         ],
@@ -37,5 +43,6 @@ export class User1756509827111 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     this.logger.log('migrating down');
     await queryRunner.query('DROP TABLE IF EXISTS "users";');
+    await queryRunner.dropColumn('users', 'current_hashed_refresh_token');
   }
 }

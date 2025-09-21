@@ -12,4 +12,28 @@ export class MailService {
       text: 'E-mail está funcionando ✅',
     });
   }
+
+  async sendConfirmation(
+    to: string,
+    subject: string,
+    name: string,
+    actionUrl: string,
+    isClient: boolean,
+  ) {
+    try {
+      await this.mailerService.sendMail({
+        to,
+        subject,
+        template: isClient
+          ? 'client-confirmation'
+          : 'service-provider-confirmation',
+        context: {
+          name: name,
+          action_url: actionUrl,
+        },
+      });
+    } catch (error) {
+      throw new Error(String(error));
+    }
+  }
 }

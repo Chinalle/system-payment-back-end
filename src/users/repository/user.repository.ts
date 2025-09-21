@@ -24,6 +24,10 @@ export class UserRepository implements IUserRepository {
     return this.userRepository.findOneBy({ id });
   }
 
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    return this.userRepository.findOneBy({ email });
+  }
+
   async create(createUserDTO: CreateUserDTO): Promise<UserDTO> {
     const existentByUserEmail = await this.userRepository.findOne({
       where: { email: createUserDTO.email },
@@ -41,8 +45,14 @@ export class UserRepository implements IUserRepository {
       throw new Error('User with this CPF already exists');
     }
 
+    if (!this.isValidPassword(createUserDTO.password)) {
+      throw new Error(
+        'Password must have at least 8 characters, one uppercase, one lowercase, one number and 1 special character',
+      );
+    }
+
     const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(createUserDTO.passowrd, salt);
+    const hashedPassword = await bcrypt.hash(createUserDTO.password, salt);
 
     const userData = {
       id: uuidv4(),
@@ -84,6 +94,22 @@ export class UserRepository implements IUserRepository {
 
     await this.userRepository.delete(existentUser.id);
   }
+
+  async setCurrentRefreshToken(
+    id: string,
+    refreshToken: string | null,
+  ): Promise<void> {
+    await this.userRepository.update(id, {
+      currentHashedRefreshToken: refreshToken,
+    });
+  }
+
+  private isValidPassword = (password: string) => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    return regex.test(password);
+  };
 
   private mapEntityToDTO(userEntity: UserEntity): UserDTO {
     return {

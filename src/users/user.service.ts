@@ -18,4 +18,19 @@ export class UserService {
   async findAll(): Promise<UserEntity[]> {
     return await this.userRepository.findAll();
   }
+
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    return this.userRepository.findByEmail(email);
+  }
+
+  async setCurrentRefreshToken(
+    id: string,
+    refreshToken: string | null,
+  ): Promise<void> {
+    return this.userRepository.setCurrentRefreshToken(id, refreshToken);
+  }
+
+  async findOne(id: string): Promise<UserEntity | null> {
+    return this.userRepository.findOne(id);
+  }
 }
