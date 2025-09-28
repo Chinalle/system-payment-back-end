@@ -18,14 +18,16 @@ import { ServiceDTO } from 'src/dtos/service/service.dto';
 @ApiTags('Services')
 @Controller('services')
 export class ServiceController {
-  constructor(private readonly servicesService: ServicesService) { }
+  constructor(private readonly servicesService: ServicesService) {}
 
   @ApiCreatedResponse({
     type: ServiceDTO,
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createServiceDto: CreateServiceDto): Promise<ServiceDTO> {
+  async create(
+    @Body() createServiceDto: CreateServiceDto,
+  ): Promise<ServiceDTO> {
     return this.servicesService.create(createServiceDto);
   }
 

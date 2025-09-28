@@ -1,31 +1,33 @@
-import {
-  Entity,
-  PrimaryColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { ServiceImage } from './service-image.entity';
+import { ServicePaymentOption } from './service-payment-option.entity';
 
-@Entity('services')
-export class ServiceEntity {
-  @PrimaryColumn('uuid')
+@Entity('service')
+export class Service {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ length: 100 })
   name: string;
 
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ length: 50 })
   category: string;
 
-  @Column({ name: 'estimated_duration', type: 'int' })
-  estimatedDuration: number;
+  @Column({ type: 'int' })
+  estimatedDuration: number; // in minutes
 
-  @CreateDateColumn({ name: 'created_at' })
+  @OneToMany(() => ServiceImage, (image) => image.service, { cascade: true })
+  images: ServiceImage[];
+
+  @OneToMany(
+    () => ServicePaymentOption,
+    (paymentOption) => paymentOption.service,
+    { cascade: true },
+  )
+  paymentOptions: ServicePaymentOption[];
   createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }
