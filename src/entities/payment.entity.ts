@@ -1,6 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Timestamp } from 'typeorm';
 import { StatusPayment, PaymentMethod } from './enum';
-import { Timestamp } from 'typeorm/browser';
 
 @Entity('payment')
 export class Payment {

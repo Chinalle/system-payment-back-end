@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, Joi
 import { Role } from './enum';
 import { Login } from './login.entity';
 import { Address } from './address.entity';
-import { Timestamp } from 'typeorm/browser';
+import { Timestamp } from 'typeorm';
 
 @Entity('user')
 export class User {

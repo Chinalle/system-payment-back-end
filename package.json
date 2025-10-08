@@ -22,7 +22,8 @@
     "migration:create": "docker exec -it backend_nest  npm run typeorm -- migration:create ./src/database/migrations/$npm_config_name",
     "migration:up": "docker exec -it backend_nest npm run typeorm migration:run -- -d ./src/database/typeorm.config.ts",
     "migration:down": "docker exec -it backend_nest npm run typeorm migration:revert -- -d ./src/database/typeorm.config.ts",
-    "drop:schema": "docker exec -it backend_nest npm run typeorm schema:drop -- -d ./src/database/typeorm.config.ts"
+    "drop:schema": "docker exec -it backend_nest npm run typeorm schema:drop -- -d ./src/database/typeorm.config.ts",
+    "migration:show": "docker exec -it backend_nest npm run typeorm migration:show -- -d ./src/database/typeorm.config.ts"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",

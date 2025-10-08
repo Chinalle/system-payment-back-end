@@ -16,7 +16,7 @@ import { ServiceModule } from './service/service.module';
     MailerModule,
     DatabaseModule,
     UserModule,
-    SeedModule,
+    // SeedModule,
     AuthModule,
     ServiceModule,
     ThrottlerModule.forRoot([

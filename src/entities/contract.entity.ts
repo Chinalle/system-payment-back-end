@@ -1,11 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToOne, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToOne, ManyToMany, JoinTable, Timestamp } from 'typeorm';
 import { StatusContract } from './enum';
 import { User } from './users.entity';
 import { Company } from './company.entity';
 import { Payment } from './payment.entity';
 import { Provider } from './provider.entity';
 import { ServiceProduct } from './services_products.entity';
-import { Timestamp } from 'typeorm/browser';
 
 @Entity('contract')
 export class Contract {

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ServiceRepository } from './repository/service.repository';
 import { CreateServiceDto } from '../dtos/service/create-service.dto';
 import { UpdateServiceDto } from '../dtos/service/update-service.dto';
-import { ServiceEntity } from '../entities/service.entity';
+import { Service } from '../entities/service.entity';
 import { ServiceDTO } from 'src/dtos/service/service.dto';
 
 @Injectable()
@@ -15,11 +15,11 @@ export class ServicesService {
     return this.serviceRepo.createService(service);
   }
 
-  async findAll(): Promise<ServiceEntity[]> {
+  async findAll(): Promise<Service[]> {
     return this.serviceRepo.findAll();
   }
 
-  async findOne(id: string): Promise<ServiceEntity> {
+  async findOne(id: string): Promise<Service> {
     const service = await this.serviceRepo.findOneById(id);
     if (!service) {
       throw new NotFoundException(`Service ID ${id} not found`);
@@ -27,7 +27,7 @@ export class ServicesService {
     return service;
   }
 
-  async update(id: string, dto: UpdateServiceDto): Promise<ServiceEntity> {
+  async update(id: string, dto: UpdateServiceDto): Promise<Service> {
     return this.serviceRepo.updateService(id, dto);
   }
 
