@@ -3,9 +3,12 @@ import {
   IsBoolean,
   IsDateString,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsString,
 } from 'class-validator';
+import type { Address } from 'src/entities/address.entity';
+import { Role } from 'src/entities/enum';
 
 export class UserDTO {
   @ApiProperty({
@@ -25,13 +28,6 @@ export class UserDTO {
   fullName: string;
 
   @ApiProperty({
-    example: 'johndoe',
-    description: 'unique username',
-  })
-  @IsString()
-  username: string;
-
-  @ApiProperty({
     example: 'john@example.com',
     description: 'User email',
   })
@@ -49,21 +45,22 @@ export class UserDTO {
     description: 'User social ID',
   })
   @IsString()
-  cpf: string;
+  cpfCnpj: string;
 
   @ApiProperty({
     example: 'nowhere',
     description: 'User Adress',
   })
-  @IsString()
-  adress: string;
+  address: Address;
 
   @ApiProperty({
     example: 'USER',
     description: 'User level access',
   })
-  @IsString()
-  role: string;
+  @IsEnum({
+    type: Role,
+  })
+  role: Role;
 
   @ApiProperty({
     example: true,

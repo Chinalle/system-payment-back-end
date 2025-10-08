@@ -7,6 +7,8 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
+import type { Address } from 'src/entities/address.entity';
+import type { Role } from 'src/entities/enum';
 
 export class CreateUserDTO {
   @ApiProperty({
@@ -15,10 +17,6 @@ export class CreateUserDTO {
   })
   @IsNotEmpty()
   fullName: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  username: string;
 
   @ApiProperty()
   @IsEmail()
@@ -35,15 +33,14 @@ export class CreateUserDTO {
 
   @ApiProperty()
   @IsString()
-  cpf: string;
+  cpfCnpj: string;
 
   @ApiProperty()
   @IsOptional()
-  adress: string;
+  address: Address;
 
   @ApiProperty()
-  @IsNotEmpty()
-  role: string;
+  role: Role;
 
   @ApiProperty()
   @IsBoolean()

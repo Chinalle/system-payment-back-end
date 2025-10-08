@@ -1,41 +1,42 @@
 import {
   Entity,
-  Column,
   PrimaryColumn,
+  Column,
   CreateDateColumn,
+  OneToOne,
+  JoinColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Role } from './enum';
+import { Login } from './login.entity';
+import { Address } from './address.entity';
+import { Company } from './company.entity';
 
 @Entity('users')
-export class UserEntity {
+export class User {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column({ length: 500, name: 'full_name' })
-  fullName: string;
+  @Column({ name: 'full_name', type: 'varchar', length: 255 })
+  fullname: string;
 
-  @Column({ length: 120, type: 'varchar', unique: true })
-  username: string;
-
-  @Column({ type: 'varchar', unique: true })
-  email: string;
-
-  @Column({ type: 'varchar', unique: false })
+  @Column({ type: 'varchar', length: 45 })
   phone: string;
 
-  @Column({ type: 'text' })
-  password: string;
+  @Column({ name: 'cpf_cnpj', type: 'varchar', length: 45, unique: true })
+  cpfCnpj: string;
 
-  @Column({ type: 'varchar', unique: true })
-  cpf: string;
+  @Column({ name: 'birth_date', type: 'date' })
+  birthDate: Date;
 
-  @Column({ type: 'text' })
-  adress: string;
+  @Column({
+    name: 'user_role_enum',
+    type: 'enum',
+    enum: Role,
+  })
+  userRoleEnum: Role;
 
-  @Column({ type: 'text' })
-  role: string;
-
-  @Column({ type: 'boolean', name: 'is_active' })
+  @Column({ name: 'is_active', type: 'boolean' })
   isActive: boolean;
 
   @Column({
@@ -51,4 +52,15 @@ export class UserEntity {
 
   @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToOne(() => Login, { nullable: true })
+  @JoinColumn({ name: 'login_id' })
+  login: Login;
+
+  @OneToOne(() => Address, { nullable: true })
+  @JoinColumn({ name: 'address_id' })
+  address: Address;
+
+  @OneToOne(() => Company, (company) => company.user)
+  company: Company;
 }

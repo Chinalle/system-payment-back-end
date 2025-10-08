@@ -32,10 +32,10 @@ export class ServiceRepository {
   private mapEntityToDTO(serviceEntity: Service): ServiceDTO {
     return {
       id: serviceEntity.id,
-      name: serviceEntity.name,
+      name: serviceEntity.serviceName,
       description: serviceEntity.description,
       category: serviceEntity.category,
-      estimatedDuration: serviceEntity.estimatedDuration,
+      estimatedDuration: serviceEntity.estimatedDurationMinutes,
       createdAt: serviceEntity.createdAt as Date,
       updatedAt: serviceEntity.updatedAt as Date,
     };
@@ -52,7 +52,12 @@ export class ServiceRepository {
   async updateService(id: string, dto: UpdateServiceDto): Promise<Service> {
     const serviceToUpdate = await this.serviceRepository.preload({
       id: id,
-      ...dto,
+      serviceName: dto.name,
+      description: dto.description,
+      estimatedDurationMinutes: dto.estimatedDuration,
+      category: dto.category,
+      images: dto.images,
+      paymentOptions: dto.paymentOptions,
     });
 
     if (!serviceToUpdate) {

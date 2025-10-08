@@ -1,15 +1,30 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
-import { User } from './users.entity';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
+import { User } from './user.entity';
+import { BankDetails } from './bank-details.entity';
+import { Provider } from './provider.entity';
 
 @Entity('company')
 export class Company {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryColumn('uuid')
+  id: string;
 
-    @Column({ type: 'varchar', length: 45 })
-    company_name: string;
+  @Column({ name: 'company_name', length: 45 })
+  companyName: string;
 
-    @OneToOne(() => User)
-    @JoinColumn({ name: 'user_id' })
-    user: User;
+  @OneToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @OneToMany(() => BankDetails, (bankDetails) => bankDetails.company)
+  bankDetails: BankDetails[];
+
+  @OneToMany(() => Provider, (provider) => provider.company)
+  providers: Provider[];
 }

@@ -10,6 +10,7 @@ import {
   IsNumber,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import type { ServiceCategory } from 'src/entities/service-category.entity';
 
 class ServiceImageDto {
   @ApiProperty()
@@ -47,9 +48,7 @@ export class CreateServiceDto {
   description: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  category: string;
+  category: ServiceCategory;
 
   @ApiProperty({ description: 'Estimated duration in minutes' })
   @IsNotEmpty()

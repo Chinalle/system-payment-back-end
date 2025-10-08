@@ -4,11 +4,11 @@ import { UserService } from '../users/user.service';
 import * as bcrypt from 'bcrypt';
 import { constants } from './constants';
 import { LoginDto } from 'src/dtos/auth/login.dto';
-import { UserEntity } from 'src/entities/user.entity';
 import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
+import type { User } from 'src/entities/user.entity';
 
 type AuthValidatedUserResponse = Omit<
-  UserEntity,
+  User,
   'password' | 'createdAt' | 'updatedAt'
 >;
 
@@ -28,8 +28,8 @@ export class AuthService {
     console.log('AuthService - user: ', password);
     if (
       user &&
-      user.password &&
-      (await bcrypt.compare(password, user.password))
+      user.login.password &&
+      (await bcrypt.compare(password, user.login.password))
     ) {
       const result: AuthValidatedUserResponse = user;
       return result;
@@ -46,8 +46,8 @@ export class AuthService {
 
     const tokens = await this.getTokens(
       existentUser.id,
-      existentUser.email,
-      existentUser.role,
+      existentUser.login.email,
+      existentUser.userRoleEnum,
       rememberMe,
     );
 
@@ -84,7 +84,11 @@ export class AuthService {
       throw new UnauthorizedException('Access Denied');
     }
 
-    const tokens = await this.getTokens(user.id, user.email, user.role);
+    const tokens = await this.getTokens(
+      user.id,
+      user.login.email,
+      user.userRoleEnum,
+    );
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }

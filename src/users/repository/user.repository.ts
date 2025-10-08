@@ -1,76 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from '../../entities/user.entity';
 import type { IUserRepository } from './user.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, type DataSource } from 'typeorm';
 import { UserDTO } from 'src/dtos/users/user.dto';
 import { CreateUserDTO } from 'src/dtos/users/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { User } from 'src/entities/user.entity';
+import { Address } from 'src/entities/address.entity';
+import { Login } from 'src/entities/login.entity';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
-  async findAll(): Promise<UserEntity[]> {
+  async findAll(): Promise<User[]> {
     const users = await this.userRepository.find();
     return users;
   }
 
-  async findOne(id: string): Promise<UserEntity | null> {
+  async findOne(id: string): Promise<User | null> {
     return this.userRepository.findOneBy({ id });
   }
 
-  async findByEmail(email: string): Promise<UserEntity | null> {
-    return this.userRepository.findOneBy({ email });
+  async findByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: {
+        login: {
+          email: email,
+        },
+      },
+      relations: {
+        login: true,
+      },
+    });
   }
 
   async create(createUserDTO: CreateUserDTO): Promise<UserDTO> {
-    const existentByUserEmail = await this.userRepository.findOne({
-      where: { email: createUserDTO.email },
-    });
-
-    if (existentByUserEmail) {
-      throw new Error('User with this e-mail already exists');
-    }
-
-    const existentUserByCpf = await this.userRepository.findOne({
-      where: { cpf: createUserDTO.cpf },
-    });
-
-    if (existentUserByCpf) {
-      throw new Error('User with this CPF already exists');
-    }
-
-    if (!this.isValidPassword(createUserDTO.password)) {
-      throw new Error(
-        'Password must have at least 8 characters, one uppercase, one lowercase, one number and 1 special character',
-      );
-    }
-
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(createUserDTO.password, salt);
-
-    const userData = {
-      id: uuidv4(),
-      fullName: createUserDTO.fullName,
-      username: createUserDTO.username,
-      email: createUserDTO.email,
-      phone: createUserDTO.phone,
-      password: hashedPassword,
-      cpf: createUserDTO.cpf,
-      adress: createUserDTO.adress || '',
-      role: createUserDTO.role,
-      isActive: createUserDTO.isActive,
-    };
-
-    const user = this.userRepository.create(userData);
-    const saveUser = await this.userRepository.save(user);
-
-    return this.mapEntityToDTO(saveUser);
+    return this.userRepository.save(createUserDTO);
   }
 
   async softDelete(id: string): Promise<void> {
@@ -110,20 +80,4 @@ export class UserRepository implements IUserRepository {
 
     return regex.test(password);
   };
-
-  private mapEntityToDTO(userEntity: UserEntity): UserDTO {
-    return {
-      id: userEntity.id,
-      fullName: userEntity.fullName,
-      username: userEntity.username,
-      email: userEntity.email,
-      phone: userEntity.phone,
-      cpf: userEntity.cpf,
-      adress: userEntity.adress,
-      role: userEntity.role,
-      isActive: userEntity.isActive,
-      createdAt: userEntity.createdAt,
-      updatedAt: userEntity.updatedAt,
-    };
-  }
 }

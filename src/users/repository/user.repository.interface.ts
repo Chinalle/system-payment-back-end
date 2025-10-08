@@ -1,11 +1,11 @@
 import { UserDTO } from 'src/dtos/users/user.dto';
-import { UserEntity } from '../../entities/user.entity';
+import type { User } from 'src/entities/user.entity';
 
 export interface IUserRepository {
-  findAll(): Promise<UserEntity[]>;
-  findOne(id: string): Promise<UserEntity | null>;
-  findByEmail(email: string): Promise<UserEntity | null>;
-  create(user: Partial<UserEntity>): Promise<UserDTO>;
+  findAll(): Promise<User[]>;
+  findOne(id: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
+  create(user: Partial<User>): Promise<UserDTO>;
   softDelete(id: string): Promise<void>;
   hardDelete(id: string): Promise<void>;
   setCurrentRefreshToken(

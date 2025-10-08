@@ -1,30 +1,36 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Timestamp } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  CreateDateColumn,
+  Timestamp,
+} from 'typeorm';
 import { StatusPayment, PaymentMethod } from './enum';
 
 @Entity('payment')
 export class Payment {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryColumn('uuid')
+  id: string;
 
-    @Column({ type: 'double precision' })
-    value: number;
+  @Column({ name: 'price_in_cents', type: 'int' })
+  priceInCents: number;
 
-    @Column({
-        type: 'enum',
-        enum: StatusPayment,
-        default: StatusPayment.PENDING,
-    })
-    status: StatusPayment;
+  @Column({
+    type: 'enum',
+    enum: StatusPayment,
+    default: StatusPayment.PENDING,
+  })
+  status: StatusPayment;
 
-    @Column({
-        type: 'enum',
-        enum: PaymentMethod,
-    })
-    payment_method: PaymentMethod;
+  @Column({
+    type: 'enum',
+    enum: PaymentMethod,
+  })
+  payment_method: PaymentMethod;
 
-    @Column({ type: 'integer', nullable: true })
-    installments: number;
+  @Column({ type: 'integer', nullable: true })
+  installments: number;
 
-    @CreateDateColumn({ nullable: true })
-    processed_in: Timestamp;
+  @CreateDateColumn({ name: 'processed_in', type: 'timestamp', nullable: true })
+  processedIn: Timestamp;
 }

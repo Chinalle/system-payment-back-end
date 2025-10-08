@@ -1,15 +1,26 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from 'src/entities/user.entity';
+import { User } from 'src/entities/user.entity';
 import { UserRepository } from './repository/user.repository';
 import { MailerModule } from 'src/mailer/mailer.module';
 import { MailService } from 'src/mailer/mailer.service';
 
+import { AddressModule } from 'src/address/address.module';
+import { LoginModule } from 'src/login/login.module';
+import { AuthModule } from 'src/auth/auth.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), ConfigModule, MailerModule],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    forwardRef(() => AuthModule),
+    ConfigModule,
+    MailerModule,
+    AddressModule,
+    LoginModule,
+  ],
   controllers: [UserController],
   exports: [UserService, 'IUserRepository'],
   providers: [
@@ -21,4 +32,4 @@ import { MailService } from 'src/mailer/mailer.service';
     },
   ],
 })
-export class UserModule { }
+export class UserModule {}

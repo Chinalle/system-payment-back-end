@@ -1,17 +1,17 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { genSalt, hash } from 'bcrypt';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class UserSeed implements OnModuleInit {
   private readonly logger = new Logger(UserSeed.name);
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async onModuleInit() {

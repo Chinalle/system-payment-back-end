@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  ManyToOne,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
 import { RoleProvider } from './enum';
 import { Login } from './login.entity';
 import { Company } from './company.entity';
@@ -8,33 +17,35 @@ import { ScheduleOverride } from './schedule-override.entity';
 
 @Entity('provider')
 export class Provider {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryColumn('uuid')
+  id: string;
 
-    @Column({ type: 'varchar', length: 255 })
-    provider_name: string;
+  @Column({ type: 'varchar', length: 255 })
+  provider_name: string;
 
-    @Column({
-        type: 'enum',
-        enum: RoleProvider,
-    })
-    roleProvider: RoleProvider;
+  @Column({
+    type: 'enum',
+    enum: RoleProvider,
+  })
+  roleProvider: RoleProvider;
 
-    @OneToOne(() => Login, { cascade: true, eager: true })
-    @JoinColumn({ name: 'login_id' })
-    login: Login;
+  @OneToOne(() => Login, { cascade: true, eager: true })
+  @JoinColumn({ name: 'login_id' })
+  login: Login;
 
-    @ManyToOne(() => Company, { nullable: true })
-    @JoinColumn({ name: 'empresa_id' })
-    company: Company;
+  @ManyToOne(() => Company, { nullable: true })
+  @JoinColumn({ name: 'company_id' })
+  company: Company;
 
-    @ManyToMany(() => Contract, contract => contract.provider)
-    contracts: Contract[];
+  @ManyToMany(() => Contract, (contract) => contract.provider)
+  contracts: Contract[];
 
-    @OneToMany(() => WorkSchedule, (workSchedule) => workSchedule.provider)
-    workSchedules: WorkSchedule[];
+  @OneToMany(() => WorkSchedule, (workSchedule) => workSchedule.provider)
+  workSchedules: WorkSchedule[];
 
-    @OneToMany(() => ScheduleOverride, (scheduleOverride) => scheduleOverride.provider)
-    scheduleOverrides: ScheduleOverride[];
-
+  @OneToMany(
+    () => ScheduleOverride,
+    (scheduleOverride) => scheduleOverride.provider,
+  )
+  scheduleOverrides: ScheduleOverride[];
 }

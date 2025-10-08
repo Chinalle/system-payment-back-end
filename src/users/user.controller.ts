@@ -8,10 +8,10 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
-import { UserEntity } from 'src/entities/user.entity';
 import { UserDTO } from 'src/dtos/users/user.dto';
 import { CreateUserDTO } from 'src/dtos/users/create-user.dto';
 import { MailService } from 'src/mailer/mailer.service';
+import type { User } from 'src/entities/user.entity';
 
 @ApiTags('User')
 @Controller('users')
@@ -34,7 +34,7 @@ export class UserController {
   }
 
   @Get()
-  async findAll(): Promise<UserEntity[]> {
+  async findAll(): Promise<User[]> {
     return await this.userService.findAll();
   }
 
