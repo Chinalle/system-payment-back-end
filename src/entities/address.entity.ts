@@ -6,8 +6,8 @@ export class Address {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  public_place: string;
+  @Column({ name: 'public_place', type: 'varchar', length: 255 })
+  publicPlace: string;
 
   @Column({ type: 'varchar', length: 255 })
   district: string;

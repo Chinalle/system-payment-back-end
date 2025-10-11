@@ -6,6 +6,8 @@ import { CreateUserDTO } from 'src/dtos/users/create-user.dto';
 import type { User } from 'src/entities/user.entity';
 import { AddressService } from 'src/address/address.service';
 import { LoginService } from 'src/login/login.service';
+import * as bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -18,7 +20,31 @@ export class UserService {
   ) {}
 
   async create(user: CreateUserDTO): Promise<UserDTO> {
-    return await this.userRepository.create(user);
+    const newAddress = await this.address.create(user.address);
+
+    const saltRounds = 20;
+    const hashedPassword = await bcrypt.hash(user.login.password, saltRounds);
+
+    const newLogin = await this.login.create({
+      email: user.login.email,
+      hashedPassword: hashedPassword,
+    });
+
+    const userData = {
+      id: uuidv4(),
+      fullname: user.fullName,
+      phone: user.phone,
+      birthDate: user.birthDate,
+      cpfCnpj: user.cpfCnpj,
+      isActive: user.isActive,
+      role: user.role,
+      address: newAddress,
+      login: newLogin,
+    };
+
+    const savedUser = await this.userRepository.create(userData);
+
+    return this.mapEntityToDTO(savedUser);
   }
 
   async findAll(): Promise<User[]> {
@@ -40,18 +66,19 @@ export class UserService {
     return this.userRepository.findOne(id);
   }
 
-  private mapEntityToDTO(userEntity: User): UserDTO {
+  private mapEntityToDTO(user: User): UserDTO {
     return {
-      id: userEntity.id,
-      fullName: userEntity.fullname,
-      email: userEntity.login.email,
-      phone: userEntity.phone,
-      cpfCnpj: userEntity.cpfCnpj,
-      address: userEntity.address,
-      role: userEntity.userRoleEnum,
-      isActive: userEntity.isActive,
-      createdAt: userEntity.createdAt,
-      updatedAt: userEntity.updatedAt,
+      id: user.id,
+      fullName: user.fullname,
+      login: user.login,
+      birthDate: user.birthDate,
+      phone: user.phone,
+      cpfCnpj: user.cpfCnpj,
+      address: user.address,
+      role: user.role,
+      isActive: user.isActive,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 }

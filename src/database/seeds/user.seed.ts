@@ -20,32 +20,32 @@ export class UserSeed implements OnModuleInit {
     const hashedPass = await hash('123456', salt);
     const count = await this.userRepository.count();
     if (count === 0) {
-      await this.userRepository.save([
-        {
-          id: uuidv4(),
-          fullName: 'Admin User',
-          username: 'admin',
-          email: 'admin@example.com',
-          phone: '19999999999',
-          password: hashedPass,
-          cpf: '000.000.000-00',
-          adress: 'Rua Admin, 1',
-          role: 'admin',
-          isActive: true,
-        },
-        {
-          id: uuidv4(),
-          fullName: 'Leonidas Oliveira',
-          username: 'leonidas',
-          email: 'leonidas@example.com',
-          phone: '19999999999',
-          password: hashedPass,
-          cpf: '111.111.111-11',
-          adress: 'Rua Leonidas, 10',
-          role: 'user',
-          isActive: true,
-        },
-      ]);
+      //   await this.userRepository.save([
+      //     {
+      //       id: uuidv4(),
+      //       fullName: 'Admin User',
+      //       username: 'admin',
+      //       email: 'admin@example.com',
+      //       phone: '19999999999',
+      //       password: hashedPass,
+      //       cpf: '000.000.000-00',
+      //       adress: 'Rua Admin, 1',
+      //       role: 'admin',
+      //       isActive: true,
+      //     },
+      //     {
+      //       id: uuidv4(),
+      //       fullName: 'Leonidas Oliveira',
+      //       username: 'leonidas',
+      //       email: 'leonidas@example.com',
+      //       phone: '19999999999',
+      //       password: hashedPass,
+      //       cpf: '111.111.111-11',
+      //       adress: 'Rua Leonidas, 10',
+      //       role: 'user',
+      //       isActive: true,
+      //     },
+      //   ]);
       console.log('✅ Users seeded with success!');
     } else {
       console.log('ℹ️ Users already exist, skipping seeding...');

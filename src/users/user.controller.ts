@@ -44,6 +44,7 @@ export class UserController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDTO): Promise<UserDTO> {
+    console.log('User data: ', createUserDto);
     return this.userService.create(createUserDto);
   }
 }

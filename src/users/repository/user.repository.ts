@@ -39,8 +39,8 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  async create(createUserDTO: CreateUserDTO): Promise<UserDTO> {
-    return this.userRepository.save(createUserDTO);
+  async create(user: Partial<User>): Promise<User> {
+    return this.userRepository.save(user);
   }
 
   async softDelete(id: string): Promise<void> {

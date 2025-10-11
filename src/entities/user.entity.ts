@@ -30,11 +30,11 @@ export class User {
   birthDate: Date;
 
   @Column({
-    name: 'user_role_enum',
+    name: 'role',
     type: 'enum',
     enum: Role,
   })
-  userRoleEnum: Role;
+  role: Role;
 
   @Column({ name: 'is_active', type: 'boolean' })
   isActive: boolean;

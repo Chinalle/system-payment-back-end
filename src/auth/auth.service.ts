@@ -47,7 +47,7 @@ export class AuthService {
     const tokens = await this.getTokens(
       existentUser.id,
       existentUser.login.email,
-      existentUser.userRoleEnum,
+      existentUser.role,
       rememberMe,
     );
 
@@ -84,11 +84,7 @@ export class AuthService {
       throw new UnauthorizedException('Access Denied');
     }
 
-    const tokens = await this.getTokens(
-      user.id,
-      user.login.email,
-      user.userRoleEnum,
-    );
+    const tokens = await this.getTokens(user.id, user.login.email, user.role);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }
