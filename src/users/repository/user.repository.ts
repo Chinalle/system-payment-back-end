@@ -23,7 +23,14 @@ export class UserRepository implements IUserRepository {
   }
 
   async findOne(id: string): Promise<User | null> {
-    return this.userRepository.findOneBy({ id });
+    return await this.userRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: {
+        login: true,
+      },
+    });
   }
 
   async findByEmail(email: string): Promise<User | null> {

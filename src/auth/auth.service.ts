@@ -67,6 +67,7 @@ export class AuthService {
 
   async refreshTokens(userId: string, refreshToken: string) {
     const user = await this.userService.findOne(userId);
+    console.log('refreshToken authService: ', user);
     if (!user || !user.currentHashedRefreshToken) {
       throw new UnauthorizedException('Access Denied');
     }

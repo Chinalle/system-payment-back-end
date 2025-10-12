@@ -52,7 +52,7 @@ export class UserService {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.userRepository.findByEmail(email);
+    return await this.userRepository.findByEmail(email);
   }
 
   async setCurrentRefreshToken(
@@ -63,14 +63,15 @@ export class UserService {
   }
 
   async findOne(id: string): Promise<User | null> {
-    return this.userRepository.findOne(id);
+    console.log('findOne UserService: ', await this.userRepository.findOne(id));
+    return await this.userRepository.findOne(id);
   }
 
   private mapEntityToDTO(user: User): UserDTO {
     return {
       id: user.id,
       fullName: user.fullname,
-      login: user.login,
+      email: user.login.email,
       birthDate: user.birthDate,
       phone: user.phone,
       cpfCnpj: user.cpfCnpj,

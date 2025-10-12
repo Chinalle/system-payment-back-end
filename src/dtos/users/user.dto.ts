@@ -9,7 +9,6 @@ import {
 } from 'class-validator';
 import type { Address } from 'src/entities/address.entity';
 import { Role } from 'src/entities/enum';
-import { Login } from 'src/entities/login.entity';
 
 export class UserDTO {
   @ApiProperty({
@@ -43,9 +42,8 @@ export class UserDTO {
   @ApiProperty({
     example: 'john@example.com',
     description: 'User login data',
-    type: Login,
   })
-  login: Login;
+  email: string;
 
   @ApiProperty({
     example: '12345678901',
