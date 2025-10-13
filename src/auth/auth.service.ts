@@ -28,8 +28,8 @@ export class AuthService {
     console.log('AuthService - user: ', password);
     if (
       user &&
-      user.login.password &&
-      (await bcrypt.compare(password, user.login.password))
+      user.passwordHash &&
+      (await bcrypt.compare(password, user.passwordHash))
     ) {
       const result: AuthValidatedUserResponse = user;
       return result;
@@ -46,7 +46,7 @@ export class AuthService {
 
     const tokens = await this.getTokens(
       existentUser.id,
-      existentUser.login.email,
+      existentUser.email,
       existentUser.role,
       rememberMe,
     );
@@ -66,8 +66,8 @@ export class AuthService {
   }
 
   async refreshTokens(userId: string, refreshToken: string) {
-    const user = await this.userService.findOne(userId);
-    console.log('refreshToken authService: ', user);
+    const user = await this.userService.findById(userId);
+    console.log('refreshToken authService using findById: ', user);
     if (!user || !user.currentHashedRefreshToken) {
       throw new UnauthorizedException('Access Denied');
     }
@@ -85,7 +85,7 @@ export class AuthService {
       throw new UnauthorizedException('Access Denied');
     }
 
-    const tokens = await this.getTokens(user.id, user.login.email, user.role);
+    const tokens = await this.getTokens(user.id, user.email, user.role);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }

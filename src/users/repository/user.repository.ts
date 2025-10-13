@@ -1,14 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import type { IUserRepository } from './user.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, type DataSource } from 'typeorm';
-import { UserDTO } from 'src/dtos/users/user.dto';
-import { CreateUserDTO } from 'src/dtos/users/create-user.dto';
-import * as bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
+import { Repository, EntityManager } from 'typeorm';
 import { User } from 'src/entities/user.entity';
-import { Address } from 'src/entities/address.entity';
-import { Login } from 'src/entities/login.entity';
+import type { CreateUserDTO } from 'src/dtos/users/create-user.dto';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -22,13 +17,10 @@ export class UserRepository implements IUserRepository {
     return users;
   }
 
-  async findOne(id: string): Promise<User | null> {
+  async findById(id: string): Promise<User | null> {
     return await this.userRepository.findOne({
       where: {
         id: id,
-      },
-      relations: {
-        login: true,
       },
     });
   }
@@ -36,18 +28,14 @@ export class UserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOne({
       where: {
-        login: {
-          email: email,
-        },
-      },
-      relations: {
-        login: true,
+        email: email,
       },
     });
   }
 
-  async create(user: Partial<User>): Promise<User> {
-    return this.userRepository.save(user);
+  async create(user: CreateUserDTO, manager?: EntityManager): Promise<User> {
+    const repo = manager ? manager.getRepository(User) : this.userRepository;
+    return repo.save(user);
   }
 
   async softDelete(id: string): Promise<void> {

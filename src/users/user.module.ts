@@ -6,10 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { UserRepository } from './repository/user.repository';
 import { MailerModule } from 'src/mailer/mailer.module';
-import { MailService } from 'src/mailer/mailer.service';
 
 import { AddressModule } from 'src/address/address.module';
-import { LoginModule } from 'src/login/login.module';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
@@ -19,13 +17,11 @@ import { AuthModule } from 'src/auth/auth.module';
     ConfigModule,
     MailerModule,
     AddressModule,
-    LoginModule,
   ],
   controllers: [UserController],
   exports: [UserService, 'IUserRepository'],
   providers: [
     UserService,
-    MailService,
     {
       provide: 'IUserRepository',
       useClass: UserRepository,

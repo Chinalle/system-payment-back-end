@@ -13,9 +13,7 @@ import {
 } from 'class-validator';
 import type { Address } from 'src/entities/address.entity';
 import { Role } from 'src/entities/enum';
-import { Login } from 'src/entities/login.entity';
 import { CreateAddressDTO } from '../address/create-address.dto';
-import { LoginDto } from '../auth/login.dto';
 
 export class CreateUserDTO {
   @ApiProperty({
@@ -26,13 +24,19 @@ export class CreateUserDTO {
   fullName: string;
 
   @ApiProperty({
-    example: 'john@example.com',
-    description: 'User login data',
-    type: LoginDto,
+    type: String,
+    example: 'johndoe@gmail.com',
   })
-  @ValidateNested()
-  @Type(() => LoginDto)
-  login: LoginDto;
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'hashedPassword',
+  })
+  @IsNotEmpty()
+  passwordHash: string;
 
   @ApiProperty({
     example: '12/02/1111',
@@ -48,13 +52,17 @@ export class CreateUserDTO {
 
   @ApiProperty()
   @IsString()
-  cpfCnpj: string;
+  cpf: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [CreateAddressDTO],
+    required: false,
+    description: 'Lista de endereços do usuário',
+  })
   @IsOptional()
-  @ValidateNested() // Valida o objeto de endereço aninhado
+  @ValidateNested({ each: true })
   @Type(() => CreateAddressDTO)
-  address: Address;
+  addresses?: CreateAddressDTO[];
 
   @ApiProperty()
   @IsEnum(Role)
@@ -63,4 +71,8 @@ export class CreateUserDTO {
   @ApiProperty()
   @IsBoolean()
   isActive: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
+  isConfirmed: boolean;
 }

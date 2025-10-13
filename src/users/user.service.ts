@@ -5,9 +5,9 @@ import { UserDTO } from 'src/dtos/users/user.dto';
 import { CreateUserDTO } from 'src/dtos/users/create-user.dto';
 import type { User } from 'src/entities/user.entity';
 import { AddressService } from 'src/address/address.service';
-import { LoginService } from 'src/login/login.service';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -15,36 +15,52 @@ export class UserService {
     @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
 
-    private readonly address: AddressService,
-    private readonly login: LoginService,
+    private readonly addressService: AddressService,
+
+    private readonly dataSource: DataSource,
   ) {}
 
+  /**
+   * @param CreateUserDTO
+   * Utilizado o manager que cria uma transaction, ou seja, o usuário o será criado se toda
+   * operação for bem sucedida
+   * **/
   async create(user: CreateUserDTO): Promise<UserDTO> {
-    const newAddress = await this.address.create(user.address);
+    return await this.dataSource.transaction(async (manager) => {
+      const saltRounds = 20;
+      const hashedPassword = await bcrypt.hash(user.passwordHash, saltRounds);
 
-    const saltRounds = 20;
-    const hashedPassword = await bcrypt.hash(user.login.password, saltRounds);
+      const userData = {
+        id: uuidv4(),
+        fullName: user.fullName,
+        email: user.email,
+        passwordHash: hashedPassword,
+        phone: user.phone,
+        birthDate: user.birthDate,
+        cpf: user.cpf,
+        isActive: user.isActive,
+        isConfirmed: false,
+        role: user.role,
+      };
 
-    const newLogin = await this.login.create({
-      email: user.login.email,
-      hashedPassword: hashedPassword,
+      const savedUser = await this.userRepository.create(userData, manager);
+
+      if (user.addresses && user.addresses.length > 0) {
+        const createdAddresses = await Promise.all(
+          user.addresses.map((addressDto) =>
+            this.addressService.create(
+              { ...addressDto },
+              savedUser,
+              savedUser.id,
+              manager,
+            ),
+          ),
+        );
+        savedUser.addresses = createdAddresses;
+      }
+
+      return this.mapEntityToDTO(savedUser);
     });
-
-    const userData = {
-      id: uuidv4(),
-      fullname: user.fullName,
-      phone: user.phone,
-      birthDate: user.birthDate,
-      cpfCnpj: user.cpfCnpj,
-      isActive: user.isActive,
-      role: user.role,
-      address: newAddress,
-      login: newLogin,
-    };
-
-    const savedUser = await this.userRepository.create(userData);
-
-    return this.mapEntityToDTO(savedUser);
   }
 
   async findAll(): Promise<User[]> {
@@ -62,22 +78,37 @@ export class UserService {
     return this.userRepository.setCurrentRefreshToken(id, refreshToken);
   }
 
-  async findOne(id: string): Promise<User | null> {
-    console.log('findOne UserService: ', await this.userRepository.findOne(id));
-    return await this.userRepository.findOne(id);
+  async findById(id: string): Promise<User | null> {
+    console.log(
+      'findOne UserService: ',
+      await this.userRepository.findById(id),
+    );
+    return await this.userRepository.findById(id);
   }
 
   private mapEntityToDTO(user: User): UserDTO {
+    const addressesDTO = user.addresses?.map((address) => ({
+      id: address.id,
+      street: address.street,
+      number: address.number,
+      complement: address.complement,
+      city: address.city,
+      state: address.state,
+      zipCode: address.zipCode,
+      createdAt: address.createdAt,
+      updatedAt: address.updatedAt,
+    }));
     return {
       id: user.id,
-      fullName: user.fullname,
-      email: user.login.email,
+      fullName: user.fullName,
+      email: user.email,
       birthDate: user.birthDate,
       phone: user.phone,
-      cpfCnpj: user.cpfCnpj,
-      address: user.address,
+      cpf: user.cpf,
+      addresses: addressesDTO ?? [],
       role: user.role,
       isActive: user.isActive,
+      isConfirmed: user.isConfirmed,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

@@ -1,12 +1,12 @@
 import type { CreateUserDTO } from 'src/dtos/users/create-user.dto';
-import { UserDTO } from 'src/dtos/users/user.dto';
-import type { User } from 'src/entities/user.entity';
+import { User } from 'src/entities/user.entity';
+import { EntityManager } from 'typeorm';
 
 export interface IUserRepository {
   findAll(): Promise<User[]>;
-  findOne(id: string): Promise<User | null>;
+  findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
-  create(user: Partial<User>): Promise<User>;
+  create(user: CreateUserDTO, manager?: EntityManager): Promise<User>;
   softDelete(id: string): Promise<void>;
   hardDelete(id: string): Promise<void>;
   setCurrentRefreshToken(

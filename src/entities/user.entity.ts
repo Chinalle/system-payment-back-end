@@ -11,7 +11,7 @@ import { Address } from './address.entity';
 import { CompanyMember } from './company-member.entity';
 
 @Entity('users')
-export class UserEntity {
+export class User {
   @PrimaryColumn('uuid')
   id: string;
 
@@ -60,9 +60,11 @@ export class UserEntity {
   @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
   updatedAt: Date;
 
-  @OneToMany(() => CompanyMember, (companyMember) => companyMember.user)
+  @OneToMany(() => CompanyMember, (companyMember) => companyMember.user, {
+    cascade: true,
+  })
   companyMember: CompanyMember;
 
-  @OneToMany(() => Address, (address) => address.user)
-  addresses: Address[];
+  @OneToMany(() => Address, (address) => address.user, { cascade: true })
+  addresses?: Address[];
 }

@@ -50,13 +50,13 @@ export class UserDTO {
     description: 'User social ID',
   })
   @IsString()
-  cpfCnpj: string;
+  cpf: string;
 
   @ApiProperty({
     example: 'nowhere',
     description: 'User Adress',
   })
-  address: Address;
+  addresses: Address[];
 
   @ApiProperty({
     example: 'USER',
@@ -73,6 +73,13 @@ export class UserDTO {
   })
   @IsBoolean()
   isActive: boolean;
+
+  @ApiProperty({
+    example: true,
+    description: 'confirmed by email link',
+  })
+  @IsBoolean()
+  isConfirmed: boolean;
 
   @ApiProperty({
     example: '2024-01-15T10:30:00Z',
