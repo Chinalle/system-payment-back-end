@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Address } from 'src/entities/address.entity';
 import type { IAddressRepository } from './address.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import type { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
 export class AddressRepository implements IAddressRepository {
@@ -12,12 +11,10 @@ export class AddressRepository implements IAddressRepository {
     private readonly addressRepository: Repository<Address>,
   ) {}
 
-  async create(address: Address): Promise<Address> {
-    const newAddress = this.addressRepository.create({
-      ...address,
-      id: uuidv4(),
-    });
-
-    return this.addressRepository.save(newAddress);
+  async create(address: Address, manager?: EntityManager): Promise<Address> {
+    const repo = manager
+      ? manager.getRepository(Address)
+      : this.addressRepository;
+    return await repo.save(address);
   }
 }

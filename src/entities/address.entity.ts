@@ -8,10 +8,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 import { Company } from './company.entity';
 
-@Entity('address')
+@Entity('addresses')
 export class Address {
   @PrimaryColumn('uuid')
   id: string;
@@ -20,7 +20,7 @@ export class Address {
   street: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  complement: string;
+  complement?: string;
 
   @Column({ name: 'number', type: 'varchar', length: 45 })
   number: string;
@@ -42,15 +42,15 @@ export class Address {
 
   // Tables Relations
 
-  @ManyToOne(() => UserEntity, (user) => user.addresses, {
+  @ManyToOne(() => User, (user) => user.addresses, {
     nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
-  user?: UserEntity;
+  user?: User;
 
   @Column({ name: 'user_id', type: 'uuid', nullable: true })
-  userId: string;
+  userId?: string;
 
   @ManyToOne(() => Company, (company) => company.addresses, {
     nullable: true,
@@ -60,5 +60,5 @@ export class Address {
   company?: Company;
 
   @Column({ name: 'company_id', type: 'uuid', nullable: true })
-  companyId: string;
+  companyId?: string;
 }
