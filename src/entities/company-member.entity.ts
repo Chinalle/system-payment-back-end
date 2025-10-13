@@ -9,7 +9,7 @@ import {
   OneToOne,
 } from 'typeorm';
 import { Company } from './company.entity';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 
 @Entity('service')
 export class CompanyMember {
@@ -34,9 +34,9 @@ export class CompanyMember {
   @Column({ name: 'company_id', type: 'uuid' })
   companyId: string;
 
-  @OneToOne(() => UserEntity, (user) => user.companyMember)
+  @OneToOne(() => User, (user) => user.companyMember)
   @JoinColumn({ name: 'user_id' })
-  user: UserEntity;
+  user: User;
 
   @Column({ name: 'user_id', type: 'uuid' })
   userId: string;

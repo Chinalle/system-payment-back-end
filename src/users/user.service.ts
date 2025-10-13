@@ -86,6 +86,16 @@ export class UserService {
     return await this.userRepository.findById(id);
   }
 
+  async emailConfirm(email: string) {
+    const user = this.userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new Error('User Not Found');
+    }
+
+    await this.userRepository.emailConfirm(email);
+  }
+
   private mapEntityToDTO(user: User): UserDTO {
     const addressesDTO = user.addresses?.map((address) => ({
       id: address.id,
@@ -112,5 +122,15 @@ export class UserService {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
+  }
+
+  async softDelete(id: string): Promise<void> {
+    const existentUser = await this.userRepository.findById(id);
+
+    if (!existentUser) {
+      throw new Error('User Not Found');
+    }
+
+    await this.userRepository.softDelete(id);
   }
 }

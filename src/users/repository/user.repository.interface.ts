@@ -7,6 +7,7 @@ export interface IUserRepository {
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   create(user: CreateUserDTO, manager?: EntityManager): Promise<User>;
+  emailConfirm(email: string): Promise<void>;
   softDelete(id: string): Promise<void>;
   hardDelete(id: string): Promise<void>;
   setCurrentRefreshToken(

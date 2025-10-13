@@ -25,7 +25,7 @@ export class Company {
   description: string;
 
   @Column({ name: 'logo_img', type: 'text', nullable: true })
-  logoImg: string;
+  logoImg?: string;
 
   @Column({ name: 'business_hours', type: 'jsonb', nullable: true })
   businessHours?: Record<string, any>;
@@ -49,7 +49,7 @@ export class Company {
   updatedAt: Date;
 
   @OneToMany(() => Address, (address) => address.company)
-  addresses: Address[];
+  addresses?: Address[];
 
   @OneToMany(() => Service, (service) => service.company)
   services: Service[];

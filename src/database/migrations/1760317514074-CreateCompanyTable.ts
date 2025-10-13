@@ -9,9 +9,9 @@ export class CreateCompanyTable1760317514074 implements MigrationInterface {
           { name: 'id', type: 'uuid', isPrimary: true },
           { name: 'name', type: 'varchar', length: '45', isUnique: true },
           { name: 'cnpj', type: 'varchar', length: '45', isUnique: true },
-          { name: 'description', type: 'text' },
+          { name: 'description', type: 'text', isNullable: true },
           { name: 'logo_img', type: 'text', isNullable: true },
-          { name: 'business_hours', type: 'jsonb' },
+          { name: 'business_hours', type: 'jsonb', isNullable: true },
           {
             name: 'rating',
             type: 'decimal',

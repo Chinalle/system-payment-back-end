@@ -8,6 +8,7 @@ import { MailerModule } from './mailer/mailer.module';
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { CompanyModule } from './companies/company.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { APP_GUARD } from '@nestjs/core';
     // SeedModule,
     AuthModule,
     // ServiceModule,
+    CompanyModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

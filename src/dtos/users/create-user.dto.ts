@@ -11,7 +11,6 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import type { Address } from 'src/entities/address.entity';
 import { Role } from 'src/entities/enum';
 import { CreateAddressDTO } from '../address/create-address.dto';
 

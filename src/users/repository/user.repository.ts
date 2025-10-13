@@ -12,8 +12,21 @@ export class UserRepository implements IUserRepository {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async emailConfirm(email: string): Promise<void> {
+    await this.userRepository.update(
+      { email },
+      {
+        isConfirmed: true,
+      },
+    );
+  }
+
   async findAll(): Promise<User[]> {
-    const users = await this.userRepository.find();
+    const users = await this.userRepository.find({
+      where: {
+        isActive: true,
+      },
+    });
     return users;
   }
 
@@ -39,12 +52,6 @@ export class UserRepository implements IUserRepository {
   }
 
   async softDelete(id: string): Promise<void> {
-    const existentUser = await this.userRepository.findOne({ where: { id } });
-
-    if (!existentUser) {
-      throw new Error('User Not Found');
-    }
-
     await this.userRepository.update(id, { isActive: false });
   }
 
