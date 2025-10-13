@@ -18,7 +18,12 @@ export class CreateAddressesTable1760318676892 implements MigrationInterface {
           },
           { name: 'city', type: 'varchar', length: '100', isNullable: false },
           { name: 'state', type: 'varchar', length: '2', isNullable: false },
-          { name: 'zipCode', type: 'varchar', length: '15', isNullable: false },
+          {
+            name: 'zip_code',
+            type: 'varchar',
+            length: '15',
+            isNullable: false,
+          },
           { name: 'user_id', type: 'uuid', isNullable: true },
           { name: 'company_id', type: 'uuid', isNullable: true },
           { name: 'created_at', type: 'timestamp', default: 'now()' },
