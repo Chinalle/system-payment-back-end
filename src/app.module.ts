@@ -11,7 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     MailerModule,
     DatabaseModule,
     UserModule,
