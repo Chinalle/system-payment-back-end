@@ -17,10 +17,10 @@ export class ServiceRepository {
   async createService(createServiceDTO: CreateServiceDto): Promise<ServiceDTO> {
     const serviceData = {
       id: uuidv4(),
-      name: createServiceDTO.name,
+      name: createServiceDTO.serviceName,
       description: createServiceDTO.description,
       category: createServiceDTO.category,
-      estimatedDuration: createServiceDTO.estimatedDuration,
+      estimatedDuration: createServiceDTO.estimatedDurationInMinutes,
     };
 
     const service = this.serviceRepository.create(serviceData);
@@ -52,9 +52,9 @@ export class ServiceRepository {
   async updateService(id: string, dto: UpdateServiceDto): Promise<Service> {
     const serviceToUpdate = await this.serviceRepository.preload({
       id: id,
-      serviceName: dto.name,
+      serviceName: dto.serviceName,
       description: dto.description,
-      estimatedDurationMinutes: dto.estimatedDuration,
+      estimatedDurationMinutes: dto.estimatedDurationInMinutes,
       category: dto.category,
       images: dto.images,
       paymentOptions: dto.paymentOptions,

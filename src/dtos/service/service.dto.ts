@@ -5,7 +5,7 @@ import {
   IsString,
   IsNumberString,
 } from 'class-validator';
-import type { ServiceCategory } from 'src/entities/service-category.entity';
+import type { ServiceCategory } from 'src/entities/category.entity';
 
 export class ServiceDTO {
   @ApiProperty({

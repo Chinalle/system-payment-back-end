@@ -8,11 +8,18 @@ import {
   ValidateNested,
   IsOptional,
   IsNumber,
+  IsUUID,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import type { ServiceCategory } from 'src/entities/service-category.entity';
+import { ServiceCategory } from 'src/entities/category.entity';
+import { ServicesService } from 'src/service/service.service';
+import { ServiceImage } from 'src/entities/service-image.entity';
 
 class ServiceImageDto {
+  @ApiProperty()
+  @IsUUID()
+  id: string;
+
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -22,6 +29,11 @@ class ServiceImageDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @ApiProperty({ required: true })
+  @ValidateNested({ each: true })
+  @Type(() => ServicesService)
+  service: ServicesService;
 }
 
 class ServicePaymentOptionDto {
@@ -37,31 +49,37 @@ class ServicePaymentOptionDto {
 }
 
 export class CreateServiceDto {
-  @ApiProperty()
+  @ApiProperty({ name: 'service name ', type: String })
   @IsNotEmpty()
   @IsString()
-  name: string;
+  serviceName: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
   description: string;
 
-  @ApiProperty()
-  category: ServiceCategory;
-
   @ApiProperty({ description: 'Estimated duration in minutes' })
   @IsNotEmpty()
   @IsInt()
   @Min(1)
-  estimatedDuration: number;
+  estimatedDurationInMinutes: number;
 
-  @ApiProperty({ type: [ServiceImageDto], required: false })
+  @ApiProperty()
+  @Min(1)
+  priceInCents: number;
+
+  @ApiProperty({ type: ServiceCategory })
+  @ValidateNested({ each: true })
+  @Type(() => ServiceCategory)
+  category: ServiceCategory;
+
+  @ApiProperty({ type: [ServiceImage], required: false })
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ServiceImageDto)
-  images?: ServiceImageDto[];
+  @Type(() => ServiceImage)
+  images?: ServiceImage[];
 
   @ApiProperty({ type: [ServicePaymentOptionDto], required: false })
   @IsOptional()

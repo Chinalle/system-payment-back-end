@@ -1,19 +1,29 @@
-import { Entity, PrimaryColumn, Column, OneToOne } from 'typeorm';
-import { User } from './user.entity';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  OneToOne,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { UserEntity } from './user.entity';
+import { Company } from './company.entity';
 
 @Entity('address')
 export class Address {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column({ name: 'public_place', type: 'varchar', length: 255 })
-  publicPlace: string;
+  @Column({ name: 'street', type: 'varchar', length: 255 })
+  street: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  district: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  complement: string;
 
-  @Column({ name: 'house_number', type: 'varchar', length: 45 })
-  houseNumber: string;
+  @Column({ name: 'number', type: 'varchar', length: 45 })
+  number: string;
 
   @Column({ type: 'varchar', length: 255 })
   city: string;
@@ -21,6 +31,34 @@ export class Address {
   @Column({ type: 'varchar', length: 255 })
   state: string;
 
-  @OneToOne(() => User, (user) => user.address)
-  user: User;
+  @Column({ name: 'zip_code', type: 'varchar', length: 255 })
+  zipCode: string;
+
+  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
+  updatedAt: Date;
+
+  // Tables Relations
+
+  @ManyToOne(() => UserEntity, (user) => user.addresses, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user?: UserEntity;
+
+  @Column({ name: 'user_id', type: 'uuid', nullable: true })
+  userId: string;
+
+  @ManyToOne(() => Company, (company) => company.addresses, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'company_id' })
+  company?: Company;
+
+  @Column({ name: 'company_id', type: 'uuid', nullable: true })
+  companyId: string;
 }
