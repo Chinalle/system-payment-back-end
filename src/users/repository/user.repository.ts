@@ -37,6 +37,13 @@ export class UserRepository implements IUserRepository {
 
   async findAll(): Promise<User[]> {
     const users = await this.userRepository.find({
+      relations: ['addresses'],
+    });
+    return users;
+  }
+
+  async findAllActiveUsers(): Promise<User[]> {
+    const users = await this.userRepository.find({
       where: {
         isActive: true,
       },
@@ -62,19 +69,21 @@ export class UserRepository implements IUserRepository {
     });
   }
 
+  async findByResetToken(token: string): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: {
+        resetPasswordToken: token,
+      },
+    });
+  }
+
   async create(user: CreateUserDTO, manager?: EntityManager): Promise<User> {
     const repo = manager ? manager.getRepository(User) : this.userRepository;
     return repo.save(user);
   }
 
-  async update(id: string, user: UpdateUserDto): Promise<User> {
-    const userToUpdate = await this.userRepository.findOne({ where: { id } });
-    if (!userToUpdate) {
-      throw new Error('any row was updated');
-    }
-    Object.assign(userToUpdate, user);
-
-    return await this.userRepository.save(userToUpdate);
+  async update(user: UpdateUserDto): Promise<User> {
+    return await this.userRepository.save(user);
   }
 
   async softDelete(id: string): Promise<void> {

@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Put,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -17,6 +18,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiParam,
   ApiResponse,
@@ -30,6 +32,7 @@ import { User } from 'src/entities/user.entity';
 import { UpdateUserDto } from 'src/dtos/users/update-user.dto';
 import { JwtRefreshGuard } from 'src/auth/jwt-refresh.guard';
 import { UpdatePasswordDto } from 'src/dtos/users/update-password.dto';
+import type { RequestWithRefreshUser } from 'src/dtos/auth/user-tokens.response.dto';
 
 // TODO: Add Role validation to type client and company [provider: manager and collaborator]
 
@@ -41,6 +44,7 @@ export class UserController {
     private readonly mailSender: MailService,
   ) {}
 
+  // Teste de email
   @Get('email')
   async emailSender(): Promise<void> {
     const to: string = 'leonidasoliv25@gmail.com';
@@ -52,22 +56,33 @@ export class UserController {
       false,
     );
   }
+  //============================
 
   @ApiResponse({
     isArray: true,
     type: User,
   })
   @ApiBearerAuth()
-  @Get()
+  @Get() // Returns all users (isActive: true and false)
   async findAll(): Promise<User[]> {
     return await this.userService.findAll();
+  }
+
+  @ApiResponse({
+    isArray: true,
+    type: User,
+  })
+  @ApiBearerAuth()
+  @Get('active')
+  async findAllActiveUsers(): Promise<User[]> {
+    return await this.userService.findAllActiveUsers();
   }
 
   @ApiCreatedResponse({
     type: UserDTO,
   })
   @ApiBearerAuth()
-  @Post()
+  @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDTO): Promise<UserDTO> {
     console.log('User data: ', createUserDto);
@@ -79,9 +94,9 @@ export class UserController {
   })
   @ApiParam({ name: 'userId' })
   @ApiBody({ type: UpdateUserDto })
-  @Post(':userId')
-  @UseGuards(JwtRefreshGuard)
-  @HttpCode(HttpStatus.CREATED)
+  @Patch(':userId')
+  // @UseGuards(JwtRefreshGuard)
+  @HttpCode(HttpStatus.OK)
   async update(
     @Param('userId', ParseUUIDPipe) userId: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -93,37 +108,35 @@ export class UserController {
     return await this.userService.update(userId, updateUserDto);
   }
 
-  @ApiOkResponse({ description: 'password was successfully changed' })
+  @ApiNoContentResponse()
   @ApiBearerAuth()
   @ApiUnauthorizedResponse({ description: 'Unauthorized user' })
-  @ApiParam({ name: 'userId', type: String })
   @ApiBody({ type: UpdatePasswordDto })
-  @Patch(':userId')
+  @Patch('password/change')
   @UseGuards(JwtRefreshGuard)
-  @HttpCode(HttpStatus.CREATED)
-  async forgotPassword(
-    @Param('userId', ParseUUIDPipe) userId: string,
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async changePassword(
+    @Request() req: RequestWithRefreshUser,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
     console.log(
-      `requesting endpoint update user with id: ${userId}`,
+      `requesting endpoint update user with id: ${req.user.sub}`,
       updatePasswordDto.password,
     );
-    /** TODO: Revisar
-     * RF: Lógica de autorização: um usuário só pode alterar a própria senha,
-     * a menos que seja um admin.
+    const userId = req.user.sub;
+    /** TODO: Usuário LOGADO!
+     * RF: Lógica de autorização: um usuário pode alterar a própria senha a qualquer momento
+     * desde que esteja autenticado
      * **/
     return this.userService.forgotPassword(userId, updatePasswordDto.password);
   }
 
   @ApiOkResponse({ description: 'user accout is confirmed' })
-  @ApiBearerAuth()
-  @ApiUnauthorizedResponse({ description: 'Unauthorized user' })
   @ApiBody({
     required: true,
   })
-  @Put('confirm-user')
-  @HttpCode(HttpStatus.OK)
+  @Put('confirm/email')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async emailConfirm(@Body('email') email: string): Promise<void> {
     console.log('user email to confirm', email);
     await this.userService.emailConfirm(email);
@@ -135,9 +148,9 @@ export class UserController {
   @ApiParam({
     name: 'userId',
   })
-  @Put(':userId')
+  @Delete(':userId')
   @UseGuards(JwtRefreshGuard)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async softDelete(
     @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<void> {
@@ -151,9 +164,9 @@ export class UserController {
   @ApiParam({
     name: 'userId',
   })
-  @Delete(':userId')
+  @Delete('me/:userId')
   @UseGuards(JwtRefreshGuard)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async hardDelete(
     @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<void> {

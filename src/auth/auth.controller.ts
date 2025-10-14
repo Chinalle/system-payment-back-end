@@ -6,9 +6,18 @@ import {
   Get,
   Body,
   Query,
+  HttpCode,
+  HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtRefreshGuard } from './jwt-refresh.guard';
@@ -16,6 +25,11 @@ import { Throttle } from '@nestjs/throttler';
 import { LoginDto } from '../dtos/auth/login.dto';
 import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
 import { RequestWithRefreshUser } from 'src/dtos/auth/user-tokens.response.dto';
+import { UpdatePasswordDto } from 'src/dtos/users/update-password.dto';
+import {
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from 'src/dtos/auth/reset-password.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -58,5 +72,34 @@ export class AuthController {
     const tokens = await this.authService.refreshTokens(userId, refreshToken);
 
     return tokens;
+  }
+
+  /**
+   * "Esqueceu a senha?" PQP
+   * RF: Lógica de autorização: um usuário só pode alterar a própria senha,
+   * a menos que seja um admin.
+   * 1. Enviar e-mail com token para alteração de senha
+   * 2. altera a senha no banco
+   * **/
+
+  @ApiBody({ type: ForgotPasswordDto })
+  @ApiNoContentResponse({
+    example: {
+      message:
+        'Se um usuário com este e-mail existir, um link de redefinição será enviado.',
+    },
+  })
+  @Patch('forgot-password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(forgotPasswordDto);
+  }
+
+  @ApiBody({ type: ResetPasswordDto })
+  @ApiNoContentResponse()
+  @Patch('reset-password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    await this.authService.resetPassword(resetPasswordDto);
   }
 }

@@ -70,6 +70,19 @@ export class UserDTO {
   role: Role;
 
   @ApiProperty({
+    example: 'hex-dfadhfapoidsh57878',
+    type: String,
+    description: '',
+  })
+  resetPasswordToken: string | null;
+
+  @ApiProperty({
+    type: Date,
+    description: '',
+  })
+  resetPasswordExpires: Date | null;
+
+  @ApiProperty({
     example: true,
     description: 'Status to use soft delete',
   })

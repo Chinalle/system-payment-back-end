@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { IUserRepository } from './repository/user.repository.interface';
 
 import { UserDTO } from 'src/dtos/users/user.dto';
@@ -65,7 +65,6 @@ export class UserService {
     });
   }
 
-  // TODO: Preciso ser realizad
   async forgotPassword(userId: string, password: string) {
     const existentUser = await this.userRepository.findById(userId);
 
@@ -88,25 +87,62 @@ export class UserService {
   // TODO: necessário implementar update para validação de tabelas relacionadas
   // FIXME: Alterar de save para update, e comparar campo a campo para evitar erros de sobrescrição de campos desnecessários
   async update(id: string, user: UpdateUserDto): Promise<User> {
-    console.log(`requesting update to user with id: ${id}`);
+    console.log(`requesting update to user with id: ${id}`, user);
 
-    if (user.password) {
-      const hashedPassword = await this.generateHashedPassword(user.password);
-      user = {
-        ...user,
-        password: hashedPassword,
-      };
+    const userToUpdate = await this.userRepository.findById(id);
+
+    console.log(`old user data`, userToUpdate);
+
+    if (!userToUpdate) {
+      throw new NotFoundException(`User with ID "${id}" not found.`);
     }
 
-    return await this.userRepository.update(id, user);
+    const { addresses: addressesDto, password, ...userData } = user;
+
+    console.log('addresses: ', addressesDto);
+
+    Object.assign(userToUpdate, userData);
+
+    if (password) {
+      const hashedPassword = await this.generateHashedPassword(password);
+      userToUpdate.passwordHash = hashedPassword;
+    }
+
+    if (addressesDto && addressesDto.length > 0) {
+      userToUpdate.addresses = userToUpdate.addresses || [];
+
+      for (const addressDto of addressesDto) {
+        const existingAddress = userToUpdate.addresses.find(
+          (addr) => addr.id == addressDto.id,
+        );
+
+        if (existingAddress) {
+          Object.assign(existingAddress, addressDto);
+        } else {
+          console.warn(
+            `Address with ID "${addressDto.id}" not found on user. Skipping update.`,
+          );
+        }
+      }
+    }
+
+    return await this.userRepository.update(userToUpdate);
   }
 
   async findAll(): Promise<User[]> {
     return await this.userRepository.findAll();
   }
 
+  async findAllActiveUsers(): Promise<User[]> {
+    return await this.userRepository.findAllActiveUsers();
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     return await this.userRepository.findByEmail(email);
+  }
+
+  async findByResetToken(token: string): Promise<User | null> {
+    return this.userRepository.findByResetToken(token);
   }
 
   async setCurrentRefreshToken(
@@ -146,6 +182,7 @@ export class UserService {
       createdAt: address.createdAt,
       updatedAt: address.updatedAt,
     }));
+
     return {
       id: user.id,
       fullName: user.fullName,
@@ -155,6 +192,8 @@ export class UserService {
       cpf: user.cpf,
       addresses: addressesDTO ?? [],
       role: user.role,
+      resetPasswordToken: user.resetPasswordToken ?? null,
+      resetPasswordExpires: user.resetPasswordExpires ?? null,
       isActive: user.isActive,
       isConfirmed: user.isConfirmed,
       createdAt: user.createdAt,

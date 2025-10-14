@@ -13,6 +13,7 @@ import {
 import { Role } from 'src/entities/enum';
 import { User } from 'src/entities/user.entity';
 import { CreateAddressDTO } from '../address/create-address.dto';
+import { UpdateAddressDTO } from '../address/update-address.dto';
 
 export class UpdateUserDto {
   @ApiProperty({
@@ -32,7 +33,7 @@ export class UpdateUserDto {
 
   @ApiProperty({
     type: String,
-    example: 'hashedPassword',
+    example: 'hashedPassword123!',
   })
   @IsOptional()
   password?: string;
@@ -58,15 +59,28 @@ export class UpdateUserDto {
   @ApiProperty({
     type: [CreateAddressDTO],
     required: false,
-    description: 'Lista de endereços do usuário',
+    description: 'address user list',
   })
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => CreateAddressDTO)
-  addresses?: CreateAddressDTO[];
+  @Type(() => UpdateAddressDTO)
+  addresses?: UpdateAddressDTO[];
 
   @ApiProperty()
   @IsEnum(Role)
   @IsOptional()
   role?: Role;
+
+  @ApiProperty({
+    example: 'hex-dfadhfapoidsh57878',
+    type: String,
+    description: '',
+  })
+  resetPasswordToken: string | null;
+
+  @ApiProperty({
+    type: Date,
+    description: '',
+  })
+  resetPasswordExpires: Date | null;
 }

@@ -51,6 +51,16 @@ export class User {
   })
   currentHashedRefreshToken?: string | null;
 
+  @Column({ name: 'reset_password_token', type: 'varchar', nullable: true })
+  resetPasswordToken: string | null;
+
+  @Column({
+    name: 'reset_password_expires',
+    type: 'timestamp with time zone',
+    nullable: true,
+  })
+  resetPasswordExpires: Date | null;
+
   @Column({ name: 'is_confirmed', type: 'boolean', default: false })
   isConfirmed: boolean;
 

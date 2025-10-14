@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../users/user.service';
 import * as bcrypt from 'bcrypt';
@@ -6,6 +10,12 @@ import { constants } from './constants';
 import { LoginDto } from 'src/dtos/auth/login.dto';
 import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
 import type { User } from 'src/entities/user.entity';
+import type {
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from 'src/dtos/auth/reset-password.dto';
+import { MailService } from 'src/mailer/mailer.service';
+import * as crypto from 'node:crypto';
 
 type AuthValidatedUserResponse = Omit<
   User,
@@ -17,6 +27,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly mailSender: MailService,
   ) {}
 
   async validateUser(
@@ -90,6 +101,58 @@ export class AuthService {
     return tokens;
   }
 
+  async forgotPassword(forgotPassword: ForgotPasswordDto) {
+    const user = await this.userService.findByEmail(forgotPassword.email);
+
+    if (user) {
+      const { resetToken, hashedResetToken } = await this.generateResetToken();
+
+      const expirationDate = new Date();
+      expirationDate.setHours(expirationDate.getHours() + 24);
+
+      await this.userService.update(user.id, {
+        resetPasswordToken: hashedResetToken,
+        resetPasswordExpires: expirationDate,
+      });
+
+      const resetLink = `http://localhost:5173/reset-password?token=${resetToken}`;
+      console.log('resetLink', resetLink);
+
+      await this.mailSender.sendPasswordResetToken(
+        forgotPassword.email,
+        user.fullName.split(' ')[0],
+        resetLink,
+      );
+    }
+
+    return {
+      message:
+        'Se um usuário com este e-mail existir, um link de redefinição será enviado.',
+    };
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { token, password } = resetPasswordDto;
+
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await this.userService.findByResetToken(hashedToken);
+
+    if (!user || user.resetPasswordToken === null) {
+      throw new Error('');
+    }
+    if (new Date() > user.resetPasswordExpires!) {
+      throw new BadRequestException('Token inválido ou expirado.');
+    }
+
+    const hashedPassword = await this.generateHashedPassword(password);
+    await this.userService.update(user.id, {
+      password: hashedPassword,
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
+    });
+  }
+
   private async updateRefreshToken(userId: string, refreshToken: string) {
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.userService.setCurrentRefreshToken(userId, hashedRefreshToken);
@@ -117,5 +180,26 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  private async generateResetToken() {
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    const hashedResetToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    return {
+      resetToken,
+      hashedResetToken,
+    };
+  }
+
+  private async generateHashedPassword(pasword: string): Promise<string> {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(pasword, saltRounds);
+
+    return hashedPassword;
   }
 }

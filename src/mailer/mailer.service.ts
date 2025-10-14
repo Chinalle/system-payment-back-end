@@ -36,4 +36,20 @@ export class MailService {
       throw new Error(String(error));
     }
   }
+
+  async sendPasswordResetToken(to: string, name: string, actionUrl: string) {
+    try {
+      await this.mailerService.sendMail({
+        to,
+        subject: 'Troca de senha',
+        template: 'password-reset',
+        context: {
+          name: name,
+          action_url: actionUrl,
+        },
+      });
+    } catch (error) {
+      throw new Error(String(error));
+    }
+  }
 }

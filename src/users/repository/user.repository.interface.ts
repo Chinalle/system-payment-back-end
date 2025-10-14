@@ -5,11 +5,13 @@ import { EntityManager } from 'typeorm';
 import type { UpdateResult } from 'typeorm/browser';
 
 export interface IUserRepository {
+  findAllActiveUsers(): Promise<User[]>;
   findAll(): Promise<User[]>;
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
+  findByResetToken(token: string): Promise<User | null>;
   create(user: CreateUserDTO, manager?: EntityManager): Promise<User>;
-  update(userId: string, user: UpdateUserDto): Promise<User>;
+  update(user: UpdateUserDto): Promise<User>;
   forgotPassword(userId: string, hashedPassword: string): Promise<UpdateResult>;
   emailConfirm(email: string): Promise<void>;
   softDelete(id: string): Promise<void>;

@@ -8,10 +8,12 @@ import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { JwtRefreshStrategy } from './jwt-refresh.strategy';
 import { constants } from './constants';
+import { MailerModule } from 'src/mailer/mailer.module';
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
+    MailerModule,
     PassportModule,
     JwtModule.register({
       secret: constants.jwtSecret,
