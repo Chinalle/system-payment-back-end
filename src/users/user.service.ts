@@ -8,6 +8,7 @@ import { AddressService } from 'src/address/address.service';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { DataSource } from 'typeorm';
+import type { UpdateUserDto } from 'src/dtos/users/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -27,8 +28,9 @@ export class UserService {
    * **/
   async create(user: CreateUserDTO): Promise<UserDTO> {
     return await this.dataSource.transaction(async (manager) => {
-      const saltRounds = 20;
-      const hashedPassword = await bcrypt.hash(user.passwordHash, saltRounds);
+      const hashedPassword = await this.generateHashedPassword(
+        user.passwordHash,
+      );
 
       const userData = {
         id: uuidv4(),
@@ -61,6 +63,42 @@ export class UserService {
 
       return this.mapEntityToDTO(savedUser);
     });
+  }
+
+  // TODO: Preciso ser realizad
+  async forgotPassword(userId: string, password: string) {
+    const existentUser = await this.userRepository.findById(userId);
+
+    if (!existentUser) {
+      throw new Error('User Not Found');
+    }
+
+    const hashedPassword = await this.generateHashedPassword(password);
+
+    const result = await this.userRepository.forgotPassword(
+      userId,
+      hashedPassword,
+    );
+
+    if (result.affected === 0) {
+      throw new Error('User Not Found');
+    }
+  }
+
+  // TODO: necessário implementar update para validação de tabelas relacionadas
+  // FIXME: Alterar de save para update, e comparar campo a campo para evitar erros de sobrescrição de campos desnecessários
+  async update(id: string, user: UpdateUserDto): Promise<User> {
+    console.log(`requesting update to user with id: ${id}`);
+
+    if (user.password) {
+      const hashedPassword = await this.generateHashedPassword(user.password);
+      user = {
+        ...user,
+        password: hashedPassword,
+      };
+    }
+
+    return await this.userRepository.update(id, user);
   }
 
   async findAll(): Promise<User[]> {
@@ -132,5 +170,25 @@ export class UserService {
     }
 
     await this.userRepository.softDelete(id);
+  }
+
+  async hardDelete(id: string): Promise<void> {
+    if (!id) {
+      throw new Error('must have user id');
+    }
+    const existentUser = await this.userRepository.findById(id);
+
+    if (!existentUser) {
+      throw new Error('User Not Found');
+    }
+
+    await this.userRepository.hardDelete(id);
+  }
+
+  private async generateHashedPassword(pasword: string): Promise<string> {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(pasword, saltRounds);
+
+    return hashedPassword;
   }
 }

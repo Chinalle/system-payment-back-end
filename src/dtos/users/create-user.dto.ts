@@ -54,7 +54,8 @@ export class CreateUserDTO {
   cpf: string;
 
   @ApiProperty({
-    type: [CreateAddressDTO],
+    type: CreateAddressDTO,
+    isArray: true,
     required: false,
     description: 'Lista de endereços do usuário',
   })
@@ -63,7 +64,11 @@ export class CreateUserDTO {
   @Type(() => CreateAddressDTO)
   addresses?: CreateAddressDTO[];
 
-  @ApiProperty()
+  @ApiProperty({
+    enumName: 'role',
+    enum: Role,
+    examples: [Role.ADMIN, Role.CLIENT, Role.PROVIDER],
+  })
   @IsEnum(Role)
   role: Role;
 

@@ -4,6 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityManager } from 'typeorm';
 import { User } from 'src/entities/user.entity';
 import type { CreateUserDTO } from 'src/dtos/users/create-user.dto';
+import type { UpdateUserDto } from 'src/dtos/users/update-user.dto';
+import type { UpdateResult } from 'typeorm/browser';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -11,6 +13,18 @@ export class UserRepository implements IUserRepository {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+
+  async forgotPassword(
+    userId: string,
+    hashedPassword: string,
+  ): Promise<UpdateResult> {
+    return await this.userRepository.update(
+      { id: userId },
+      {
+        passwordHash: hashedPassword,
+      },
+    );
+  }
 
   async emailConfirm(email: string): Promise<void> {
     await this.userRepository.update(
@@ -26,6 +40,7 @@ export class UserRepository implements IUserRepository {
       where: {
         isActive: true,
       },
+      relations: ['addresses'],
     });
     return users;
   }
@@ -35,6 +50,7 @@ export class UserRepository implements IUserRepository {
       where: {
         id: id,
       },
+      relations: ['addresses'],
     });
   }
 
@@ -51,20 +67,27 @@ export class UserRepository implements IUserRepository {
     return repo.save(user);
   }
 
+  async update(id: string, user: UpdateUserDto): Promise<User> {
+    const userToUpdate = await this.userRepository.findOne({ where: { id } });
+    if (!userToUpdate) {
+      throw new Error('any row was updated');
+    }
+    Object.assign(userToUpdate, user);
+
+    return await this.userRepository.save(userToUpdate);
+  }
+
   async softDelete(id: string): Promise<void> {
-    await this.userRepository.update(id, { isActive: false });
+    await this.userRepository.update(
+      { id },
+      {
+        isActive: false,
+      },
+    );
   }
 
   async hardDelete(id: string): Promise<void> {
-    if (!id) return;
-
-    const existentUser = await this.userRepository.findOne({ where: { id } });
-
-    if (!existentUser) {
-      throw new Error('Not Found');
-    }
-
-    await this.userRepository.delete(existentUser.id);
+    await this.userRepository.delete(id);
   }
 
   async setCurrentRefreshToken(

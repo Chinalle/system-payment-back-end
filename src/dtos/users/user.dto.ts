@@ -7,7 +7,7 @@ import {
   IsNotEmpty,
   IsString,
 } from 'class-validator';
-import type { Address } from 'src/entities/address.entity';
+import { Address } from 'src/entities/address.entity';
 import { Role } from 'src/entities/enum';
 
 export class UserDTO {
@@ -53,14 +53,16 @@ export class UserDTO {
   cpf: string;
 
   @ApiProperty({
-    example: 'nowhere',
     description: 'User Adress',
+    isArray: true,
+    type: Address,
   })
   addresses: Address[];
 
   @ApiProperty({
-    example: 'USER',
+    example: 'client | provider',
     description: 'User level access',
+    enum: Role,
   })
   @IsEnum({
     type: Role,
