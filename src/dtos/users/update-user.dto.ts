@@ -39,7 +39,7 @@ export class UpdateUserDto {
   password?: string;
 
   @ApiProperty({
-    example: '12/02/1111',
+    example: '1998-12-25',
     description: 'User birthday',
     type: Date,
   })

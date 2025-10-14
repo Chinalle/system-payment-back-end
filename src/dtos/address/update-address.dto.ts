@@ -13,13 +13,13 @@ export class UpdateAddressDTO {
   @IsOptional()
   id: string;
 
-  @ApiProperty({ example: 'Rua dos bobos' })
+  @ApiProperty({ example: 'Bobos street' })
   @IsString()
   @IsOptional()
   @Length(3, 255)
   street?: string;
 
-  @ApiProperty({ example: 'apartamento 28' })
+  @ApiProperty({ example: 'apartment 28' })
   @IsString()
   @IsOptional()
   complement?: string;
@@ -35,7 +35,7 @@ export class UpdateAddressDTO {
   @IsOptional()
   city?: string;
 
-  @ApiProperty({ example: 'São Paulo' })
+  @ApiProperty({ example: 'SP' })
   @IsString()
   @IsOptional()
   @Length(2, 2)

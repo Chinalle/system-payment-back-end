@@ -20,7 +20,7 @@ export class LoginDto {
 
   @ApiProperty({
     example: true,
-    description: 'Manter a sessão ativa por um período extendido',
+    description: 'Keep the session active for an extended period',
     required: false,
   })
   @IsOptional()

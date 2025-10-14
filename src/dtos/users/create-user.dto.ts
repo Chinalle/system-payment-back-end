@@ -38,7 +38,7 @@ export class CreateUserDTO {
   passwordHash: string;
 
   @ApiProperty({
-    example: '12/02/1111',
+    example: '1998-12-25',
     description: 'User birthday',
     type: Date,
   })
@@ -57,7 +57,7 @@ export class CreateUserDTO {
     type: CreateAddressDTO,
     isArray: true,
     required: false,
-    description: 'Lista de endereços do usuário',
+    description: 'User adressses list',
   })
   @IsOptional()
   @ValidateNested({ each: true })
