@@ -2,9 +2,9 @@ import {
   Entity,
   PrimaryColumn,
   Column,
-  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Service } from './services.entity';
 
@@ -13,10 +13,10 @@ export class Category {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column({ length: 45 })
+  @Column({ length: 120 })
   name: string;
 
-  @Column({ length: 45 })
+  @Column({ length: 120, unique: true })
   slug: string;
 
   @Column({ name: 'is_active', default: true })
@@ -28,6 +28,7 @@ export class Category {
   @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
   updatedAt: Date;
 
+  // Table relations
   @OneToMany(() => Service, (service) => service.category)
   services: Service[];
 }

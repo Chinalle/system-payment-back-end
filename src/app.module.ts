@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { CompanyModule } from './companies/company.module';
+import { ServiceModule } from './services/service.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CompanyModule } from './companies/company.module';
     AuthModule,
     // ServiceModule,
     CompanyModule,
+    ServiceModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

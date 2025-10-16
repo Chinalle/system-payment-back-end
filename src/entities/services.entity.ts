@@ -27,6 +27,12 @@ export class Service {
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean;
 
+  @Column({ name: 'company_id', type: 'uuid' })
+  companyId: string;
+
+  @Column({ name: 'category_id', type: 'uuid' })
+  categoryId: string;
+
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
 
@@ -40,15 +46,9 @@ export class Service {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'company_id' })
-  company?: Company;
-
-  @Column({ name: 'company_id', type: 'uuid' })
-  companyId: string;
+  company: Company;
 
   @ManyToOne(() => Category, (category) => category.services)
   @JoinColumn({ name: 'category_id' })
   category: Category;
-
-  @Column({ type: 'uuid' })
-  categoryId: string;
 }

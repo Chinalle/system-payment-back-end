@@ -27,7 +27,7 @@ async function bootstrap() {
   setupSwagger(app);
 
   await app.listen(port, '0.0.0.0');
-  console.log(`Application running on port ${app.getUrl()}`);
+  console.log(`Application running on port ${await app.getUrl()}`);
   console.log(`📚 Swagger documentation: http://localhost:${port}/api/docs`);
 }
 void bootstrap();
