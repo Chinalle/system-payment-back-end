@@ -19,6 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:run:prod": "node ./node_modules/typeorm/cli.js migration:run -d dist/database/typeorm.config.js",
     "local:migration:create": "npm run typeorm -- migration:create ./src/database/migrations/$npm_config_name",
     "migration:create": "docker exec -it api  npm run typeorm -- migration:create ./src/database/migrations/$npm_config_name",
     "migration:up": "docker exec -it api npm run typeorm migration:run -- -d ./src/database/typeorm.config.ts",
