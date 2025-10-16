@@ -10,11 +10,21 @@ import {
 } from 'typeorm';
 import { Company } from './company.entity';
 import { User } from './user.entity';
+import { RoleProvider } from './enum';
 
-@Entity('service')
+@Entity('company_member')
 export class CompanyMember {
   @PrimaryColumn('uuid')
   id: string;
+
+  @Column({ name: 'company_id', type: 'uuid' })
+  companyId: string;
+
+  @Column({ name: 'user_id', type: 'uuid' })
+  userId: string;
+
+  @Column({ name: 'provider_role', type: 'enum', enum: RoleProvider })
+  providerRole: RoleProvider;
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
@@ -24,20 +34,14 @@ export class CompanyMember {
 
   // Tables Relations
 
-  @ManyToOne(() => Company, (company) => company.services, {
+  @ManyToOne(() => Company, (company) => company.companyMembers, {
     nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'company_id' })
-  company?: Company;
-
-  @Column({ name: 'company_id', type: 'uuid' })
-  companyId: string;
+  company: Company;
 
   @OneToOne(() => User, (user) => user.companyMember)
   @JoinColumn({ name: 'user_id' })
   user: User;
-
-  @Column({ name: 'user_id', type: 'uuid' })
-  userId: string;
 }

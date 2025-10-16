@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsNotEmpty,
-  Length,
-  IsOptional,
-  IsUUID,
-} from 'class-validator';
+import { IsString, Length, IsOptional, IsUUID } from 'class-validator';
 
 export class UpdateAddressDTO {
   @ApiProperty({ example: 'UUID' })

@@ -1,17 +1,14 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  IsBoolean,
   IsEmail,
   IsDateString,
-  IsNotEmpty,
   IsString,
   IsOptional,
   ValidateNested,
   IsEnum,
 } from 'class-validator';
 import { Role } from 'src/entities/enum';
-import { User } from 'src/entities/user.entity';
 import { CreateAddressDTO } from '../address/create-address.dto';
 import { UpdateAddressDTO } from '../address/update-address.dto';
 

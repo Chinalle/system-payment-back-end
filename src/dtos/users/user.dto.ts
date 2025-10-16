@@ -43,6 +43,7 @@ export class UserDTO {
     example: 'john@example.com',
     description: 'User login data',
   })
+  @IsEmail()
   email: string;
 
   @ApiProperty({
