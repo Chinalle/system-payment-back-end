@@ -9,6 +9,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT ?? 3000;
 
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    cretendtials: true,
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -20,8 +26,8 @@ async function bootstrap() {
   logger.log('Starting Swagger module');
   setupSwagger(app);
 
-  await app.listen(port);
-  console.log(`Application running on port ${port}`);
+  await app.listen(port, '0.0.0.0');
+  console.log(`Application running on port ${app.getUrl()}`);
   console.log(`📚 Swagger documentation: http://localhost:${port}/api/docs`);
 }
 void bootstrap();
