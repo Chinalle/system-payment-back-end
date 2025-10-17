@@ -5,7 +5,6 @@ import {
   IsOptional,
   MaxLength,
   IsObject,
-  IsUrl,
   IsDateString,
   IsBase64,
 } from 'class-validator';

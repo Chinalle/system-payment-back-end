@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsString, IsBoolean } from 'class-validator';
-import type { Category } from 'src/entities/category.entity';
-import type { Company } from 'src/entities/company.entity';
+import { IsString, IsBoolean } from 'class-validator';
 
 export class CreateServiceDto {
   @ApiProperty({

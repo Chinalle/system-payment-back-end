@@ -14,7 +14,7 @@ import { ApiTags, ApiCreatedResponse } from '@nestjs/swagger';
 import { ServicesService } from './service.service';
 import { CreateServiceDto } from '../dtos/services/create-service.dto';
 import { ServicesDTO } from 'src/dtos/services/service.dto';
-import type { Service } from 'src/entities/services.entity';
+import type { Services } from 'src/entities/services.entity';
 
 @ApiTags('Services')
 @Controller('services')
@@ -26,7 +26,7 @@ export class ServiceController {
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createServiceDto: CreateServiceDto): Promise<Service> {
+  async create(@Body() createServiceDto: CreateServiceDto): Promise<Services> {
     console.log('Objeto de entrada', createServiceDto);
     return await this.servicesService.create(createServiceDto);
   }
@@ -34,7 +34,7 @@ export class ServiceController {
   @Get(':companyId')
   async findAll(
     @Param('companyId', ParseUUIDPipe) companyId: string,
-  ): Promise<Service[]> {
+  ): Promise<Services[]> {
     return await this.servicesService.findAllByCompanyId(companyId);
   }
 

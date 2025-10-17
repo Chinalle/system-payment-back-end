@@ -6,12 +6,15 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Company } from './company.entity';
 import { Category } from './category.entity';
+import { ServicePricing } from './service-pricing.entity';
+import { ServicePortfolioImage } from './service-portfolio-images.entity';
 
 @Entity('services')
-export class Service {
+export class Services {
   @PrimaryColumn('uuid')
   id: string;
 
@@ -40,6 +43,28 @@ export class Service {
   updatedAt: Date;
 
   // Tables Relations
+
+  @OneToMany(
+    () => ServicePricing,
+    (servicePricing) => servicePricing.services,
+    {
+      nullable: true,
+      onDelete: 'CASCADE',
+    },
+  )
+  @JoinColumn({ name: 'service_pricing' })
+  servicePricing: ServicePricing[];
+
+  @OneToMany(
+    () => ServicePortfolioImage,
+    (servicePortfolioImage) => servicePortfolioImage.services,
+    {
+      nullable: true,
+      onDelete: 'CASCADE',
+    },
+  )
+  @JoinColumn({ name: 'service_portfolio_image' })
+  servicePortfolioImage: ServicePortfolioImage;
 
   @ManyToOne(() => Company, (company) => company.services, {
     nullable: true,

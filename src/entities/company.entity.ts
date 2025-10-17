@@ -5,10 +5,12 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { Address } from './address.entity';
-import { Service } from './services.entity';
+import { Services } from './services.entity';
 import { CompanyMember } from './company-member.entity';
+import { PortfolioImages } from './portfolio_images.entity';
 
 @Entity('company')
 export class Company {
@@ -48,12 +50,27 @@ export class Company {
   @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
   updatedAt: Date;
 
+  // Table relations
+
   @OneToMany(() => Address, (address) => address.company)
   addresses?: Address[];
 
-  @OneToMany(() => Service, (service) => service.company)
-  services: Service[];
+  @OneToMany(() => Services, (service) => service.company)
+  services: Services[];
 
   @OneToMany(() => CompanyMember, (companyMember) => companyMember.company)
   companyMembers: CompanyMember[];
+
+  // a empresa deve ter um portfolio (banco de imagens)
+  @OneToMany(
+    () => PortfolioImages,
+    (portfolioImages) => portfolioImages.company,
+    {
+      nullable: true,
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+  )
+  @JoinColumn({ name: 'portfolio_images' })
+  portfolioImages: PortfolioImages[];
 }

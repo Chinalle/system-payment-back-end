@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { Service } from './services.entity';
+import { Services } from './services.entity';
 
 @Entity('category')
 export class Category {
@@ -29,6 +29,6 @@ export class Category {
   updatedAt: Date;
 
   // Table relations
-  @OneToMany(() => Service, (service) => service.category)
-  services: Service[];
+  @OneToMany(() => Services, (service) => service.category)
+  services: Services[];
 }

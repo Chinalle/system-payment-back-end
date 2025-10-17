@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDateString,
-  IsNotEmpty,
-  IsString,
-  IsNumberString,
-  IsBoolean,
-} from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString, IsBoolean } from 'class-validator';
 import type { Category } from 'src/entities/category.entity';
 import type { Company } from 'src/entities/company.entity';
 
