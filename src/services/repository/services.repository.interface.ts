@@ -1,9 +1,8 @@
-import type { CreateUserDTO } from 'src/dtos/users/create-user.dto';
-import { User } from 'src/entities/user.entity';
-import { EntityManager } from 'typeorm';
+import type { CreateServiceDto } from 'src/dtos/services/create-service.dto';
+import type { Service } from 'src/entities/services.entity';
 
 export interface IServicesRepository {
-  findAll(): Promise<User[]>;
-  findById(id: string): Promise<User | null>;
-  create(user: CreateUserDTO, manager?: EntityManager): Promise<User>;
+  findAll(companyId: string): Promise<Service[]>;
+  findById(serviceId: string, companyId: string): Promise<Service | null>;
+  create(service: CreateServiceDto): Promise<Service>;
 }

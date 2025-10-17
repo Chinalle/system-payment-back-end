@@ -28,7 +28,6 @@ export class CategoryService {
       id: uuidv4(),
       name: createCategoryDto.name,
       slug: generatedSlug,
-      isActive: createCategoryDto.isActive ?? true,
     };
 
     return await this.categoryRepository.create(categoryDto);

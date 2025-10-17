@@ -14,6 +14,7 @@ export class CategoryRepository implements ICategoryRepository {
 
   async create(category: CreateCategoryDto): Promise<Category> {
     const newCategory = this.categoryRepository.create(category);
+    console.log('created category object', newCategory);
     return this.categoryRepository.save(newCategory);
   }
 

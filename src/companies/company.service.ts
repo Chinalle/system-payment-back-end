@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { ICompanyRepository } from './repository/company.repository.interface';
 import { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -42,5 +42,15 @@ export class CompanyService {
 
   async findAll(): Promise<Company[]> {
     return this.companyRepository.findAll();
+  }
+
+  async findById(companyId: string): Promise<Company> {
+    const existingCompany = await this.companyRepository.findById(companyId);
+
+    if (!existingCompany) {
+      throw new NotFoundException('Company Not Found');
+    }
+
+    return existingCompany;
   }
 }

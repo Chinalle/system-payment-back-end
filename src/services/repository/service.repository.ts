@@ -1,10 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, type EntityManager } from 'typeorm';
+import { Repository } from 'typeorm';
 import type { IServicesRepository } from './services.repository.interface';
-import type { CreateUserDTO } from 'src/dtos/users/create-user.dto';
-import type { User } from 'src/entities/user.entity';
 import { Service } from 'src/entities/services.entity';
+import type { CreateServiceDto } from 'src/dtos/services/create-service.dto';
 
 @Injectable()
 export class ServiceRepository implements IServicesRepository {
@@ -13,13 +12,28 @@ export class ServiceRepository implements IServicesRepository {
     private readonly serviceRepository: Repository<Service>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    throw new Error('Method not implemented.');
+  async findAll(companyId: string): Promise<Service[]> {
+    return this.serviceRepository.find({
+      where: {
+        companyId: companyId,
+      },
+    });
   }
-  findById(id: string): Promise<User | null> {
-    throw new Error('Method not implemented.');
+  async findById(
+    serviceId: string,
+    companyId: string,
+  ): Promise<Service | null> {
+    return this.serviceRepository.findOne({
+      where: {
+        id: serviceId,
+        companyId: companyId,
+      },
+    });
   }
-  create(user: CreateUserDTO, manager?: EntityManager): Promise<User> {
-    throw new Error('Method not implemented.');
+  async create(serviceDto: CreateServiceDto): Promise<Service> {
+    const service = this.serviceRepository.create(serviceDto);
+    console.log('created service object', service);
+
+    return await this.serviceRepository.save(service);
   }
 }

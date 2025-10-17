@@ -4,5 +4,6 @@ import { Company } from 'src/entities/company.entity';
 export interface ICompanyRepository {
   create(companyDto: CreateCompanyDto): Promise<Company>;
   findAll(): Promise<Company[]>;
+  findById(companyId: string): Promise<Company | null>;
   findByCnpj(cnpj: string): Promise<Company | null>;
 }

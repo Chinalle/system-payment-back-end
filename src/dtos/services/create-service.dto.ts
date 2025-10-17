@@ -24,21 +24,7 @@ export class CreateServiceDto {
     default: false,
   })
   @IsBoolean()
-  requires_quotation: boolean;
-
-  @ApiProperty({
-    example: true,
-    description: 'True if the service is active on the company',
-    default: true,
-  })
-  @IsBoolean()
-  is_active: boolean;
-
-  @ApiProperty({
-    example: 'Service company',
-    description: 'Service company',
-  })
-  company: Company;
+  requiresQuotation?: boolean;
 
   @ApiProperty({
     example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
@@ -46,12 +32,6 @@ export class CreateServiceDto {
   })
   @IsString()
   companyId: string;
-
-  @ApiProperty({
-    example: 'Service category',
-    description: 'Service category',
-  })
-  category: Category;
 
   @ApiProperty({
     example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',

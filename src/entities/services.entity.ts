@@ -10,7 +10,7 @@ import {
 import { Company } from './company.entity';
 import { Category } from './category.entity';
 
-@Entity('service')
+@Entity('services')
 export class Service {
   @PrimaryColumn('uuid')
   id: string;

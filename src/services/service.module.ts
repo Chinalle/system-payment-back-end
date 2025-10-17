@@ -8,9 +8,10 @@ import { Category } from 'src/entities/category.entity';
 import { CategoryRepository } from './category/repository/category.repository';
 import { CategoryService } from './category/category.service';
 import { CategoryController } from './category/category.controller';
+import { CompanyModule } from 'src/companies/company.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Service, Category])],
+  imports: [TypeOrmModule.forFeature([Service, Category]), CompanyModule],
   controllers: [ServiceController, CategoryController],
   exports: [
     ServicesService,

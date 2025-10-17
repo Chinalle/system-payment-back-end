@@ -16,6 +16,10 @@ export class CompanyRepository implements ICompanyRepository {
     return await this.companyRepository.save(companyDto);
   }
 
+  async findAll(): Promise<Company[]> {
+    return this.companyRepository.find();
+  }
+
   async findByCnpj(cnpj: string): Promise<Company | null> {
     return await this.companyRepository.findOne({
       where: {
@@ -24,7 +28,11 @@ export class CompanyRepository implements ICompanyRepository {
     });
   }
 
-  findAll(): Promise<Company[]> {
-    return this.companyRepository.find();
+  async findById(companyId: string): Promise<Company | null> {
+    return await this.companyRepository.findOne({
+      where: {
+        id: companyId,
+      },
+    });
   }
 }
