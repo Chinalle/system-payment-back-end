@@ -92,7 +92,8 @@ export class CompanyMembersController {
   @Get('member/:userId')
   async findCompanyMember(
     @Param('userId', ParseUUIDPipe) userId: string,
+    @Param('companyId', ParseUUIDPipe) companyId: string,
   ): Promise<CompanyMember> {
-    return await this.companyMemberService.findCompanyMember(userId);
+    return await this.companyMemberService.findCompanyMember(userId, companyId);
   }
 }

@@ -30,11 +30,19 @@ export class CompanyMemberService {
     return companyMembers;
   }
 
-  async findCompanyMember(userId: string): Promise<CompanyMember> {
-    const member = await this.membersRepository.findCompanyMember(userId);
+  async findCompanyMember(
+    userId: string,
+    companyId: string, 
+  ): Promise<CompanyMember> {
+    const member = await this.membersRepository.findCompanyMember(
+      userId,
+      companyId,
+    );
 
     if (!member) {
-      throw new NotFoundException(`member with id: ${userId} not found`);
+      throw new NotFoundException(
+        `Member with userId: ${userId} not found in company: ${companyId}`,
+      );
     }
 
     return member;

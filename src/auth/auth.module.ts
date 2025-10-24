@@ -9,18 +9,21 @@ import { LocalStrategy } from './local.strategy';
 import { JwtRefreshStrategy } from './jwt-refresh.strategy';
 import { constants } from './constants';
 import { MailerModule } from 'src/mailer/mailer.module';
+import { RolesGuard } from './guards/roles.guard'; 
+import { CompanyModule } from 'src/companies/company.module';
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
     MailerModule,
     PassportModule,
+    CompanyModule,
     JwtModule.register({
       secret: constants.jwtSecret,
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RolesGuard, JwtRefreshStrategy, RolesGuard],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [AuthService, RolesGuard],
 })
 export class AuthModule {}
