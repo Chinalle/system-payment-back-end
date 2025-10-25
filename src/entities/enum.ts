@@ -9,11 +9,17 @@ export enum RoleProvider {
   COLLABORATOR = 'collaborator',
 }
 
-export enum StatusContract {
+export enum QuotationRequest {
   PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
+  ANSWERED = 'answered',
   CANCELED = 'canceled',
+}
+
+export enum Quotation {
+  PROPOSED = 'pending',
+  ACCEPTED = 'answered',
+  REJECTED = 'rejected',
+  EXPIRED = 'expired',
 }
 
 export enum StatusPayment {

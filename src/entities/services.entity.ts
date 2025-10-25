@@ -12,6 +12,7 @@ import { Company } from './company.entity';
 import { Category } from './category.entity';
 import { ServicePricing } from './service-pricing.entity';
 import { ServicePortfolioImage } from './service-portfolio-images.entity';
+import { QuotationRequestEntity } from './quotation-request.entity';
 
 @Entity('services')
 export class Services {
@@ -76,4 +77,12 @@ export class Services {
   @ManyToOne(() => Category, (category) => category.services)
   @JoinColumn({ name: 'category_id' })
   category: Category;
+
+  @OneToMany(
+    () => QuotationRequestEntity,
+    (quotationRequest) => quotationRequest.services,
+    { nullable: true },
+  )
+  @JoinColumn({ name: 'quotation_request' })
+  quotationRequest: QuotationRequestEntity[];
 }

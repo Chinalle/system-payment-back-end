@@ -1,14 +1,16 @@
 import {
-  Entity,
-  PrimaryColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
+  Entity,
+  JoinColumn,
   OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { Role } from './enum';
 import { Address } from './address.entity';
 import { CompanyMember } from './company-member.entity';
+import { Role } from './enum';
+import { QuotationRequestEntity } from './quotation-request.entity';
 
 @Entity('users')
 export class User {
@@ -77,4 +79,12 @@ export class User {
 
   @OneToMany(() => Address, (address) => address.user, { cascade: true })
   addresses?: Address[];
+
+  @OneToMany(
+    () => QuotationRequestEntity,
+    (quotationRequest) => quotationRequest.services,
+    { nullable: true },
+  )
+  @JoinColumn({ name: 'quotation_request' })
+  quotationRequest: QuotationRequestEntity[];
 }
