@@ -11,10 +11,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiNoContentResponse,
   ApiOkResponse,
-  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -48,10 +48,7 @@ export class AuthController {
     return await this.authService.login(loginDto, rememberMe);
   }
 
-  @ApiParam({
-    name: 'user jwt payload',
-    type: AuthPayloadDto,
-  })
+  @ApiBearerAuth('access_token')
   @ApiResponse({
     type: UserDTO,
   })
