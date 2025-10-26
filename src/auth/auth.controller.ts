@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiNoContentResponse,
   ApiOkResponse,
-  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -31,7 +31,6 @@ import {
   ResetPasswordDto,
 } from 'src/dtos/auth/reset-password.dto';
 import { UserDTO } from 'src/dtos/users/user.dto';
-import { AuthPayloadDto } from 'src/dtos/auth/payload-jwt.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -53,10 +52,7 @@ export class AuthController {
     return await this.authService.login(loginDto, rememberMe);
   }
 
-  @ApiParam({
-    name: 'user jwt payload',
-    type: AuthPayloadDto,
-  })
+  @ApiBearerAuth('access_token')
   @ApiResponse({
     type: UserDTO,
   })
