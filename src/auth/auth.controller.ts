@@ -15,6 +15,7 @@ import {
   ApiBody,
   ApiNoContentResponse,
   ApiOkResponse,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -25,11 +26,12 @@ import { Throttle } from '@nestjs/throttler';
 import { LoginDto } from '../dtos/auth/login.dto';
 import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
 import { RequestWithRefreshUser } from 'src/dtos/auth/user-tokens.response.dto';
-import { UpdatePasswordDto } from 'src/dtos/users/update-password.dto';
 import {
   ForgotPasswordDto,
   ResetPasswordDto,
 } from 'src/dtos/auth/reset-password.dto';
+import { UserDTO } from 'src/dtos/users/user.dto';
+import { AuthPayloadDto } from 'src/dtos/auth/payload-jwt.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -49,6 +51,20 @@ export class AuthController {
   ): Promise<LoginResponseDto> {
     console.log('rota chamada - usuario: ', loginDto);
     return await this.authService.login(loginDto, rememberMe);
+  }
+
+  @ApiParam({
+    name: 'user jwt payload',
+    type: AuthPayloadDto,
+  })
+  @ApiResponse({
+    type: UserDTO,
+  })
+  @Get('/me')
+  @UseGuards(JwtAuthGuard)
+  async me(@Request() req: RequestWithRefreshUser) {
+    console.table([req.user]);
+    return await this.authService.me(req.user.sub);
   }
 
   @UseGuards(JwtAuthGuard)

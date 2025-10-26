@@ -157,11 +157,26 @@ export class UserService {
       'findOne UserService: ',
       await this.userRepository.findById(id),
     );
-    return await this.userRepository.findById(id);
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new NotFoundException('Not Found');
+    }
+    return user;
+  }
+
+  async me(id: string): Promise<UserDTO | null> {
+    console.log('me UserService: ', await this.userRepository.findById(id));
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new NotFoundException('Not Found');
+    }
+    const userDtoResponse = this.mapEntityToDTO(user);
+
+    return userDtoResponse;
   }
 
   async emailConfirm(email: string) {
-    const user = this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new Error('User Not Found');

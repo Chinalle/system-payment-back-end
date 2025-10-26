@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -16,6 +17,7 @@ import type {
 } from 'src/dtos/auth/reset-password.dto';
 import { MailService } from 'src/mailer/mailer.service';
 import * as crypto from 'node:crypto';
+import { UserDTO } from 'src/dtos/users/user.dto';
 
 type AuthValidatedUserResponse = Omit<
   User,
@@ -70,6 +72,16 @@ export class AuthService {
     };
 
     return response;
+  }
+
+  async me(userId: string): Promise<UserDTO> {
+    const user = await this.userService.me(userId);
+
+    if (!user) {
+      throw new NotFoundException('Not Found');
+    }
+
+    return user;
   }
 
   async logout(userId: string) {
@@ -182,7 +194,7 @@ export class AuthService {
     };
   }
 
-  private async generateResetToken() {
+  private generateResetToken() {
     const resetToken = crypto.randomBytes(32).toString('hex');
 
     const hashedResetToken = crypto

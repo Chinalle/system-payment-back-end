@@ -44,6 +44,13 @@ export class UserController {
     private readonly mailSender: MailService,
   ) {}
 
+  @Get('health')
+  async health() {
+    return await {
+      message: 'API Running on',
+    };
+  }
+
   // Teste de email
   @Get('email')
   async emailSender(): Promise<void> {
@@ -64,6 +71,7 @@ export class UserController {
   })
   @ApiBearerAuth()
   @Get() // Returns all users (isActive: true and false)
+  @UseGuards(JwtRefreshGuard)
   async findAll(): Promise<User[]> {
     return await this.userService.findAll();
   }
@@ -74,6 +82,7 @@ export class UserController {
   })
   @ApiBearerAuth()
   @Get('active')
+  @UseGuards(JwtRefreshGuard)
   async findAllActiveUsers(): Promise<User[]> {
     return await this.userService.findAllActiveUsers();
   }
@@ -95,7 +104,7 @@ export class UserController {
   @ApiParam({ name: 'userId' })
   @ApiBody({ type: UpdateUserDto })
   @Patch(':userId')
-  // @UseGuards(JwtRefreshGuard)
+  @UseGuards(JwtRefreshGuard)
   @HttpCode(HttpStatus.OK)
   async update(
     @Param('userId', ParseUUIDPipe) userId: string,
