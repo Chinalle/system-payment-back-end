@@ -191,6 +191,7 @@ export class UserService {
       street: address.street,
       number: address.number,
       complement: address.complement,
+      district: address.district,
       city: address.city,
       state: address.state,
       zipCode: address.zipCode,
