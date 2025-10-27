@@ -24,6 +24,9 @@ export class Address {
   @Column({ name: 'number', type: 'varchar', length: 45 })
   number: string;
 
+  @Column({ name: 'district', type: 'varchar' })
+  district: string;
+
   @Column({ type: 'varchar', length: 255 })
   city: string;
 

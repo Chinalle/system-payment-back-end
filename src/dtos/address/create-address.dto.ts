@@ -19,6 +19,11 @@ export class CreateAddressDTO {
   @Length(1, 45)
   number: string;
 
+  @ApiProperty({ example: 'Bobos Garden' })
+  @IsString()
+  @IsOptional()
+  district: string;
+
   @ApiProperty({ example: 'Araras' })
   @IsString()
   @IsNotEmpty()
