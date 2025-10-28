@@ -40,7 +40,7 @@ export class UserService {
         phone: user.phone,
         birthDate: user.birthDate,
         cpf: user.cpf,
-        isActive: user.isActive,
+        isActive: false,
         isConfirmed: false,
         role: user.role,
       };

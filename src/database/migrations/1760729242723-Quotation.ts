@@ -12,7 +12,7 @@ export class Quotation1760729242723 implements MigrationInterface {
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
           { name: 'request_id', type: 'uuid', isNullable: false },
-          { name: 'provider_id', type: 'uudi' },
+          { name: 'provider_id', type: 'uuid' },
           { name: 'description', type: 'text' },
           { name: 'proposed_price_in_cents', type: 'int' },
           { name: 'estimated_duration_minutes', type: 'int' },
