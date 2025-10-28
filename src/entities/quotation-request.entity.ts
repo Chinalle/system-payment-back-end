@@ -1,12 +1,13 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { QuotationRequest } from './enum';
+import { QuotationEntity } from './quotation.entity';
 import { Services } from './services.entity';
 import { User } from './user.entity';
 
@@ -27,16 +28,17 @@ export class QuotationRequestEntity {
   @Column({ name: 'status', type: 'enum', enum: QuotationRequest })
   status: QuotationRequest;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @Column({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 
-  @OneToOne(() => Services, (service) => service.quotationRequest, {
-    nullable: false,
-  })
-  @JoinColumn({ name: 'services' })
-  services: Services;
+  @ManyToOne(() => Services)
+  @JoinColumn({ name: 'service_id' })
+  service: Services;
 
-  @OneToOne(() => User, (user) => user.quotationRequest)
-  @JoinColumn({ name: 'client' })
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'client_id' })
   client: User;
+
+  @OneToOne(() => QuotationEntity, (quotation) => quotation.quotationRequest)
+  quotation: QuotationEntity;
 }

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { IQuotationRequestRepository } from './quotation-request.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QuotationRequestEntity } from 'src/entities/quotation-request.entity';
-import { Repository } from 'typeorm';
 import { CreateQuotationRequestDto } from 'src/dtos/quotation-request/create-quotation-request.dto';
 import { QuotationRequest } from 'src/entities/enum';
+import { QuotationRequestEntity } from 'src/entities/quotation-request.entity';
+import { Repository } from 'typeorm';
+import { IQuotationRequestRepository } from './quotation-request.repository.interface';
 
 @Injectable()
 export class QuotationRequestRepository implements IQuotationRequestRepository {
@@ -15,13 +15,20 @@ export class QuotationRequestRepository implements IQuotationRequestRepository {
   async create(
     quotationRequest: CreateQuotationRequestDto,
   ): Promise<QuotationRequestEntity> {
-    await console.log(quotationRequest);
-    throw new Error('Method not implemented.');
+    const newQuotationRequest =
+      this.quotationRequestRepository.create(quotationRequest);
+
+    return await this.quotationRequestRepository.save(newQuotationRequest);
   }
+
   async findById(id: string): Promise<QuotationRequestEntity | null> {
-    await console.log(id);
-    throw new Error('Method not implemented.');
+    return await this.quotationRequestRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
   }
+
   async findAll(status?: QuotationRequest): Promise<QuotationRequestEntity[]> {
     if (!status) {
       return await this.quotationRequestRepository.find();

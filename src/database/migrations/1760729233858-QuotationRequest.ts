@@ -41,5 +41,6 @@ export class QuotationRequest1760729233858 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable(this.tableName);
+    await queryRunner.query(`DROP TYPE "quotation_request_status_enum"`);
   }
 }

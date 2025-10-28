@@ -1,6 +1,6 @@
 import { CreateQuotationRequestDto } from 'src/dtos/quotation-request/create-quotation-request.dto';
-import { QuotationRequestEntity } from '../../entities/quotation-request.entity';
 import { QuotationRequest } from 'src/entities/enum';
+import { QuotationRequestEntity } from '../../entities/quotation-request.entity';
 
 export interface IQuotationRequestRepository {
   create(

@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
-import { UserModule } from './users/user.module';
-import { SeedModule } from './database/seeds/seed.module';
-import { MailerModule } from './mailer/mailer.module';
-import { AuthModule } from './auth/auth.module';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import { CompanyModule } from './companies/company.module';
+import { DatabaseModule } from './database/database.module';
+import { MailerModule } from './mailer/mailer.module';
+import { QuotationRequestModule } from './quotation-request/quotation-request.module';
+import { QuotationModule } from './quotation/quotation.module';
 import { ServiceModule } from './services/service.module';
+import { UserModule } from './users/user.module';
 
 @Module({
   imports: [
@@ -22,6 +23,8 @@ import { ServiceModule } from './services/service.module';
     // ServiceModule,
     CompanyModule,
     ServiceModule,
+    QuotationModule,
+    QuotationRequestModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

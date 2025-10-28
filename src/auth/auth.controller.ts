@@ -1,35 +1,29 @@
 import {
-  Controller,
-  Post,
-  UseGuards,
-  Request,
-  Get,
   Body,
-  Query,
+  Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Patch,
+  Post,
+  Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiNoContentResponse,
   ApiOkResponse,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { LocalAuthGuard } from './local-auth.guard';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { JwtRefreshGuard } from './jwt-refresh.guard';
 import { Throttle } from '@nestjs/throttler';
-import { LoginDto } from '../dtos/auth/login.dto';
 import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
-import { RequestWithRefreshUser } from 'src/dtos/auth/user-tokens.response.dto';
 import {
   ForgotPasswordDto,
   ResetPasswordDto,
 } from 'src/dtos/auth/reset-password.dto';
+import { RequestWithRefreshUser } from 'src/dtos/auth/user-tokens.response.dto';
 import { UserDTO } from 'src/dtos/users/user.dto';
 
 @ApiTags('Auth')

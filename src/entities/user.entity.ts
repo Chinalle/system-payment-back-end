@@ -11,6 +11,7 @@ import { Address } from './address.entity';
 import { CompanyMember } from './company-member.entity';
 import { Role } from './enum';
 import { QuotationRequestEntity } from './quotation-request.entity';
+import { QuotationEntity } from './quotation.entity';
 
 @Entity('users')
 export class User {
@@ -82,9 +83,13 @@ export class User {
 
   @OneToMany(
     () => QuotationRequestEntity,
-    (quotationRequest) => quotationRequest.services,
+    (quotationRequest) => quotationRequest.service,
     { nullable: true },
   )
   @JoinColumn({ name: 'quotation_request' })
   quotationRequest: QuotationRequestEntity[];
+
+  @OneToMany(() => QuotationEntity, (quotation) => quotation.providerId)
+  @JoinColumn({ name: 'provider_id' })
+  providerId: QuotationEntity[];
 }

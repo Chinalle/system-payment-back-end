@@ -1,18 +1,18 @@
 import {
-  Entity,
-  PrimaryColumn,
   Column,
-  ManyToOne,
-  JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { Company } from './company.entity';
 import { Category } from './category.entity';
-import { ServicePricing } from './service-pricing.entity';
-import { ServicePortfolioImage } from './service-portfolio-images.entity';
+import { Company } from './company.entity';
 import { QuotationRequestEntity } from './quotation-request.entity';
+import { ServicePortfolioImage } from './service-portfolio-images.entity';
+import { ServicePricing } from './service-pricing.entity';
 
 @Entity('services')
 export class Services {
@@ -80,7 +80,7 @@ export class Services {
 
   @OneToMany(
     () => QuotationRequestEntity,
-    (quotationRequest) => quotationRequest.services,
+    (quotationRequest) => quotationRequest.service,
     { nullable: true },
   )
   @JoinColumn({ name: 'quotation_request' })

@@ -1,7 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsDateString } from 'class-validator';
 import { Quotation } from 'src/entities/enum';
 
-export class CreateQuotationDto {
+export class QuotationtDto {
+  @ApiProperty({ name: 'id' })
+  id: string;
+
   @ApiProperty({ name: 'requestId' })
   requestId: string;
 
@@ -19,4 +23,18 @@ export class CreateQuotationDto {
 
   @ApiProperty({ name: 'status', enumName: 'status', enum: Quotation })
   status: Quotation;
+
+  @ApiProperty({
+    example: '2024-01-15T10:30:00Z',
+    description: 'Creation date',
+  })
+  @IsDateString()
+  createdAt: Date;
+
+  @ApiProperty({
+    example: '2024-01-15T10:30:00Z',
+    description: 'Expired date',
+  })
+  @IsDateString()
+  expiredAt: Date;
 }
