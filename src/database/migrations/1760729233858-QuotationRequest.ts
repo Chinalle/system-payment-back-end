@@ -12,7 +12,7 @@ export class QuotationRequest1760729233858 implements MigrationInterface {
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
           { name: 'service_id', type: 'uuid', isNullable: false },
-          { name: 'client_id', type: 'uudi' },
+          { name: 'client_id', type: 'uuid' },
           { name: 'client_notes', type: 'text' },
           { name: 'status', type: 'quotation_request_status_enum' },
           { name: 'created_at', type: 'timestamptz', default: 'now()' },

@@ -40,7 +40,7 @@ export class UserService {
         phone: user.phone,
         birthDate: user.birthDate,
         cpf: user.cpf,
-        isActive: user.isActive,
+        isActive: false,
         isConfirmed: false,
         role: user.role,
       };
@@ -161,7 +161,7 @@ export class UserService {
   }
 
   async emailConfirm(email: string) {
-    const user = this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new Error('User Not Found');

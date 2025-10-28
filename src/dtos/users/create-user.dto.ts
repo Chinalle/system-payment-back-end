@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  IsBoolean,
   IsDateString,
   IsEmail,
   IsEnum,
@@ -70,12 +69,4 @@ export class CreateUserDTO {
   })
   @IsEnum(Role)
   role: Role;
-
-  @ApiProperty()
-  @IsBoolean()
-  isActive: boolean;
-
-  @ApiProperty()
-  @IsBoolean()
-  isConfirmed: boolean;
 }
