@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
@@ -25,7 +26,7 @@ export class QuotationEntity {
   description: string;
 
   @Column({ name: 'proposed_price_in_cents', type: 'int' })
-  proposedPriceInCcents: number;
+  proposedPriceInCents: number;
 
   @Column({ name: 'estimated_duration_minutes', type: 'int' })
   estimatedDurationMinutes: number;
@@ -43,7 +44,7 @@ export class QuotationEntity {
   @JoinColumn({ name: 'request_id' })
   quotationRequest: QuotationRequestEntity;
 
-  @OneToOne(() => User, (provider) => provider.providerId)
+  @ManyToOne(() => User, (provider) => provider.quotations)
   @JoinColumn({ name: 'provider_id' })
   provider: User;
 }

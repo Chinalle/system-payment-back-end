@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
@@ -83,13 +82,11 @@ export class User {
 
   @OneToMany(
     () => QuotationRequestEntity,
-    (quotationRequest) => quotationRequest.service,
+    (quotationRequest) => quotationRequest.client,
     { nullable: true },
   )
-  @JoinColumn({ name: 'quotation_request' })
   quotationRequest: QuotationRequestEntity[];
 
-  @OneToMany(() => QuotationEntity, (quotation) => quotation.providerId)
-  @JoinColumn({ name: 'provider_id' })
-  providerId: QuotationEntity[];
+  @OneToMany(() => QuotationEntity, (quotation) => quotation.provider)
+  quotations: QuotationEntity[];
 }
