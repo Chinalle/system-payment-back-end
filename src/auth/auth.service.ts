@@ -5,19 +5,19 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../users/user.service';
 import * as bcrypt from 'bcrypt';
-import { constants } from './constants';
+import * as crypto from 'node:crypto';
 import { LoginDto } from 'src/dtos/auth/login.dto';
 import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
-import type { User } from 'src/entities/user.entity';
 import type {
   ForgotPasswordDto,
   ResetPasswordDto,
 } from 'src/dtos/auth/reset-password.dto';
-import { MailService } from 'src/mailer/mailer.service';
-import * as crypto from 'node:crypto';
 import { UserDTO } from 'src/dtos/users/user.dto';
+import type { User } from 'src/entities/user.entity';
+import { MailService } from 'src/mailer/mailer.service';
+import { UserService } from '../users/user.service';
+import { constants } from './constants';
 
 type AuthValidatedUserResponse = Omit<
   User,

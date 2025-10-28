@@ -19,14 +19,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { LoginDto } from 'src/dtos/auth/login.dto';
 import { LoginResponseDto } from 'src/dtos/auth/login.response.dto';
-import { AuthPayloadDto } from 'src/dtos/auth/payload-jwt.dto';
 import {
   ForgotPasswordDto,
   ResetPasswordDto,
 } from 'src/dtos/auth/reset-password.dto';
 import { RequestWithRefreshUser } from 'src/dtos/auth/user-tokens.response.dto';
 import { UserDTO } from 'src/dtos/users/user.dto';
+import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { JwtRefreshGuard } from './jwt-refresh.guard';
+import { LocalAuthGuard } from './local-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
