@@ -27,6 +27,10 @@ export class CompanyRepository implements ICompanyRepository {
       },
     );
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0940dc5 (feat: add create onboarding link company method)
   async create(companyDto: CreateCompanyDto): Promise<Company> {
     return await this.companyRepository.save(companyDto);
   }
