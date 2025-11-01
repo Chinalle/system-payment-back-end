@@ -22,6 +22,13 @@ export enum Quotation {
   EXPIRED = 'expired',
 }
 
+export enum AppointmentStatus {
+  SCHEDULED = 'scheduled',
+  CONFIRMED = 'confirmed',
+  CANCELED = 'canceled',
+  COMPLETED = 'completed',
+}
+
 export enum StatusPayment {
   PENDING = 'pending',
   APPROVED = 'approved',
