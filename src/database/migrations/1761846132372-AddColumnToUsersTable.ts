@@ -6,7 +6,7 @@ export class AddColumnToUsersTable1761846132372 implements MigrationInterface {
       'users',
       new TableColumn({
         name: 'stripe_customer_id',
-        type: '',
+        type: 'text',
         isNullable: true,
       }),
     );

@@ -1,7 +1,15 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CreateRefundsTable1761849641410 implements MigrationInterface {
-  // [x] Nova Tabela refund: Criar a tabela de estornos com as colunas: id, payment_id (FK), stripe_refund_id (string, unique), amount_in_cents, reason, status, created_at.
+  /* [x] Nova Tabela refund: Criar a tabela de estornos com as colunas: 
+  id, 
+  payment_id (FK), 
+  stripe_refund_id (string, unique), 
+  amount_in_cents, 
+  reason, 
+  status, 
+  created_at. 
+  */
   private tableName = 'refunds';
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
@@ -9,7 +17,7 @@ export class CreateRefundsTable1761849641410 implements MigrationInterface {
         name: this.tableName,
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
-          { name: 'payment_id', type: '' },
+          { name: 'payment_id', type: 'text' },
           { name: 'stripe_refund_id', type: 'text' },
           { name: 'amount_in_cents', type: 'int' },
           { name: 'reason', type: 'int' },

@@ -1,8 +1,8 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import type { ICompanyRepository } from './repository/company.repository.interface';
 import { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
-import { v4 as uuidv4 } from 'uuid';
 import { Company } from 'src/entities/company.entity';
+import { v4 as uuidv4 } from 'uuid';
+import type { ICompanyRepository } from './repository/company.repository.interface';
 
 @Injectable()
 export class CompanyService {
@@ -52,5 +52,9 @@ export class CompanyService {
     }
 
     return existingCompany;
+  }
+
+  async updateStripeAccountId(companyId: string, acc: string) {
+    await this.companyRepository.updateStripeAccountId(companyId, acc);
   }
 }

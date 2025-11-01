@@ -6,4 +6,5 @@ export interface ICompanyRepository {
   findAll(): Promise<Company[]>;
   findById(companyId: string): Promise<Company | null>;
   findByCnpj(cnpj: string): Promise<Company | null>;
+  updateStripeAccountId(companyID: string, acc: string): Promise<void>;
 }

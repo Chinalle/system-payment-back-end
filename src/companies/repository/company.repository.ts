@@ -1,9 +1,9 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
-import type { ICompanyRepository } from './company.repository.interface';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import type { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
 import { Company } from 'src/entities/company.entity';
 import { Repository } from 'typeorm';
-import type { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
+import type { ICompanyRepository } from './company.repository.interface';
 
 @Injectable()
 export class CompanyRepository implements ICompanyRepository {
@@ -11,6 +11,14 @@ export class CompanyRepository implements ICompanyRepository {
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
   ) {}
+  async updateStripeAccountId(companyId: string, acc: string): Promise<void> {
+    await this.companyRepository.update(
+      { id: companyId },
+      {
+        stripeAccountId: acc,
+      },
+    );
+  }
 
   async create(companyDto: CreateCompanyDto): Promise<Company> {
     return await this.companyRepository.save(companyDto);

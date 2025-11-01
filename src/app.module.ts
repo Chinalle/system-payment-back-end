@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { CompanyModule } from './companies/company.module';
 import { DatabaseModule } from './database/database.module';
 import { MailerModule } from './mailer/mailer.module';
+import { PaymentsModule } from './payments/payments.module';
 import { QuotationRequestModule } from './quotation-request/quotation-request.module';
 import { QuotationModule } from './quotation/quotation.module';
 import { ServiceModule } from './services/service.module';
@@ -25,6 +26,7 @@ import { UserModule } from './users/user.module';
     ServiceModule,
     QuotationModule,
     QuotationRequestModule,
+    PaymentsModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

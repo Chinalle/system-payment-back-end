@@ -5,18 +5,16 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Param,
-  UseGuards
 } from '@nestjs/common';
-import { ApiBody, ApiCreatedResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'; 
-import { RolesGuard } from '../auth/guards/roles.guard'; 
-import { Roles } from '../auth/decorators/roles.decorator'; 
-import { ProviderRoles } from '../auth/decorators/provider-roles.decorator'; 
-import { Role, RoleProvider } from '../entities/enum'; 
-import { CompanyService } from './company.service';
-import { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Company } from 'src/dtos/company/company.dto';
+import { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
+import { CompanyService } from './company.service';
 
 @ApiTags('Company')
 @ApiBearerAuth()

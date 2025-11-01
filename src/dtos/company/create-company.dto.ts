@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsString,
   IsNotEmpty,
-  IsOptional,
-  MaxLength,
   IsObject,
+  IsOptional,
+  IsString,
   IsUrl,
+  MaxLength,
 } from 'class-validator';
 
 export class CreateCompanyDto {
@@ -36,33 +36,33 @@ export class CreateCompanyDto {
     properties: {
       monday: {
         type: 'boolean',
-        example: true
+        example: true,
       },
       tuesday: {
         type: 'boolean',
-        example: true
+        example: true,
       },
       wednesday: {
         type: 'boolean',
-        example: true
+        example: true,
       },
       thursday: {
         type: 'boolean',
-        example: true
+        example: true,
       },
       friday: {
         type: 'boolean',
-        example: true
+        example: true,
       },
       saturday: {
         type: 'boolean',
-        example: false
+        example: false,
       },
       sunday: {
         type: 'boolean',
-        example: false
-      }
-    }
+        example: false,
+      },
+    },
   })
   @IsOptional()
   @IsObject({ message: 'Property businessHours must be an object.' })
@@ -70,6 +70,6 @@ export class CreateCompanyDto {
 
   @ApiProperty({ example: '102030506080' })
   @IsString()
-  @IsNotEmpty()
-  stripeAccountId: string;
+  // @IsNotEmpty()
+  stripeAccountId?: string;
 }
