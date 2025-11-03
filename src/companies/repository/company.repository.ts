@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
+import { UpdatedCompanyDto } from 'src/dtos/company/update-company.dto';
 import { Company } from 'src/entities/company.entity';
 import { Repository } from 'typeorm';
 import type { ICompanyRepository } from './company.repository.interface';
@@ -11,6 +12,13 @@ export class CompanyRepository implements ICompanyRepository {
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
   ) {}
+
+  async findByName(name: string) {
+    return await this.companyRepository.findOneBy({ name: name });
+  }
+  async update(updateCompanyDto: UpdatedCompanyDto): Promise<Company> {
+    return await this.companyRepository.save(updateCompanyDto);
+  }
   async updateStripeAccountId(companyId: string, acc: string): Promise<void> {
     await this.companyRepository.update(
       { id: companyId },
@@ -41,6 +49,7 @@ export class CompanyRepository implements ICompanyRepository {
       where: {
         id: companyId,
       },
+      relations: ['addresses'],
     });
   }
 }

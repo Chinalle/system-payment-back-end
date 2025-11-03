@@ -4,12 +4,17 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { Company } from 'src/dtos/company/company.dto';
@@ -33,6 +38,33 @@ export class CompanyController {
   async create(@Body() companyDto: CreateCompanyDto): Promise<Company> {
     console.log('controller', companyDto);
     return this.companyService.create(companyDto);
+  }
+
+  @ApiBody({
+    type: UpdatedCompanyDto,
+  })
+  @ApiOkResponse({
+    type: Company,
+  })
+  @Patch(':companyId')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Param('companyId', ParseUUIDPipe) companyId: string,
+    @Body() updateCompany: UpdatedCompanyDto,
+  ) {
+    return await this.companyService.update(companyId, updateCompany);
+  }
+
+  @ApiParam({
+    name: 'companyId',
+  })
+  @ApiOkResponse({
+    type: Company,
+  })
+  @Get(':companyId')
+  @HttpCode(HttpStatus.OK)
+  async companyProfile(@Param('companyId', ParseUUIDPipe) companyId: string) {
+    return await this.companyService.findById(companyId);
   }
 
   @ApiCreatedResponse({
