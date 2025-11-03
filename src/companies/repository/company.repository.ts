@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import type { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
+import { UpdatedCompanyDto } from 'src/dtos/company/update-company.dto';
 import type { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
 import { UpdatedCompanyDto } from 'src/dtos/company/update-company.dto';
 import { Company } from 'src/entities/company.entity';
 import { Repository } from 'typeorm';
+import type { ICompanyRepository } from './company.repository.interface';
 import type { ICompanyRepository } from './company.repository.interface';
 
 @Injectable()
@@ -52,6 +56,7 @@ export class CompanyRepository implements ICompanyRepository {
       where: {
         id: companyId,
       },
+      relations: ['addresses'],
       relations: ['addresses'],
     });
   }
