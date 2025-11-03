@@ -1,24 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  MaxLength,
   IsObject,
+  IsOptional,
+  IsString,
   IsUrl,
+  MaxLength,
+  ValidateNested,
 } from 'class-validator';
+import { CreateAddressDTO } from '../address/create-address.dto';
+import { UpdateAddressDTO } from '../address/update-address.dto';
 
-export class CreateCompanyDto {
+export class UpdatedCompanyDto {
   @ApiProperty({ example: 'Nexus' })
   @IsString({ message: 'Property name must be a string.' })
-  @IsNotEmpty({ message: 'Property name must not be empty.' })
+  @IsOptional()
   @MaxLength(45, { message: 'Property name must have up to 45 characters.' })
-  name: string;
+  name?: string;
 
   @ApiProperty({ example: '4546549875646' })
   @IsString({ message: 'Property CNPJ must be a string.' })
-  @IsNotEmpty({ message: 'Property CNPJ cannot be empty.' })
-  cnpj: string;
+  @IsOptional()
+  cnpj?: string;
 
   @ApiProperty({ example: 'blablabla' })
   @IsString({ message: 'Property description must be a string.' })
@@ -68,8 +71,24 @@ export class CreateCompanyDto {
   @IsObject({ message: 'Property businessHours must be an object.' })
   businessHours?: Record<string, any>;
 
-  @ApiProperty({ example: '102030506080' })
+  @ApiProperty({
+    name: 'rating',
+    type: Number,
+  })
+  @IsOptional()
+  rating?: number;
+
+  @ApiProperty({ example: 'acct_1SOTkVFbsgtDXle4' })
   @IsString()
-  @IsNotEmpty()
-  stripeAccountId: string;
+  @IsOptional()
+  stripeAccountId?: string;
+
+  @ApiProperty({
+    type: [CreateAddressDTO],
+    required: false,
+  })
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateAddressDTO)
+  addresses?: UpdateAddressDTO[];
 }
