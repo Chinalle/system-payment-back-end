@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 export class CreateAppointmentsTable1761882590366
   implements MigrationInterface
 {
-  private tableName = '';
+  private tableName = 'appointments';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     // 	uuid id PK "ID do agendamento"
@@ -25,8 +25,9 @@ export class CreateAppointmentsTable1761882590366
           { name: 'id', type: 'uuid', isPrimary: true },
           { name: 'service_pricing_id', type: 'uuid', isNullable: true },
           { name: 'quotation_id', type: 'uuid', isNullable: true },
-          { name: 'client_id', type: 'text' }, // Depois preciso recuperar o stripe_customer_id **
-          { name: 'provider_id', type: 'text' }, // Recuperar a conta da empresa no stripe (stripe_company_id - acc_...) do member company
+          { name: 'client_id', type: 'uuid' }, // Depois preciso recuperar o stripe_customer_id **
+          { name: 'provider_id', type: 'uuid' }, // Recuperar a conta da empresa no stripe (stripe_company_id - acc_...) do member company
+          { name: 'service_id', type: 'uuid' }, // Recuperar a conta da empresa no stripe (stripe_company_id - acc_...) do member company
           { name: 'status', type: 'appointment_status_enum' },
           { name: 'start_time', type: 'timestamptz' },
           { name: 'end_time', type: 'timestamptz' },

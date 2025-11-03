@@ -14,10 +14,10 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { CompanyMemberService } from './members.service';
+import { CompanyMemberDto } from 'src/dtos/company/company-member.dto';
 import { CreateCompanyMemberDto } from 'src/dtos/company/create-company-member.dto';
 import type { CompanyMember } from 'src/entities/company-member.entity';
-import { CompanyMemberDto } from 'src/dtos/company/company-member.dto';
+import { CompanyMemberService } from './members.service';
 
 @ApiTags('Company Members')
 @Controller('company-members')
@@ -89,7 +89,7 @@ export class CompanyMembersController {
     description: 'return a company member object',
     example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
   })
-  @Get('member/:userId')
+  @Get('member/:userId/:companyId')
   async findCompanyMember(
     @Param('userId', ParseUUIDPipe) userId: string,
     @Param('companyId', ParseUUIDPipe) companyId: string,

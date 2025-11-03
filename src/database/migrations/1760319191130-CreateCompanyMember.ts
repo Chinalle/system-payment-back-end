@@ -11,8 +11,8 @@ export class CreateCompanyMember1760319191130 implements MigrationInterface {
         name: this.tableTable,
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
-          { name: 'user_id', type: 'uuid', isPrimary: true },
-          { name: 'company_id', type: 'uuid', isPrimary: true },
+          { name: 'user_id', type: 'uuid', isUnique: true },
+          { name: 'company_id', type: 'uuid', isUnique: true },
           { name: 'provider_role', type: 'company_role_enum' },
           { name: 'created_at', type: 'timestamp', default: 'now()' },
           { name: 'updated_at', type: 'timestamp', default: 'now()' },

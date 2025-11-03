@@ -4,5 +4,8 @@ import type { CompanyMember } from 'src/entities/company-member.entity';
 export interface ICompanyMemberRepository {
   create(memberDto: CreateCompanyMemberDto): Promise<CompanyMember>;
   findAllCompanyMembers(companyId: string): Promise<CompanyMember[]>;
-  findCompanyMember(userId: string, companyId: string): Promise<CompanyMember | null>;
+  findCompanyMember(
+    userId: string,
+    companyId: string,
+  ): Promise<CompanyMember | null>;
 }
