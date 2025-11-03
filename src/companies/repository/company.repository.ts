@@ -32,7 +32,10 @@ export class CompanyRepository implements ICompanyRepository {
     );
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 44e35c5 (feat: add update company method)
 
 >>>>>>> 0940dc5 (feat: add create onboarding link company method)
   async create(companyDto: CreateCompanyDto): Promise<Company> {
