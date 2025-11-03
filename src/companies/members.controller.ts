@@ -14,10 +14,10 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { CompanyMemberService } from './members.service';
+import { CompanyMemberDto } from 'src/dtos/company/company-member.dto';
 import { CreateCompanyMemberDto } from 'src/dtos/company/create-company-member.dto';
 import type { CompanyMember } from 'src/entities/company-member.entity';
-import { CompanyMemberDto } from 'src/dtos/company/company-member.dto';
+import { CompanyMemberService } from './members.service';
 
 @ApiTags('Company Members')
 @Controller('company-members')
