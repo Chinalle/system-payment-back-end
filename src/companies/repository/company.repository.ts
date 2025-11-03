@@ -1,13 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
-import { UpdatedCompanyDto } from 'src/dtos/company/update-company.dto';
 import type { CreateCompanyDto } from 'src/dtos/company/create-company.dto';
 import { UpdatedCompanyDto } from 'src/dtos/company/update-company.dto';
 import { Company } from 'src/entities/company.entity';
 import { Repository } from 'typeorm';
-import type { ICompanyRepository } from './company.repository.interface';
 import type { ICompanyRepository } from './company.repository.interface';
 
 @Injectable()
@@ -31,13 +27,6 @@ export class CompanyRepository implements ICompanyRepository {
       },
     );
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 44e35c5 (feat: add update company method)
-
->>>>>>> 0940dc5 (feat: add create onboarding link company method)
   async create(companyDto: CreateCompanyDto): Promise<Company> {
     return await this.companyRepository.save(companyDto);
   }
