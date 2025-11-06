@@ -1,41 +1,41 @@
 import {
-  Controller,
-  Put,
   Body,
-  UseGuards,
-  Request,
+  Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
-  Get,
+  Put,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
   ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiUnauthorizedResponse,
   ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { ProviderRoles } from '../auth/decorators/provider-roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RoleProvider } from '../entities/enum';
 import { AvailabilityService } from './availability.service';
-import { UpdateAvailabilityDto } from './dto/update-availability.dto';
 import { CreateAvailabilityOverrideDto } from './dto/create-availability-override.dto';
 import { GetAvailabilityDto } from './dto/get-availability.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'; 
-import { RolesGuard } from '../auth/guards/roles.guard'; 
-import { Roles } from '../auth/decorators/roles.decorator'; 
-import { Role } from '../entities/enum'; 
+import { UpdateAvailabilityDto } from './dto/update-availability.dto';
 
 @ApiTags('Availability')
-@Controller('availability') 
+@Controller('availability')
 export class AvailabilityController {
-  constructor(private readonly availabilityService: AvailabilityService) {}
+  constructor(private readonly availabilityService: AvailabilityService) { }
 
-  @Put('weekly') 
+  @Put('weekly')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.PROVIDER) 
+  @ProviderRoles(RoleProvider.MANAGER, RoleProvider.COLLABORATOR)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Update provider's standard weekly availability" })
@@ -46,13 +46,14 @@ export class AvailabilityController {
     @Request() req: any,
     @Body() updateDto: UpdateAvailabilityDto,
   ) {
-    const userId = req.user.id;
+    console.log('USER OBJECT NO CONTROLLER:', req.user);
+    const userId = req.user.userId;
     return this.availabilityService.updateWeeklyAvailability(userId, updateDto);
   }
 
-  @Post('overrides') 
+  @Post('overrides')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.PROVIDER)
+  @ProviderRoles(RoleProvider.MANAGER, RoleProvider.COLLABORATOR)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create or update an availability override (holiday, block)' })
@@ -61,17 +62,17 @@ export class AvailabilityController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
   async createOrUpdateOverride(
     @Request() req: any,
-    @Body() overrideDto: CreateAvailabilityOverrideDto, 
+    @Body() overrideDto: CreateAvailabilityOverrideDto,
   ) {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     return this.availabilityService.createOrUpdateOverride(userId, overrideDto);
   }
 
-  @Get('slots') 
+  @Get('slots')
   @ApiOperation({ summary: 'Get available time slots for booking' })
   @ApiOkResponse({ description: 'Returns available slots per day.' })
   @ApiBadRequestResponse({ description: 'Invalid query parameters.' })
-  async getAvailability(@Query() queryDto: GetAvailabilityDto) { 
+  async getAvailability(@Query() queryDto: GetAvailabilityDto) {
     return this.availabilityService.getAvailability(queryDto);
   }
 }

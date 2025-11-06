@@ -1,9 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsNotEmpty, IsUUID } from 'class-validator';
 
-/**
- * DTO defining the query parameters for the GET /availability/slots endpoint.
- */
 export class GetAvailabilityDto {
   @ApiProperty({
     description: 'The ID of the User (Provider) to check availability for.',
@@ -11,7 +8,7 @@ export class GetAvailabilityDto {
   })
   @IsUUID()
   @IsNotEmpty()
-  userId: string; // O ID do User (Provider)
+  userId: string;
 
   @ApiProperty({
     description: 'The ID of the Service Pricing variant being requested (determines duration).',
@@ -19,7 +16,7 @@ export class GetAvailabilityDto {
   })
   @IsUUID()
   @IsNotEmpty()
-  servicePricingId: string; // O ID da variação de preço do serviço
+  servicePricingId: string;
 
   @ApiProperty({
     description: 'The start date of the range to check, in YYYY-MM-DD format.',

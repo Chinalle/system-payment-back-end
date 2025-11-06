@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryColumn,
+  CreateDateColumn
 } from 'typeorm';
 import { QuotationRequest } from './enum';
 import { QuotationEntity } from './quotation.entity';
@@ -28,7 +29,7 @@ export class QuotationRequestEntity {
   @Column({ name: 'status', type: 'enum', enum: QuotationRequest })
   status: QuotationRequest;
 
-  @Column({ name: 'created_at', type: 'timestamptz' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 
   @ManyToOne(() => Services)

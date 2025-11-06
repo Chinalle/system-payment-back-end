@@ -13,15 +13,12 @@ export class ServicesService {
 
     //Services Dependencies
     private readonly companyService: CompanyService,
-  ) {}
+  ) { }
 
   async create(service: CreateServiceDto): Promise<Services> {
     const newServiceDto = {
+      ...service,
       id: uuidv4(),
-      name: service.name,
-      description: service.description,
-      companyId: service.companyId,
-      categoryId: service.categoryId,
     };
 
     return await this.serviceRepository.create(newServiceDto);
