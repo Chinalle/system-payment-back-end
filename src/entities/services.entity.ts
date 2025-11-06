@@ -53,7 +53,7 @@ export class Services {
       onDelete: 'CASCADE',
     },
   )
-  @JoinColumn({ name: 'service_pricing' })
+  @JoinColumn({ name: 'services_pricing' })
   servicePricing: ServicePricing[];
 
   @OneToMany(
