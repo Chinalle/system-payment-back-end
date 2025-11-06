@@ -24,7 +24,7 @@ services:
   
   postgres:
     image: bitnami/postgresql
-    container_name: olympia_db
+    container_name: postgres
     env_file:
       - ./.env
     environment:

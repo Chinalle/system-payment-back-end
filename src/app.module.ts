@@ -4,6 +4,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { AvailabilityModule } from './avaiability/availability.module';
 import { CompanyModule } from './companies/company.module';
 import { DatabaseModule } from './database/database.module';
 import { MailerModule } from './mailer/mailer.module';
@@ -26,6 +27,7 @@ import { UserModule } from './users/user.module';
     ServiceModule,
     QuotationModule,
     QuotationRequestModule,
+    AvailabilityModule,
     PaymentsModule,
     ThrottlerModule.forRoot([
       {

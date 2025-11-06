@@ -14,17 +14,17 @@ export class AvailabilityBreak {
 
   @ManyToOne(() => Availability, (availability) => availability.breaks, {
     nullable: false,
-    onDelete: 'CASCADE', 
+    onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'availability_id' }) 
+  @JoinColumn({ name: 'availability_id' })
   availability: Availability;
 
-  @Column({ length: 100, nullable: true }) 
-  name: string | null; 
+  @Column({ length: 100, nullable: true })
+  name: string;
 
   @Column({ type: 'time', name: 'start_time' })
   startTime: string;
 
-  @Column({ type: 'time', name: 'end_time' }) 
+  @Column({ type: 'time', name: 'end_time' })
   endTime: string;
 }

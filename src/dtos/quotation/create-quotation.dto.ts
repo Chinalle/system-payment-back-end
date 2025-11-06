@@ -1,22 +1,28 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Quotation } from 'src/entities/enum';
+import { IsString, IsUUID, IsInt, Min } from 'class-validator';
 
 export class CreateQuotationDto {
-  @ApiProperty({ name: 'requestId' })
+
+  @ApiProperty()
+  @IsUUID()
   requestId: string;
 
-  @ApiProperty({ name: 'providerId' })
+  @ApiProperty()
+  @IsUUID()
   providerId: string;
 
-  @ApiProperty({ name: 'description' })
+  @ApiProperty()
+  @IsString()
   description: string;
 
-  @ApiProperty({ name: 'proposedPriceInCents', type: 'integer' })
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
   proposedPriceInCents: number;
 
-  @ApiProperty({ name: 'estimatedDurationMinutes', type: 'integer' })
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
   estimatedDurationMinutes: number;
-
-  @ApiProperty({ name: 'status', enumName: 'status', enum: Quotation })
-  status: Quotation;
 }

@@ -6,9 +6,10 @@ import { AvailabilityRepository } from './repository/availability.repository';
 import { Availability } from '../entities/availability.entity';
 import { AvailabilityBreak } from '../entities/availability-break.entity';
 import { AvailabilityOverride } from '../entities/availability-override.entity';
-import { ServicePricing } from '../entities/service-pricing.entity'; 
-import { Appointment } from '../entities/appointment.entity';      
-import { AuthModule } from '../auth/auth.module';                 
+import { ServicePricing } from '../entities/service-pricing.entity';
+import { Appointment } from '../entities/appointment.entity';
+import { AuthModule } from '../auth/auth.module';
+import { CompanyModule } from '../companies/company.module';
 
 @Module({
   imports: [
@@ -17,11 +18,12 @@ import { AuthModule } from '../auth/auth.module';
       AvailabilityBreak,
       AvailabilityOverride,
       ServicePricing,
-      Appointment,
+      Appointment
     ]),
-    AuthModule, 
+    CompanyModule,
+    AuthModule,
   ],
   controllers: [AvailabilityController],
   providers: [AvailabilityService, AvailabilityRepository],
 })
-export class AvailabilityModule {}
+export class AvailabilityModule { }

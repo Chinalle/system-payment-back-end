@@ -1,18 +1,24 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateQuotationDto } from 'src/dtos/quotation/create-quotation.dto';
 import { QuotationEntity } from 'src/entities/quotation.entity';
+import { Quotation } from 'src/entities/enum';
 import { v4 as uuidv4 } from 'uuid';
 import type { IQuotationRepository } from './repository/quotation.repository.interface';
 @Injectable()
 export class QuotationService {
+
   constructor(
     @Inject('IQuotationRepository')
     private readonly quotationRepository: IQuotationRepository,
-  ) {}
+  ) { }
 
   async create(
     createQuotation: CreateQuotationDto,
   ): Promise<QuotationEntity | null> {
+
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 30);
+
     const newQuotationReq = {
       id: uuidv4(),
       requestId: createQuotation.requestId,
@@ -20,7 +26,8 @@ export class QuotationService {
       description: createQuotation.description,
       proposedPriceInCents: createQuotation.proposedPriceInCents,
       estimatedDurationMinutes: createQuotation.estimatedDurationMinutes,
-      status: createQuotation.status,
+      status: Quotation.PROPOSED,
+      expiredAt: expirationDate
     };
 
     const savedQuotationRequest =

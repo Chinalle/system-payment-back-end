@@ -1,16 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { QuotationRequest } from 'src/entities/enum';
+import { IsString, IsUUID, IsOptional } from 'class-validator';
 
 export class CreateQuotationRequestDto {
   @ApiProperty({ name: 'serviceId' })
+  @IsUUID()
   serviceId: string;
 
   @ApiProperty({ name: 'ClientId' })
+  @IsUUID()
   clientId: string;
 
   @ApiProperty({ name: 'clientNotes' })
+  @IsString()
+  @IsOptional()
   clientNotes: string;
-
-  @ApiProperty({ name: 'status', enumName: 'status', enum: QuotationRequest })
-  status: QuotationRequest;
 }

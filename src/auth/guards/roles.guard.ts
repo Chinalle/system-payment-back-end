@@ -16,7 +16,7 @@ export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private readonly companyMemberService: CompanyMemberService,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -45,7 +45,7 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const companyId = params.companyId;
+    const companyId = request.headers['x-company-id'];
     if (!companyId) {
       throw new ForbiddenException(
         'Company context (companyId) is required for this action.',

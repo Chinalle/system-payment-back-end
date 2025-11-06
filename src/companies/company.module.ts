@@ -12,12 +12,6 @@ import { CompanyRepository } from './repository/company.repository';
 @Module({
   imports: [TypeOrmModule.forFeature([Company, CompanyMember])],
   controllers: [CompanyController, CompanyMembersController],
-  exports: [
-    CompanyService,
-    CompanyMemberService,
-    'ICompanyRepository',
-    'ICompanyMemberRepository',
-  ],
   providers: [
     CompanyService,
     CompanyMemberService,
@@ -30,5 +24,11 @@ import { CompanyRepository } from './repository/company.repository';
       useClass: companyMemberRepository,
     },
   ],
+  exports: [
+    CompanyService,
+    CompanyMemberService,
+    'ICompanyRepository',
+    'ICompanyMemberRepository',
+  ],
 })
-export class CompanyModule {}
+export class CompanyModule { }
