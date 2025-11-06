@@ -8,7 +8,7 @@ export class CreateServicePricing1760325816963 implements MigrationInterface {
         name: this.tableName,
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
-          { name: 'service_id', type: 'uuid', isPrimary: true },
+          { name: 'service_id', type: 'uuid' },
           { name: 'name', type: 'varchar', length: '120' },
           { name: 'description', type: 'text' },
           { name: 'price_in_cents', type: 'int' },
