@@ -27,6 +27,7 @@ import { UserModule } from './users/user.module';
     ServiceModule,
     QuotationModule,
     QuotationRequestModule,
+    AvailabilityModule,
     PaymentsModule,
     AvailabilityModule,
     PaymentsModule,
