@@ -1,10 +1,10 @@
 import {
-  Entity,
-  PrimaryColumn,
   Column,
-  ManyToOne,
-  JoinColumn,
   CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Services } from './services.entity';
@@ -23,10 +23,10 @@ export class ServicePricing {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'int' })
+  @Column({ name: 'price_in_cents', type: 'int' })
   priceInCents: number;
 
-  @Column({ type: 'int' })
+  @Column({ name: 'duration_in_minutes', type: 'int' })
   durationInMinutes: number;
 
   @Column({ name: 'is_active', type: 'boolean', default: true })

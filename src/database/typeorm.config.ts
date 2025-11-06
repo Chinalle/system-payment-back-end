@@ -15,8 +15,8 @@ const dataSourceOptions: DataSourceOptions = {
   username: configService.get<string>('POSTGRES_USER'),
   password: configService.get<string>('POSTGRES_PASSWORD'),
   database: configService.get<string>('POSTGRES_DB'),
-  entities: [join(__dirname, '../**/**/*entity{.ts,.js}')],
-  migrations: [join(__dirname, '../database/migrations/**/*{.ts,.js}')],
+  entities: ['src/**/*.entity.ts'],
+  migrations: ['src/database/migrations/**/*.ts'],
   migrationsTableName: 'migrations',
 };
 

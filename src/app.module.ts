@@ -11,6 +11,7 @@ import { QuotationRequestModule } from './quotation-request/quotation-request.mo
 import { QuotationModule } from './quotation/quotation.module';
 import { ServiceModule } from './services/service.module';
 import { UserModule } from './users/user.module';
+import { AvailabilityModule } from './avaiability/availability.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UserModule } from './users/user.module';
     ServiceModule,
     QuotationModule,
     QuotationRequestModule,
+    AvailabilityModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
@@ -40,4 +42,4 @@ import { UserModule } from './users/user.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
