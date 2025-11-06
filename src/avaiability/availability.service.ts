@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AvailabilityRepository } from './repository/availability.repository';
-import { UpdateAvailabilityDto } from './dto/update-availability.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Between, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { Appointment, AppointmentStatus } from '../entities/appointment.entity';
+import { AvailabilityOverride } from '../entities/availability-override.entity';
+import { Availability } from '../entities/availability.entity';
+import { ServicePricing } from '../entities/service-pricing.entity';
 import { CreateAvailabilityOverrideDto } from './dto/create-availability-override.dto';
 import { GetAvailabilityDto } from './dto/get-availability.dto';
-import { AvailabilityOverride } from '../entities/availability-override.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ServicePricing } from '../entities/service-pricing.entity'; 
-import { Appointment, AppointmentStatus } from '../entities/appointment.entity';
-import { Availability } from '../entities/availability.entity';
-import { Between, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { UpdateAvailabilityDto } from './dto/update-availability.dto';
+import { AvailabilityRepository } from './repository/availability.repository';
 
 @Injectable()
 export class AvailabilityService {
@@ -22,7 +22,7 @@ export class AvailabilityService {
     private readonly availabilityRepo: Repository<Availability>,
     @InjectRepository(AvailabilityOverride)
     private readonly overrideRepo: Repository<AvailabilityOverride>,
-  ) {}
+  ) { }
 
   async updateWeeklyAvailability(
     userId: string,
@@ -52,7 +52,7 @@ export class AvailabilityService {
 
     const standardAvailability = await this.availabilityRepo.find({
       where: { user: { id: userId } },
-      relations: ['breaks'], 
+      relations: ['breaks'],
     });
 
     const overrides = await this.overrideRepo.find({
@@ -76,14 +76,14 @@ export class AvailabilityService {
 
     const availableSlotsByDay: { date: string; slots: string[] }[] = [];
     const currentDate = new Date(Date.UTC(
-        parseInt(startDate.substring(0, 4)),
-        parseInt(startDate.substring(5, 7)) - 1,
-        parseInt(startDate.substring(8, 10))
+      parseInt(startDate.substring(0, 4)),
+      parseInt(startDate.substring(5, 7)) - 1,
+      parseInt(startDate.substring(8, 10))
     ));
     const lastDate = new Date(Date.UTC(
-        parseInt(endDate.substring(0, 4)),
-        parseInt(endDate.substring(5, 7)) - 1,
-        parseInt(endDate.substring(8, 10))
+      parseInt(endDate.substring(0, 4)),
+      parseInt(endDate.substring(5, 7)) - 1,
+      parseInt(endDate.substring(8, 10))
     ));
 
 
@@ -104,7 +104,7 @@ export class AvailabilityService {
         if (standardDay && standardDay.isAvailable && standardDay.startTime && standardDay.endTime) {
           workHours.push({ start: standardDay.startTime, end: standardDay.endTime });
           standardDay.breaks?.forEach(b => {
-            if (b.startTime && b.endTime) { 
+            if (b.startTime && b.endTime) {
               busySlots.push({ start: b.startTime, end: b.endTime });
             }
           });
@@ -134,15 +134,19 @@ export class AvailabilityService {
 
   private generateSlots(workHours: { start: string; end: string }[], busySlots: { start: string; end: string }[], duration: number): string[] {
     const slots: string[] = [];
-    const interval = 30; 
+    const interval = 30;
 
     const timeToMinutes = (time: string | null): number | null => {
       if (!time) return null;
       const parts = time.split(':');
-      if (parts.length !== 2) return null; 
+
+      if (parts.length < 2) return null;
+
       const hours = parseInt(parts[0], 10);
       const minutes = parseInt(parts[1], 10);
+
       if (isNaN(hours) || isNaN(minutes)) return null;
+
       return hours * 60 + minutes;
     };
 
@@ -151,8 +155,8 @@ export class AvailabilityService {
       .filter(interval => interval.start !== null && interval.end !== null && interval.end > interval.start) as { start: number; end: number }[]; // Filtrar intervalos inválidos
 
     const busyIntervals = busySlots
-       .map(bs => ({ start: timeToMinutes(bs.start), end: timeToMinutes(bs.end) }))
-       .filter(interval => interval.start !== null && interval.end !== null && interval.end > interval.start) as { start: number; end: number }[]; // Filtrar intervalos inválidos
+      .map(bs => ({ start: timeToMinutes(bs.start), end: timeToMinutes(bs.end) }))
+      .filter(interval => interval.start !== null && interval.end !== null && interval.end > interval.start) as { start: number; end: number }[]; // Filtrar intervalos inválidos
     busyIntervals.sort((a, b) => a.start - b.start);
 
     for (const workInterval of workIntervals) {
@@ -163,14 +167,14 @@ export class AvailabilityService {
         let isAvailable = true;
 
         if (slotEnd > workInterval.end) {
-             isAvailable = false;
-             continue; 
+          isAvailable = false;
+          continue;
         }
 
         for (const busy of busyIntervals) {
           if (slotStart < busy.end && slotEnd > busy.start) {
             isAvailable = false;
-            break; 
+            break;
           }
         }
 
