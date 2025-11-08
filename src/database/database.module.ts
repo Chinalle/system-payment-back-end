@@ -10,11 +10,11 @@ import { join } from 'path';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get<string>('POSTGRES_HOST'),
-        port: configService.get<number>('POSTGRES_PORT'),
-        username: configService.get<string>('POSTGRES_USER'),
-        password: configService.get<string>('POSTGRES_PASSWORD'),
-        database: configService.get<string>('POSTGRES_DB'),
+        host: configService.get<string>('POSTGRESQL_HOST'),
+        port: configService.get<number>('POSTGRESQL_PORT'),
+        username: configService.get<string>('POSTGRESQL_USERNAME'),
+        password: configService.get<string>('POSTGRESQL_PASSWORD'),
+        database: configService.get<string>('POSTGRESQL_DATABASE'),
 
         entities: [join(__dirname, '../**/**/*entity{.ts,.js}')],
         autoLoadEntities: true,
@@ -28,4 +28,4 @@ import { join } from 'path';
     }),
   ],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

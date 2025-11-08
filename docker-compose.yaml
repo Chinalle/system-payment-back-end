@@ -29,9 +29,9 @@ services:
       - ./.env
     environment:
       NODE_ENV: "development"
-      POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRESQL_DATABASE: "${POSTGRESQL_DATABASE}"
+      POSTGRESQL_USERNAME: "${POSTGRESQL_USERNAME}"
+      POSTGRESQL_PASSWORD: "${POSTGRESQL_PASSWORD}"
     ports:
       - '5432:5432'
 
