@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
@@ -40,7 +41,9 @@ export class CreateAvailabilityOverrideDto {
   })
   @ValidateIf((o) => o.is_available === true)
   @IsNotEmpty({ message: 'Start time cannot be empty when available.' })
-  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: 'Start time must be in HH:mm format' })
+  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+    message: 'Start time must be in HH:mm format',
+  })
   start_time?: string; // Corresponde à coluna 'start_time'
 
   @ApiProperty({
@@ -51,7 +54,9 @@ export class CreateAvailabilityOverrideDto {
   })
   @ValidateIf((o) => o.is_available === true)
   @IsNotEmpty({ message: 'End time cannot be empty when available.' })
-  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: 'End time must be in HH:mm format' })
+  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+    message: 'End time must be in HH:mm format',
+  })
   end_time?: string; // Corresponde à coluna 'end_time'
 
   @ApiProperty({

@@ -31,4 +31,4 @@ import { CompanyRepository } from './repository/company.repository';
     'ICompanyMemberRepository',
   ],
 })
-export class CompanyModule { }
+export class CompanyModule {}

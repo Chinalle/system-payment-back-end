@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Body,
   Controller,
@@ -31,7 +33,7 @@ import { UpdateAvailabilityDto } from './dto/update-availability.dto';
 @ApiTags('Availability')
 @Controller('availability')
 export class AvailabilityController {
-  constructor(private readonly availabilityService: AvailabilityService) { }
+  constructor(private readonly availabilityService: AvailabilityService) {}
 
   @Put('weekly')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -56,8 +58,12 @@ export class AvailabilityController {
   @ProviderRoles(RoleProvider.MANAGER, RoleProvider.COLLABORATOR)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create or update an availability override (holiday, block)' })
-  @ApiCreatedResponse({ description: 'Availability override saved successfully.' })
+  @ApiOperation({
+    summary: 'Create or update an availability override (holiday, block)',
+  })
+  @ApiCreatedResponse({
+    description: 'Availability override saved successfully.',
+  })
   @ApiBadRequestResponse({ description: 'Invalid data provided.' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
   async createOrUpdateOverride(

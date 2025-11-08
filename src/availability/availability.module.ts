@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from '../auth/auth.module';
+import { CompanyModule } from '../companies/company.module';
+import { Appointment } from '../entities/appointment.entity';
+import { AvailabilityBreak } from '../entities/availability-break.entity';
+import { AvailabilityOverride } from '../entities/availability-override.entity';
+import { Availability } from '../entities/availability.entity';
+import { ServicePricing } from '../entities/service-pricing.entity';
 import { AvailabilityController } from './availability.controller';
 import { AvailabilityService } from './availability.service';
 import { AvailabilityRepository } from './repository/availability.repository';
-import { Availability } from '../entities/availability.entity';
-import { AvailabilityBreak } from '../entities/availability-break.entity';
-import { AvailabilityOverride } from '../entities/availability-override.entity';
-import { ServicePricing } from '../entities/service-pricing.entity';
-import { Appointment } from '../entities/appointment.entity';
-import { AuthModule } from '../auth/auth.module';
-import { CompanyModule } from '../companies/company.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { CompanyModule } from '../companies/company.module';
       AvailabilityBreak,
       AvailabilityOverride,
       ServicePricing,
-      Appointment
+      Appointment,
     ]),
     CompanyModule,
     AuthModule,
@@ -26,4 +26,4 @@ import { CompanyModule } from '../companies/company.module';
   controllers: [AvailabilityController],
   providers: [AvailabilityService, AvailabilityRepository],
 })
-export class AvailabilityModule { }
+export class AvailabilityModule {}

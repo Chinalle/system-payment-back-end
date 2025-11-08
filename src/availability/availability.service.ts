@@ -1,6 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import {
+  Between,
+  In,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 import { Appointment, AppointmentStatus } from '../entities/appointment.entity';
 import { AvailabilityOverride } from '../entities/availability-override.entity';
 import { Availability } from '../entities/availability.entity';
@@ -22,7 +28,7 @@ export class AvailabilityService {
     private readonly availabilityRepo: Repository<Availability>,
     @InjectRepository(AvailabilityOverride)
     private readonly overrideRepo: Repository<AvailabilityOverride>,
-  ) { }
+  ) {}
 
   async updateWeeklyAvailability(
     userId: string,
@@ -38,15 +44,24 @@ export class AvailabilityService {
     userId: string,
     overrideDto: CreateAvailabilityOverrideDto,
   ): Promise<AvailabilityOverride> {
-    return this.availabilityRepository.createOrUpdateOverride(userId, overrideDto);
+    return this.availabilityRepository.createOrUpdateOverride(
+      userId,
+      overrideDto,
+    );
   }
 
-  async getAvailability(queryDto: GetAvailabilityDto): Promise<{ availableSlots: { date: string; slots: string[] }[] }> {
+  async getAvailability(
+    queryDto: GetAvailabilityDto,
+  ): Promise<{ availableSlots: { date: string; slots: string[] }[] }> {
     const { userId, servicePricingId, startDate, endDate } = queryDto;
 
-    const servicePricing = await this.servicePricingRepository.findOneBy({ id: servicePricingId });
+    const servicePricing = await this.servicePricingRepository.findOneBy({
+      id: servicePricingId,
+    });
     if (!servicePricing || !servicePricing.durationInMinutes) {
-      throw new NotFoundException(`Service pricing with ID ${servicePricingId} not found or has no duration.`);
+      throw new NotFoundException(
+        `Service pricing with ID ${servicePricingId} not found or has no duration.`,
+      );
     }
     const serviceDuration = servicePricing.durationInMinutes;
 
@@ -58,7 +73,7 @@ export class AvailabilityService {
     const overrides = await this.overrideRepo.find({
       where: {
         user: { id: userId },
-        overrideDate: Between(startDate, endDate)
+        overrideDate: Between(startDate, endDate),
       },
     });
 
@@ -71,21 +86,24 @@ export class AvailabilityService {
       },
       order: {
         startTime: 'ASC',
-      }
+      },
     });
 
     const availableSlotsByDay: { date: string; slots: string[] }[] = [];
-    const currentDate = new Date(Date.UTC(
-      parseInt(startDate.substring(0, 4)),
-      parseInt(startDate.substring(5, 7)) - 1,
-      parseInt(startDate.substring(8, 10))
-    ));
-    const lastDate = new Date(Date.UTC(
-      parseInt(endDate.substring(0, 4)),
-      parseInt(endDate.substring(5, 7)) - 1,
-      parseInt(endDate.substring(8, 10))
-    ));
-
+    const currentDate = new Date(
+      Date.UTC(
+        parseInt(startDate.substring(0, 4)),
+        parseInt(startDate.substring(5, 7)) - 1,
+        parseInt(startDate.substring(8, 10)),
+      ),
+    );
+    const lastDate = new Date(
+      Date.UTC(
+        parseInt(endDate.substring(0, 4)),
+        parseInt(endDate.substring(5, 7)) - 1,
+        parseInt(endDate.substring(8, 10)),
+      ),
+    );
 
     while (currentDate <= lastDate) {
       const dayStr = currentDate.toISOString().split('T')[0]; // Formato YYYY-MM-DD
@@ -94,16 +112,26 @@ export class AvailabilityService {
       const workHours: { start: string; end: string }[] = [];
       const busySlots: { start: string; end: string }[] = [];
 
-      const override = overrides.find(o => o.overrideDate === dayStr);
+      const override = overrides.find((o) => o.overrideDate === dayStr);
       if (override) {
         if (override.isAvailable && override.startTime && override.endTime) {
           workHours.push({ start: override.startTime, end: override.endTime });
         }
       } else {
-        const standardDay = standardAvailability.find(a => a.dayOfWeek === dayOfWeek);
-        if (standardDay && standardDay.isAvailable && standardDay.startTime && standardDay.endTime) {
-          workHours.push({ start: standardDay.startTime, end: standardDay.endTime });
-          standardDay.breaks?.forEach(b => {
+        const standardDay = standardAvailability.find(
+          (a) => a.dayOfWeek === dayOfWeek,
+        );
+        if (
+          standardDay &&
+          standardDay.isAvailable &&
+          standardDay.startTime &&
+          standardDay.endTime
+        ) {
+          workHours.push({
+            start: standardDay.startTime,
+            end: standardDay.endTime,
+          });
+          standardDay.breaks?.forEach((b) => {
             if (b.startTime && b.endTime) {
               busySlots.push({ start: b.startTime, end: b.endTime });
             }
@@ -111,7 +139,7 @@ export class AvailabilityService {
         }
       }
 
-      existingAppointments.forEach(appt => {
+      existingAppointments.forEach((appt) => {
         const apptStart = new Date(appt.startTime);
         const apptEnd = new Date(appt.endTime);
         if (apptStart.toISOString().split('T')[0] === dayStr) {
@@ -121,7 +149,11 @@ export class AvailabilityService {
         }
       });
 
-      const daySlots = this.generateSlots(workHours, busySlots, serviceDuration);
+      const daySlots = this.generateSlots(
+        workHours,
+        busySlots,
+        serviceDuration,
+      );
       if (daySlots.length > 0) {
         availableSlotsByDay.push({ date: dayStr, slots: daySlots });
       }
@@ -132,7 +164,11 @@ export class AvailabilityService {
     return { availableSlots: availableSlotsByDay };
   }
 
-  private generateSlots(workHours: { start: string; end: string }[], busySlots: { start: string; end: string }[], duration: number): string[] {
+  private generateSlots(
+    workHours: { start: string; end: string }[],
+    busySlots: { start: string; end: string }[],
+    duration: number,
+  ): string[] {
     const slots: string[] = [];
     const interval = 30;
 
@@ -151,16 +187,36 @@ export class AvailabilityService {
     };
 
     const workIntervals = workHours
-      .map(wh => ({ start: timeToMinutes(wh.start), end: timeToMinutes(wh.end) }))
-      .filter(interval => interval.start !== null && interval.end !== null && interval.end > interval.start) as { start: number; end: number }[]; // Filtrar intervalos inválidos
+      .map((wh) => ({
+        start: timeToMinutes(wh.start),
+        end: timeToMinutes(wh.end),
+      }))
+      .filter(
+        (interval) =>
+          interval.start !== null &&
+          interval.end !== null &&
+          interval.end > interval.start,
+      ) as { start: number; end: number }[]; // Filtrar intervalos inválidos
 
     const busyIntervals = busySlots
-      .map(bs => ({ start: timeToMinutes(bs.start), end: timeToMinutes(bs.end) }))
-      .filter(interval => interval.start !== null && interval.end !== null && interval.end > interval.start) as { start: number; end: number }[]; // Filtrar intervalos inválidos
+      .map((bs) => ({
+        start: timeToMinutes(bs.start),
+        end: timeToMinutes(bs.end),
+      }))
+      .filter(
+        (interval) =>
+          interval.start !== null &&
+          interval.end !== null &&
+          interval.end > interval.start,
+      ) as { start: number; end: number }[]; // Filtrar intervalos inválidos
     busyIntervals.sort((a, b) => a.start - b.start);
 
     for (const workInterval of workIntervals) {
-      for (let time = workInterval.start; time <= workInterval.end - duration; time += interval) {
+      for (
+        let time = workInterval.start;
+        time <= workInterval.end - duration;
+        time += interval
+      ) {
         const slotStart = time;
         const slotEnd = time + duration;
 
@@ -179,7 +235,9 @@ export class AvailabilityService {
         }
 
         if (isAvailable) {
-          const hours = Math.floor(slotStart / 60).toString().padStart(2, '0');
+          const hours = Math.floor(slotStart / 60)
+            .toString()
+            .padStart(2, '0');
           const minutes = (slotStart % 60).toString().padStart(2, '0');
           slots.push(`${hours}:${minutes}`);
         }
