@@ -13,8 +13,8 @@ export class CreateAvailabilityTables1762373718906
           { name: 'id', type: 'uuid', isPrimary: true },
           { name: 'user_id', type: 'uuid', isNullable: false },
           { name: 'day_of_week', type: 'int', isNullable: false },
-          { name: 'start_time', type: 'timestampz' },
-          { name: 'end_time', type: 'timestampz' },
+          { name: 'start_time', type: 'timestamptz' },
+          { name: 'end_time', type: 'timestamptz' },
           { name: 'is_available', type: 'boolean' },
         ],
 
