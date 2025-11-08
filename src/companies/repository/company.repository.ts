@@ -19,6 +19,14 @@ export class CompanyRepository implements ICompanyRepository {
   async update(updateCompanyDto: UpdatedCompanyDto): Promise<Company> {
     return await this.companyRepository.save(updateCompanyDto);
   }
+  async updateStripeAccountId(companyId: string, acc: string): Promise<void> {
+    await this.companyRepository.update(
+      { id: companyId },
+      {
+        stripeAccountId: acc,
+      },
+    );
+  }
 
   async create(companyDto: CreateCompanyDto): Promise<Company> {
     return await this.companyRepository.save(companyDto);

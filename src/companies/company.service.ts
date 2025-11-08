@@ -133,4 +133,8 @@ export class CompanyService {
 
     return existingCompany;
   }
+
+  async updateStripeAccountId(companyId: string, acc: string) {
+    await this.companyRepository.updateStripeAccountId(companyId, acc);
+  }
 }

@@ -1,205 +1,38 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateAvailabilityTables1762373718906 implements MigrationInterface {
-    name = 'CreateAvailabilityTables1762373718906'
+export class CreateAvailabilityTables1762373718906
+  implements MigrationInterface
+{
+  private tableName = 'availability';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "quotation" DROP CONSTRAINT "FKQuotationRequest"`);
-        await queryRunner.query(`ALTER TABLE "quotation" DROP CONSTRAINT "FKUser"`);
-        await queryRunner.query(`ALTER TABLE "quotation_request" DROP CONSTRAINT "FKService"`);
-        await queryRunner.query(`ALTER TABLE "quotation_request" DROP CONSTRAINT "FKUser"`);
-        await queryRunner.query(`ALTER TABLE "portfolio_images" DROP CONSTRAINT "FKServiceCompany"`);
-        await queryRunner.query(`ALTER TABLE "services" DROP CONSTRAINT "FKServiceCompany"`);
-        await queryRunner.query(`ALTER TABLE "services" DROP CONSTRAINT "FKServiceCategory"`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP CONSTRAINT "FKUserMember"`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP CONSTRAINT "FKCompanyMember"`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP CONSTRAINT "FKUserAddress"`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP CONSTRAINT "FKCompany"`);
-        await queryRunner.query(`CREATE TABLE "service_portfolio_image" ("id" uuid NOT NULL, "name" character varying(255) NOT NULL, "portfolio_images_id" uuid NOT NULL, "service_id" uuid NOT NULL, "portfolio_images" uuid, CONSTRAINT "PK_d641e6e5b9e499bba158bc0ea88" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "availability_break" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(100), "start_time" TIME NOT NULL, "end_time" TIME NOT NULL, "availability_id" uuid NOT NULL, CONSTRAINT "PK_55979f0c5b58e7804729e8cb12e" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "availability" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "day_of_week" integer NOT NULL, "start_time" TIME, "end_time" TIME, "is_available" boolean NOT NULL DEFAULT false, "user_id" uuid NOT NULL, CONSTRAINT "PK_05a8158cf1112294b1c86e7f1d3" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "availability_override" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "override_date" date NOT NULL, "start_time" TIME, "end_time" TIME, "is_available" boolean NOT NULL DEFAULT false, "description" text, "user_id" uuid NOT NULL, CONSTRAINT "PK_65233ed10f8dc3e16903e06b317" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TYPE "public"."appointment_status_enum" AS ENUM('SCHEDULED', 'CONFIRMED', 'CANCELED', 'COMPLETED')`);
-        await queryRunner.query(`CREATE TABLE "appointment" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "status" "public"."appointment_status_enum" NOT NULL DEFAULT 'SCHEDULED', "start_time" TIMESTAMP WITH TIME ZONE NOT NULL, "end_time" TIMESTAMP WITH TIME ZONE NOT NULL, "client_notes" text, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "services_pricing_id" uuid, "client_id" uuid NOT NULL, "provider_id" uuid NOT NULL, CONSTRAINT "PK_e8be1a53027415e709ce8a2db74" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`ALTER TABLE "portfolio_images" ADD "name" character varying(255) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "quotation" ADD CONSTRAINT "UQ_7f3c6238228cb519e5aecba5639" UNIQUE ("request_id")`);
-        await queryRunner.query(`ALTER TYPE "public"."quotation_status_enum" RENAME TO "quotation_status_enum_old"`);
-        await queryRunner.query(`CREATE TYPE "public"."quotation_status_enum" AS ENUM('pending', 'answered', 'rejected', 'expired')`);
-        await queryRunner.query(`ALTER TABLE "quotation" ALTER COLUMN "status" TYPE "public"."quotation_status_enum" USING "status"::"text"::"public"."quotation_status_enum"`);
-        await queryRunner.query(`DROP TYPE "public"."quotation_status_enum_old"`);
-        await queryRunner.query(`ALTER TABLE "quotation" ALTER COLUMN "expired_at" DROP DEFAULT`);
-        await queryRunner.query(`ALTER TABLE "quotation_request" ALTER COLUMN "created_at" DROP DEFAULT`);
-        await queryRunner.query(`ALTER TABLE "services" DROP COLUMN "name"`);
-        await queryRunner.query(`ALTER TABLE "services" ADD "name" character varying(255) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "services" ALTER COLUMN "requires_quotation" DROP DEFAULT`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP CONSTRAINT "PK_3aa16d76bd0082f2c2e6ec62ffb"`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD CONSTRAINT "PK_fef18df355192fa1e0b95fcbdad" PRIMARY KEY ("id", "user_id")`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP CONSTRAINT "PK_fef18df355192fa1e0b95fcbdad"`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD CONSTRAINT "PK_50735265431b38042b357626756" PRIMARY KEY ("id")`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD CONSTRAINT "UQ_b79e769f56204286c7929a84a2c" UNIQUE ("user_id")`);
-        await queryRunner.query(`ALTER TYPE "public"."company_role_enum" RENAME TO "company_role_enum_old"`);
-        await queryRunner.query(`CREATE TYPE "public"."company_member_provider_role_enum" AS ENUM('manager', 'collaborator')`);
-        await queryRunner.query(`ALTER TABLE "company_member" ALTER COLUMN "provider_role" TYPE "public"."company_member_provider_role_enum" USING "provider_role"::"text"::"public"."company_member_provider_role_enum"`);
-        await queryRunner.query(`DROP TYPE "public"."company_role_enum_old"`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP COLUMN "created_at"`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP COLUMN "updated_at"`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()`);
-        //await queryRunner.query(`ALTER TABLE "company" DROP CONSTRAINT "UQ_a76c5cd486f7779bd9c319afd27"`);
-        //await queryRunner.query(`ALTER TABLE "company" DROP CONSTRAINT "UQ_b55d9c6e6adfa3c6de735c5a2eb"`);
-        //await queryRunner.query(`ALTER TABLE "company" DROP COLUMN "cnpj"`);
-        //await queryRunner.query(`ALTER TABLE "company" ADD "cnpj" character varying NOT NULL`);
-        //await queryRunner.query(`ALTER TABLE "company" ADD CONSTRAINT "UQ_b55d9c6e6adfa3c6de735c5a2eb" UNIQUE ("cnpj")`);
-        //await queryRunner.query(`ALTER TABLE "company" ALTER COLUMN "description" SET NOT NULL`);
-        //await queryRunner.query(`ALTER TABLE "company" ALTER COLUMN "rating" DROP NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "street"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "street" character varying(255) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "complement"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "complement" character varying(255)`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "number"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "number" character varying(45) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" ALTER COLUMN "district" SET NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "city"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "city" character varying(255) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "state"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "state" character varying(255) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "zip_code"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "zip_code" character varying(255) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "created_at"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "updated_at"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()`);
-        await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3"`);
-        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "email"`);
-        await queryRunner.query(`ALTER TABLE "users" ADD "email" character varying(60) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email")`);
-        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "phone" SET NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "birth_date" SET NOT NULL`);
-        await queryRunner.query(`ALTER TYPE "public"."user_role_enum" RENAME TO "user_role_enum_old"`);
-        await queryRunner.query(`CREATE TYPE "public"."users_role_enum" AS ENUM('client', 'provider', 'admin')`);
-        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "role" TYPE "public"."users_role_enum" USING "role"::"text"::"public"."users_role_enum"`);
-        await queryRunner.query(`DROP TYPE "public"."user_role_enum_old"`);
-        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "is_confirmed" SET DEFAULT false`);
-        await queryRunner.query(`ALTER TABLE "quotation" ADD CONSTRAINT "FK_7f3c6238228cb519e5aecba5639" FOREIGN KEY ("request_id") REFERENCES "quotation_request"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "quotation" ADD CONSTRAINT "FK_c8af2cc5464abb73cdafd466c3d" FOREIGN KEY ("provider_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "quotation_request" ADD CONSTRAINT "FK_279eecdc9293f75aeb6e04a48a8" FOREIGN KEY ("service_id") REFERENCES "services"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "quotation_request" ADD CONSTRAINT "FK_1bbbac6019dfad7e8f18d605784" FOREIGN KEY ("client_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "portfolio_images" ADD CONSTRAINT "FK_34da357feaedf456530842fb613" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "service_portfolio_image" ADD CONSTRAINT "FK_04321a1c254eab26167a258bb2e" FOREIGN KEY ("service_id") REFERENCES "services"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "service_portfolio_image" ADD CONSTRAINT "FK_440d93d7b8898b3f42b399e6530" FOREIGN KEY ("portfolio_images") REFERENCES "portfolio_images"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "services_pricing" ADD CONSTRAINT "FK_e79f701112c0b6561584e5fa42f" FOREIGN KEY ("service_id") REFERENCES "services"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "services" ADD CONSTRAINT "FK_8e753d53a2de803b47ed9acec4c" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "services" ADD CONSTRAINT "FK_1f8d1173481678a035b4a81a4ec" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD CONSTRAINT "FK_d1e54984ccc83a08feb48c614ce" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD CONSTRAINT "FK_b79e769f56204286c7929a84a2c" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD CONSTRAINT "FK_16aac8a9f6f9c1dd6bcb75ec023" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD CONSTRAINT "FK_21b07f425d667f94949fcc07914" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "availability_break" ADD CONSTRAINT "FK_baec334af1a74bde3eb83a52145" FOREIGN KEY ("availability_id") REFERENCES "availability"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "availability" ADD CONSTRAINT "FK_b6c2e41eb4c62deeeb43451bf33" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "availability_override" ADD CONSTRAINT "FK_74fe4140fcbee8b5600b8845376" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "appointment" ADD CONSTRAINT "FK_8bbe73e17a38253534a64f5aa65" FOREIGN KEY ("services_pricing_id") REFERENCES "services_pricing"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "appointment" ADD CONSTRAINT "FK_86361ca7754614e2602af531c74" FOREIGN KEY ("client_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "appointment" ADD CONSTRAINT "FK_378ea106aad574466ce9c50b365" FOREIGN KEY ("provider_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-    }
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: this.tableName,
+        columns: [
+          { name: 'id', type: 'uuid', isPrimary: true },
+          { name: 'user_id', type: 'uuid', isNullable: false },
+          { name: 'day_of_week', type: 'int', isNullable: false },
+          { name: 'start_time', type: 'timestampz' },
+          { name: 'end_time', type: 'timestampz' },
+          { name: 'is_available', type: 'boolean' },
+        ],
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "appointment" DROP CONSTRAINT "FK_378ea106aad574466ce9c50b365"`);
-        await queryRunner.query(`ALTER TABLE "appointment" DROP CONSTRAINT "FK_86361ca7754614e2602af531c74"`);
-        await queryRunner.query(`ALTER TABLE "appointment" DROP CONSTRAINT "FK_8bbe73e17a38253534a64f5aa65"`);
-        await queryRunner.query(`ALTER TABLE "availability_override" DROP CONSTRAINT "FK_74fe4140fcbee8b5600b8845376"`);
-        await queryRunner.query(`ALTER TABLE "availability" DROP CONSTRAINT "FK_b6c2e41eb4c62deeeb43451bf33"`);
-        await queryRunner.query(`ALTER TABLE "availability_break" DROP CONSTRAINT "FK_baec334af1a74bde3eb83a52145"`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP CONSTRAINT "FK_21b07f425d667f94949fcc07914"`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP CONSTRAINT "FK_16aac8a9f6f9c1dd6bcb75ec023"`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP CONSTRAINT "FK_b79e769f56204286c7929a84a2c"`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP CONSTRAINT "FK_d1e54984ccc83a08feb48c614ce"`);
-        await queryRunner.query(`ALTER TABLE "services" DROP CONSTRAINT "FK_1f8d1173481678a035b4a81a4ec"`);
-        await queryRunner.query(`ALTER TABLE "services" DROP CONSTRAINT "FK_8e753d53a2de803b47ed9acec4c"`);
-        await queryRunner.query(`ALTER TABLE "services_pricing" DROP CONSTRAINT "FK_e79f701112c0b6561584e5fa42f"`);
-        await queryRunner.query(`ALTER TABLE "service_portfolio_image" DROP CONSTRAINT "FK_440d93d7b8898b3f42b399e6530"`);
-        await queryRunner.query(`ALTER TABLE "service_portfolio_image" DROP CONSTRAINT "FK_04321a1c254eab26167a258bb2e"`);
-        await queryRunner.query(`ALTER TABLE "portfolio_images" DROP CONSTRAINT "FK_34da357feaedf456530842fb613"`);
-        await queryRunner.query(`ALTER TABLE "quotation_request" DROP CONSTRAINT "FK_1bbbac6019dfad7e8f18d605784"`);
-        await queryRunner.query(`ALTER TABLE "quotation_request" DROP CONSTRAINT "FK_279eecdc9293f75aeb6e04a48a8"`);
-        await queryRunner.query(`ALTER TABLE "quotation" DROP CONSTRAINT "FK_c8af2cc5464abb73cdafd466c3d"`);
-        await queryRunner.query(`ALTER TABLE "quotation" DROP CONSTRAINT "FK_7f3c6238228cb519e5aecba5639"`);
-        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "is_confirmed" DROP DEFAULT`);
-        await queryRunner.query(`CREATE TYPE "public"."user_role_enum_old" AS ENUM('client', 'provider', 'admin')`);
-        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "role" TYPE "public"."user_role_enum_old" USING "role"::"text"::"public"."user_role_enum_old"`);
-        await queryRunner.query(`DROP TYPE "public"."users_role_enum"`);
-        await queryRunner.query(`ALTER TYPE "public"."user_role_enum_old" RENAME TO "user_role_enum"`);
-        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "birth_date" DROP NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "phone" DROP NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3"`);
-        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "email"`);
-        await queryRunner.query(`ALTER TABLE "users" ADD "email" character varying(255) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email")`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "updated_at"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "updated_at" TIMESTAMP NOT NULL DEFAULT now()`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "created_at"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "created_at" TIMESTAMP NOT NULL DEFAULT now()`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "zip_code"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "zip_code" character varying(15) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "state"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "state" character varying(2) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "city"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "city" character varying(100) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" ALTER COLUMN "district" DROP NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "number"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "number" character varying(20) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "complement"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "complement" character varying(100)`);
-        await queryRunner.query(`ALTER TABLE "addresses" DROP COLUMN "street"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD "street" character varying(100) NOT NULL`);
-        //await queryRunner.query(`ALTER TABLE "company" ALTER COLUMN "rating" SET NOT NULL`);
-        //await queryRunner.query(`ALTER TABLE "company" ALTER COLUMN "description" DROP NOT NULL`);
-        //await queryRunner.query(`ALTER TABLE "company" DROP CONSTRAINT "UQ_b55d9c6e6adfa3c6de735c5a2eb"`);
-        //await queryRunner.query(`ALTER TABLE "company" DROP COLUMN "cnpj"`);
-        //await queryRunner.query(`ALTER TABLE "company" ADD "cnpj" character varying(45) NOT NULL`);
-        //await queryRunner.query(`ALTER TABLE "company" ADD CONSTRAINT "UQ_b55d9c6e6adfa3c6de735c5a2eb" UNIQUE ("cnpj")`);
-        //await queryRunner.query(`ALTER TABLE "company" ADD CONSTRAINT "UQ_a76c5cd486f7779bd9c319afd27" UNIQUE ("name")`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP COLUMN "updated_at"`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD "updated_at" TIMESTAMP NOT NULL DEFAULT now()`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP COLUMN "created_at"`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD "created_at" TIMESTAMP NOT NULL DEFAULT now()`);
-        await queryRunner.query(`CREATE TYPE "public"."company_role_enum_old" AS ENUM('manager', 'collaborator')`);
-        await queryRunner.query(`ALTER TABLE "company_member" ALTER COLUMN "provider_role" TYPE "public"."company_role_enum_old" USING "provider_role"::"text"::"public"."company_role_enum_old"`);
-        await queryRunner.query(`DROP TYPE "public"."company_member_provider_role_enum"`);
-        await queryRunner.query(`ALTER TYPE "public"."company_role_enum_old" RENAME TO "company_role_enum"`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP CONSTRAINT "UQ_b79e769f56204286c7929a84a2c"`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP CONSTRAINT "PK_50735265431b38042b357626756"`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD CONSTRAINT "PK_fef18df355192fa1e0b95fcbdad" PRIMARY KEY ("id", "user_id")`);
-        await queryRunner.query(`ALTER TABLE "company_member" DROP CONSTRAINT "PK_fef18df355192fa1e0b95fcbdad"`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD CONSTRAINT "PK_3aa16d76bd0082f2c2e6ec62ffb" PRIMARY KEY ("id", "user_id", "company_id")`);
-        await queryRunner.query(`ALTER TABLE "services" ALTER COLUMN "requires_quotation" SET DEFAULT false`);
-        await queryRunner.query(`ALTER TABLE "services" DROP COLUMN "name"`);
-        await queryRunner.query(`ALTER TABLE "services" ADD "name" character varying NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "quotation_request" ALTER COLUMN "created_at" SET DEFAULT now()`);
-        await queryRunner.query(`ALTER TABLE "quotation" ALTER COLUMN "expired_at" SET DEFAULT now()`);
-        await queryRunner.query(`CREATE TYPE "public"."quotation_status_enum_old" AS ENUM('proposed', 'accepted', 'rejected', 'expired')`);
-        await queryRunner.query(`ALTER TABLE "quotation" ALTER COLUMN "status" TYPE "public"."quotation_status_enum_old" USING "status"::"text"::"public"."quotation_status_enum_old"`);
-        await queryRunner.query(`DROP TYPE "public"."quotation_status_enum"`);
-        await queryRunner.query(`ALTER TYPE "public"."quotation_status_enum_old" RENAME TO "quotation_status_enum"`);
-        await queryRunner.query(`ALTER TABLE "quotation" DROP CONSTRAINT "UQ_7f3c6238228cb519e5aecba5639"`);
-        await queryRunner.query(`ALTER TABLE "portfolio_images" DROP COLUMN "name"`);
-        await queryRunner.query(`DROP TABLE "appointment"`);
-        await queryRunner.query(`DROP TYPE "public"."appointment_status_enum"`);
-        await queryRunner.query(`DROP TABLE "availability_override"`);
-        await queryRunner.query(`DROP TABLE "availability"`);
-        await queryRunner.query(`DROP TABLE "availability_break"`);
-        await queryRunner.query(`DROP TABLE "services_pricing"`);
-        await queryRunner.query(`DROP TABLE "service_portfolio_image"`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD CONSTRAINT "FKCompany" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "addresses" ADD CONSTRAINT "FKUserAddress" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD CONSTRAINT "FKCompanyMember" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "company_member" ADD CONSTRAINT "FKUserMember" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "services" ADD CONSTRAINT "FKServiceCategory" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE SET NULL ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "services" ADD CONSTRAINT "FKServiceCompany" FOREIGN KEY ("company_id", "company_id") REFERENCES "company"("id","id") ON DELETE CASCADE ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "portfolio_images" ADD CONSTRAINT "FKServiceCompany" FOREIGN KEY ("company_id", "company_id") REFERENCES "company"("id","id") ON DELETE CASCADE ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "quotation_request" ADD CONSTRAINT "FKUser" FOREIGN KEY ("client_id", "provider_id") REFERENCES "users"("id","id") ON DELETE CASCADE ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "quotation_request" ADD CONSTRAINT "FKService" FOREIGN KEY ("service_id") REFERENCES "services"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "quotation" ADD CONSTRAINT "FKUser" FOREIGN KEY ("client_id", "provider_id") REFERENCES "users"("id","id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "quotation" ADD CONSTRAINT "FKQuotationRequest" FOREIGN KEY ("request_id") REFERENCES "quotation_request"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-    }
+        foreignKeys: [
+          {
+            name: 'FKUser',
+            columnNames: ['user_id'],
+            referencedTableName: 'users',
+            referencedColumnNames: ['id'],
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+          },
+        ],
+      }),
+    );
+  }
 
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable(this.tableName);
+  }
 }

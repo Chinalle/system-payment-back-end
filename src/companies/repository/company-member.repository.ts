@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import type { CreateCompanyMemberDto } from 'src/dtos/company/create-company-member.dto';
 import { CompanyMember } from 'src/entities/company-member.entity';
 import type { ICompanyMemberRepository } from './company-member.interface';
-import type { CreateCompanyMemberDto } from 'src/dtos/company/create-company-member.dto';
 
 @Injectable()
 export class companyMemberRepository implements ICompanyMemberRepository {
@@ -23,9 +23,8 @@ export class companyMemberRepository implements ICompanyMemberRepository {
 
   async findCompanyMember(userId: string): Promise<CompanyMember | null> {
     return await this.companyMemberRepository.findOne({
-      where: {
-        userId: userId,
-      },
+      where: { userId },
+      relations: ['company', 'user'],
     });
   }
 

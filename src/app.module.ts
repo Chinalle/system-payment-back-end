@@ -4,14 +4,15 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { AvailabilityModule } from './availability/availability.module';
 import { CompanyModule } from './companies/company.module';
 import { DatabaseModule } from './database/database.module';
 import { MailerModule } from './mailer/mailer.module';
+import { PaymentsModule } from './payments/payments.module';
 import { QuotationRequestModule } from './quotation-request/quotation-request.module';
 import { QuotationModule } from './quotation/quotation.module';
 import { ServiceModule } from './services/service.module';
 import { UserModule } from './users/user.module';
-import { AvailabilityModule } from './avaiability/availability.module';
 
 @Module({
   imports: [
@@ -19,13 +20,12 @@ import { AvailabilityModule } from './avaiability/availability.module';
     MailerModule,
     DatabaseModule,
     UserModule,
-    // SeedModule,
     AuthModule,
-    // ServiceModule,
     CompanyModule,
     ServiceModule,
     QuotationModule,
     QuotationRequestModule,
+    PaymentsModule,
     AvailabilityModule,
     ThrottlerModule.forRoot([
       {
@@ -42,4 +42,4 @@ import { AvailabilityModule } from './avaiability/availability.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,16 +1,15 @@
 import {
-  Entity,
-  PrimaryColumn,
   Column,
-  ManyToOne,
-  JoinColumn,
   CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
   UpdateDateColumn,
-  OneToOne,
 } from 'typeorm';
 import { Company } from './company.entity';
-import { User } from './user.entity';
 import { RoleProvider } from './enum';
+import { User } from './user.entity';
 
 @Entity('company_member')
 export class CompanyMember {
@@ -41,7 +40,7 @@ export class CompanyMember {
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
-  @OneToOne(() => User, (user) => user.companyMember)
+  @ManyToOne(() => User, (user) => user.companyMember)
   @JoinColumn({ name: 'user_id' })
   user: User;
 }

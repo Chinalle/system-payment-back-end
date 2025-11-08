@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  MaxLength,
-  IsObject,
-  IsDateString,
   IsBase64,
+  IsDateString,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  IsString,
+  MaxLength,
 } from 'class-validator';
 
 export class Company {
@@ -51,7 +51,7 @@ export class Company {
 
   @ApiProperty({ example: '' })
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   stripeAccountId: string;
 
   @ApiProperty({
