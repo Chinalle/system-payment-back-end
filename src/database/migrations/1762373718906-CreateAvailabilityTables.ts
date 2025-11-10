@@ -1,8 +1,7 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CreateAvailabilityTables1762373718906
-  implements MigrationInterface
-{
+  implements MigrationInterface {
   private tableName = 'availability';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
