@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import type { CreateServiceDto } from 'src/dtos/services/create-service.dto';
+import { Services } from 'src/entities/services.entity';
 import { Repository } from 'typeorm';
 import type { IServicesRepository } from './services.repository.interface';
-import { Services } from 'src/entities/services.entity';
-import type { CreateServiceDto } from 'src/dtos/services/create-service.dto';
 
 @Injectable()
 export class ServiceRepository implements IServicesRepository {
@@ -11,6 +11,10 @@ export class ServiceRepository implements IServicesRepository {
     @InjectRepository(Services)
     private readonly serviceRepository: Repository<Services>,
   ) {}
+
+  async findAllServices(): Promise<Services[]> {
+    return this.serviceRepository.find();
+  }
 
   async findAll(companyId: string): Promise<Services[]> {
     return this.serviceRepository.find({

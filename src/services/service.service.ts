@@ -1,9 +1,9 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import type { IServicesRepository } from './repository/services.repository.interface';
-import type { Services } from 'src/entities/services.entity';
-import type { CreateServiceDto } from 'src/dtos/services/create-service.dto';
-import { v4 as uuidv4 } from 'uuid';
 import { CompanyService } from 'src/companies/company.service';
+import type { CreateServiceDto } from 'src/dtos/services/create-service.dto';
+import type { Services } from 'src/entities/services.entity';
+import { v4 as uuidv4 } from 'uuid';
+import type { IServicesRepository } from './repository/services.repository.interface';
 
 @Injectable()
 export class ServicesService {
@@ -13,7 +13,7 @@ export class ServicesService {
 
     //Services Dependencies
     private readonly companyService: CompanyService,
-  ) { }
+  ) {}
 
   async create(service: CreateServiceDto): Promise<Services> {
     const newServiceDto = {
@@ -54,5 +54,9 @@ export class ServicesService {
     }
 
     return foundService;
+  }
+
+  async findAllServices(): Promise<Services[]> {
+    return this.serviceRepository.findAllServices();
   }
 }
