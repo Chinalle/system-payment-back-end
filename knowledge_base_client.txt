@@ -1,0 +1,68 @@
+---
+# GERENCIAMENTO DE CONTA E LOGIN
+- P: Como faço para redefinir minha senha?
+  R: Você pode usar a função de "recuperação de senha". O sistema enviará um token de recuperação para o seu e-mail, permitindo que você redefina sua senha com segurança.
+
+- P: Tentei fazer login várias vezes e fui bloqueado. O que aconteceu?
+  R: Por segurança, o sistema limita as tentativas de login. Há um limite de 5 tentativas falhas a cada 15 minutos.
+
+---
+# BUSCANDO E ESCOLHENDO SERVIÇOS
+- P: Como encontro o serviço que desejo?
+  R: Você pode buscar serviços por categoria, buscar prestadores por localização (CEP, cidade ou endereço) ou por palavras chaves.
+
+- P: Como posso refinar minha busca?
+  R: Você pode usar filtros avançados, como faixa de preço, avaliação do prestador, disponibilidade (data/horário) e formas de pagamento aceitas.
+
+- P: O que eu vejo na página de um prestador?
+  R: Você pode ver informações detalhadas, como nome, foto e descrição do prestador, a lista de serviços que ele oferece com preços, e o mais importante, avaliações. Alguns prestadores também possuem uma galeria de trabalhos realizados.
+
+---
+# REALIZANDO UM AGENDAMENTO
+- P: Como eu sei quando o prestador está disponível?
+  R: O sistema exibe um calendário interativo com visualização mensal e semanal, mostrando os horários disponíveis em tempo real. Os slots ocupados ou livres são indicados visualmente.
+
+- P: Como faço para agendar?
+  R: Basta selecionar uma data e um horário disponíveis no calendário.
+
+- P: Posso agendar mais de um serviço com o mesmo prestador de uma vez?
+  R: Sim, o sistema permite a seleção de múltiplos serviços do mesmo prestador. A plataforma calculará automaticamente a duração total necessária.
+
+- P: Cliquei em um horário. Ele já é meu?
+  R: Quando você seleciona um horário, o sistema faz uma reserva temporária de 15 minutos para você. Isso garante que ninguém pegue seu horário enquanto você finaliza o pagamento.
+
+- P: Posso adicionar observações ao meu agendamento?
+  R: Sim, existe um campo para observações especiais. Em alguns serviços, você pode até fazer upload de arquivos de referência.
+
+---
+# PAGAMENTO
+- P: Como eu pago pelo serviço?
+  R: O pagamento é feito diretamente pela plataforma com cartão de crédito ou PIX, usando um gateway seguro como Stripe.
+
+- P: Posso salvar meu cartão de crédito para compras futuras?
+  R: Sim, o sistema permite o salvamento seguro de cartões para uso futuro.
+
+- P: Existe opção de parcelamento?
+  R: Sim, o sistema oferece opção de parcelamento, quando disponível.
+
+---
+# GERENCIANDO MEUS AGENDAMENTOS
+- P: Onde eu vejo meus agendamentos?
+  R: Você tem uma seção de "Histórico de Agendamentos", que lista seus agendamentos futuros e passados. Você pode ver o status de cada um (confirmado, cancelado, concluído).
+
+- P: Preciso cancelar um agendamento. Como eu faço?
+  R: Você pode cancelar seus agendamentos diretamente pela plataforma.
+
+- P: Vou ser reembolsado se eu cancelar?
+  R: A política de reembolso depende do prazo do cancelamento. Há um limite de horas antes do serviço para poder cancelar. 
+
+- P: Posso reagendar um serviço em vez de cancelar?
+  R: Sim, o sistema permite o reagendamento. Você pode alterar a data e o horário, sujeito à disponibilidade do prestador. Pode haver uma taxa de reagendamento, se aplicável.
+
+---
+# NOTIFICAÇÕES E AVALIAÇÕES
+- P: Vou ser notificado quando meu agendamento for confirmado?
+  R: Sim, imediatamente após o pagamento, você receberá um e-mail de confirmação com todos os detalhes do agendamento.
+
+- P: Como posso avaliar o serviço que recebi?
+  R: Após a conclusão do serviço, o sistema permitirá que você faça uma avaliação. Você pode dar uma nota em estrelas (de 1 a 5) e escrever um comentário detalhado.

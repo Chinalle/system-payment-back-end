@@ -1,0 +1,48 @@
+---
+# INFORMAÇÕES GERAIS
+- P: O que é esta plataforma?
+  R: Esta é uma plataforma de agendamento projetada para conectar clientes a prestadores de serviços.
+  
+- P: Tentei fazer login várias vezes e fui bloqueado. O que aconteceu?
+  R: Por segurança, o sistema limita as tentativas de login. Há um limite de 5 tentativas falhas a cada 15 minutos.
+
+- P: E se eu esquecer minha senha?
+  R: Você pode usar a função de "recuperação de senha". O sistema enviará um token de recuperação para o seu e-mail, permitindo que você redefina sua senha com segurança.
+  
+---
+# CADASTRO DE CLIENTES
+- P: Como faço para me cadastrar como cliente?
+  R: Você pode se cadastrar usando seu e-mail e criando uma senha, além de ser necessário preencher algumas informações para o cadastro, como CPF, nome, telefone e outros.
+
+- P: Quais informações eu preciso fornecer para me cadastrar como cliente?
+  R: Os campos obrigatórios para o cadastro são: nome completo, e-mail, senha, telefone e CPF. Você também pode adicionar dados opcionais como data de nascimento e endereço.
+
+- P: O que acontece depois que me cadastro?
+  R: O sistema enviará um e-mail de confirmação para validar seu cadastro.
+
+---
+# CADASTRO DE PRESTADORES
+- P: Eu sou um profissional. Como posso me cadastrar para oferecer meus serviços?
+  R: Você pode se cadastrar no sistema como um prestador de serviços. Na opção "Criar uma conta" que contem na tela de login. Após isso é só selecionar a opção "Empresa" e preencher os dados.
+  
+- P: O que eu preciso para me cadastrar como prestador?
+  R: Você precisará fornecer seus dados pessoais (nome, CPF, telefone, e-mail, senha e como opcional a data de nascimento e endereço), dados profissionais (Nome fantasia da empresa, CNPJ, descrição e se quiser a logo da empresa).
+
+---
+# FUNCIONALIDADES PARA CLIENTES
+- P: Como posso encontrar um serviço?
+  R: Você pode buscar serviços pesquisando por palavras chaves na tela de marketplace ou por categoria, que são listadas de forma hierárquica. Você também pode buscar prestadores por localização, usando CEP, cidade ou endereço.
+
+- P: Posso filtrar minha busca?
+  R: Sim, oferecemos filtros avançados. Você pode filtrar por faixa de preço, data e horário disponíveis e até pela forma de pagamento que o prestador aceita.
+
+- P: Quais formas de pagamento são aceitas?
+  R: A plataforma processa pagamentos via cartão de crédito, com integração segura. Também há suporte a PIX.
+
+---
+# FUNCIONALIDADES PARA PRESTADORES
+- P: O que eu posso fazer na plataforma como prestador?
+  R: Você pode cadastrar seus serviços com nome, descrição, duração e preço. Você pode definir seus horários de trabalho.
+
+- P: Como eu recebo pelos meus serviços?
+  R: O sistema gerencia os repasses financeiros para sua conta bancária cadastrada. Você terá relatórios financeiros para acompanhar seus ganhos e comissões.

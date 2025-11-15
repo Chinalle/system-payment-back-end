@@ -1,0 +1,68 @@
+---
+# GERENCIAMENTO DE CONTA E LOGIN
+- P: Como faço para redefinir minha senha?
+  R: Você pode usar a função de "recuperação de senha". O sistema enviará um token de recuperação para o seu e-mail, permitindo que você redefina sua senha com segurança.
+
+- P: Como cadastro minha conta bancária para receber?
+  R: Na sua área de gestão financeira, você pode configurar seus dados bancários.
+
+- P: Posso alterar minha conta bancária depois?
+  R: Sim, além disso é possível adicionar mais de uma conta bancária.
+
+---
+# GESTÃO DE SERVIÇOS E PREÇOS
+- P: Como eu cadastro os serviços que ofereço?
+  R: Você pode ir ao seu painel e cadastrar seus serviços. É preciso informar o nome, descrição, categoria, a duração estimada do serviço, preço e caso necessário, galeria com as fotos do serviço.
+
+- P: Posso adicionar fotos dos meus serviços?
+  R: Sim, você pode adicionar uma galeria de imagens ou portfólio para cada serviço ou um link de um portfólio externo.
+
+- P: Posso ter preços diferentes para o mesmo serviço?
+  R: Sim. O sistema permite configurar preços dinâmicos e promocionais.
+
+---
+# GESTÃO DE AGENDA E DISPONIBILIDADE
+- P: Como eu configuro meus horários de trabalho?
+  R: O sistema permite que você defina seus horários de trabalho. Você pode ter horários diferentes para cada dia da semana e configurar seus períodos de almoço ou intervalo. Somente ir na pagina da sua agenda e clicar em "Configurar Agenda".
+
+- P: E se eu precisar bloquear um dia, como férias ou um compromisso?
+  R: Você pode fazer bloqueios temporários na sua agenda. O sistema permite o bloqueio manual de horários por um período específico, onde você pode indicar o motivo (férias, compromisso pessoal, etc.). Somente ir na pagina da sua agenda e clicar em "Configurar Agenda".
+
+- P: Como eu vejo meus agendamentos?
+  R: Você tem acesso a uma agenda visual interativa com visualização diária, semanal e mensal.
+
+---
+# GESTÃO DE AGENDAMENTOS
+- P: Como eu sei quando recebo um novo agendamento?
+  R: O sistema irá notificá-lo sobre novos agendamentos, via e-mail.
+
+- P: Eu preciso aprovar cada agendamento?
+  R: Depende da sua configuração. Você pode configurar a auto-confirmação para horários disponíveis ou optar pela confirmação/rejeição manual.
+
+- P: E se eu precisar cancelar um agendamento?
+  R: Você pode gerenciar cancelamentos, mas será necessário fornecer uma justificativa.
+
+- P: E se eu precisar reagendar um cliente?
+  R: O sistema permite que o prestador solicite um reagendamento. Você deve propor novos horários ao cliente e fornecer uma justificativa obrigatória. O cliente precisa aprovar o novo horário.
+
+---
+# GESTÃO FINANCEIRA
+- P: Como eu acompanho meus ganhos?
+  R: Você tem acesso a relatórios financeiros que mostram seu faturamento (diário, semanal, mensal), os valores das comissões descontadas pela plataforma, e o que você tem a receber. Esses relatórios estão na pagina "Financeiro"
+
+- P: Quando eu recebo o dinheiro dos meus serviços?
+  R: O sistema gerencia os repasses financeiros para sua conta. Existe um cronograma de repasses (semanal ou quinzenal). Você terá acesso ao histórico completo de recebimentos.
+
+---
+# MÓDULO DE COLABORADORES
+- P: Eu tenho uma equipe. Posso cadastrá-los na plataforma?
+  R: Sim, o sistema possui um módulo de colaborador. O prestador responsável pode cadastrar seus colaboradores. Esse módulo está disponível na página de "Gerenciamento de Equipe".
+
+- P: Como funciona o cadastro de colaborador?
+  R: Você insere os dados básicos (nome, e-mail, função) e define o nível hierárquico dele. Um convite por e-mail é enviado para o colaborador ativar a conta.
+
+- P: O que são "níveis hierárquicos"?
+  R: São níveis de permissão. Vão desde o Colaborador Básico (que só vê a própria agenda) até um Coordenador (com acesso quase total). Isso permite que Supervisores e Gerentes vejam as agendas de suas equipes.
+
+- P: Meu colaborador pode gerenciar a própria agenda?
+  R: Sim. O colaborador pode ver sua agenda individual, confirmar agendamentos atribuídos e marcar a conclusão do serviço.

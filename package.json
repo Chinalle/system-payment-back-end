@@ -28,6 +28,7 @@
     "migration:show": "docker exec -it backend_nest npm run typeorm migration:show -- -d ./src/database/typeorm.config.ts"
   },
   "dependencies": {
+    "@google/genai": "^1.28.0",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
@@ -39,6 +40,7 @@
     "@nestjs/throttler": "^6.4.0",
     "@nestjs/typeorm": "^11.0.0",
     "@types/passport-jwt": "^4.0.1",
+    "axios": "^1.13.1",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
@@ -63,7 +65,7 @@
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22.10.7",
+    "@types/node": "^22.18.13",
     "@types/nodemailer": "^7.0.1",
     "@types/passport-local": "^1.0.38",
     "@types/pg": "^8.15.5",

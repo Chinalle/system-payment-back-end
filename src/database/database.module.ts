@@ -15,10 +15,8 @@ import { join } from 'path';
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
-
         entities: [join(__dirname, '../**/**/*entity{.ts,.js}')],
         autoLoadEntities: true,
-
         migrations: [join(__dirname, '../database/migrations/**/*{.ts,.js}')],
         migrationsTableName: 'migrations',
         synchronize: false,
@@ -28,4 +26,4 @@ import { join } from 'path';
     }),
   ],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

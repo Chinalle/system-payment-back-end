@@ -11,6 +11,8 @@ import { QuotationRequestModule } from './quotation-request/quotation-request.mo
 import { QuotationModule } from './quotation/quotation.module';
 import { ServiceModule } from './services/service.module';
 import { UserModule } from './users/user.module';
+import { ChatbotModule } from './chatbot/chatbot.module';
+import { SeedModule } from './database/seeds/seed.module';
 
 @Module({
   imports: [
@@ -18,13 +20,14 @@ import { UserModule } from './users/user.module';
     MailerModule,
     DatabaseModule,
     UserModule,
-    // SeedModule,
+    SeedModule,
     AuthModule,
-    // ServiceModule,
+    ServiceModule,
     CompanyModule,
     ServiceModule,
     QuotationModule,
     QuotationRequestModule,
+    ChatbotModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
