@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   Param,
@@ -9,7 +10,13 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { ApiBody, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger';
 import type { Request } from 'express';
 import { PaymentsService } from './payments.service';
 
@@ -42,6 +49,27 @@ export class PaymentsController {
     return await this.paymentService.createOnboardingLink(managerId, companyId);
   }
 
+  @ApiOperation({
+    summary: 'delete customer stripe account',
+  })
+  @Delete('client/:userId')
+  async deleteCustomerStripeAccount(@Param('userId') userId: string) {
+    return this.paymentService.deleteCustomerStripeAccount(userId);
+  }
+
+  @ApiOperation({
+    summary: 'create customer stripe account',
+  })
+  @Post('client/:userId')
+  async createStripeClientAccount(
+    @Param('userId', ParseUUIDPipe) userId: string,
+  ) {
+    return await this.paymentService.createClientAccountLink(userId);
+  }
+
+  @ApiProperty({
+    description: 'return status of stripe company account',
+  })
   @Get('status/:companyId')
   async getStripeStatusAccount(
     @Param('companyId', ParseUUIDPipe) companyId: string,

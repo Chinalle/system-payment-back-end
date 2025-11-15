@@ -195,6 +195,47 @@ export class PaymentsService {
     }
   }
 
+  /**
+   * - stripeClientId
+   * - name
+   * - email
+   * **/
+  async createClientAccountLink(userId: string) {
+    if (!userId) throw new BadRequestException('');
+
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User Not Found');
+    }
+
+    const data = await this.stripe.customers.create({
+      name: user.fullName,
+      email: user.email,
+      metadata: {
+        userId: user.id,
+        email: user.email,
+      },
+    });
+
+    const accountLink = this.stripe.accountLinks.create({
+      account: data.id,
+      type: 'account_onboarding',
+    });
+
+    return {
+      data,
+      accountLink,
+    };
+  }
+
+  async deleteCustomerStripeAccount(userCustumerId: string) {
+    const deletedUser = await this.stripe.customers.del(userCustumerId);
+    console.log('deletedUser', deletedUser);
+    if (!deletedUser) throw new Error('');
+    return deletedUser;
+  }
+
   private handleAccountUpdated(account: Stripe.Account) {
     const { id, charges_enabled, payouts_enabled } = account;
 
