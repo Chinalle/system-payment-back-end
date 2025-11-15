@@ -5,7 +5,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 config();
 
-console.log(join(__dirname, '../migrations/**/*{.ts,.js}'));
+const useSSL = process.env.USE_SSL === 'true' ? true : false;
 
 const configService = new ConfigService();
 const dataSourceOptions: DataSourceOptions = {
@@ -15,6 +15,7 @@ const dataSourceOptions: DataSourceOptions = {
   username: configService.get<string>('POSTGRESQL_USERNAME'),
   password: configService.get<string>('POSTGRESQL_PASSWORD'),
   database: configService.get<string>('POSTGRESQL_DATABASE'),
+  ssl: useSSL ? { rejectUnauthorized: false } : false,
   entities: [join(__dirname, '../**/**/*entity{.ts,.js}')],
   migrations: [join(__dirname, '../database/migrations/**/*{.ts,.js}')],
   migrationsTableName: 'migrations',
