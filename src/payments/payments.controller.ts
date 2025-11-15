@@ -32,6 +32,9 @@ class CreateStripeCompanyAccount {
 export class PaymentsController {
   constructor(private readonly paymentService: PaymentsService) {}
 
+  @ApiOperation({
+    summary: 'Create Stripe Onboarding Link for Company Account',
+  })
   @ApiParam({
     name: 'managerId',
     description: 'To setup company payments user must be a manager',
@@ -67,6 +70,57 @@ export class PaymentsController {
     return await this.paymentService.createClientAccountLink(userId);
   }
 
+  @ApiOperation({
+    summary: 'create customer payment intent',
+    description:
+      'retorna o client secret do setup intent para o frontend criar o formulário seguro do stripe',
+  })
+  @ApiParam({
+    name: 'customerStripeId',
+    description: 'Stripe Customer ID',
+  })
+  @Post('create-payment-intent/:customerStripeId')
+  async createCustomerPaymentIntent(
+    @Param('customerStripeId') customerStripeId: string,
+  ) {
+    return await this.paymentService.createCustomerPaymentIntent(
+      customerStripeId,
+    );
+  }
+
+  @ApiOperation({
+    summary: 'list all customer payments methods',
+  })
+  @ApiParam({
+    name: 'customerStripeId',
+    description: 'Stripe Customer ID',
+  })
+  @Get('payment-methods/:customerStripeId')
+  async listCustomerPaymentMethods(
+    @Param('customerStripeId') customerStripeId: string,
+  ) {
+    return await this.paymentService.listCustomerPaymentMethods(
+      customerStripeId,
+    );
+  }
+
+  @ApiOperation({
+    summary: 'get stripe customer account status',
+  })
+  @ApiParam({
+    name: 'customerStripeId',
+    description: 'Stripe Customer ID',
+  })
+  @Get('client-status/:customerStripeId')
+  async getCustumerStripeStatus(
+    @Param('customerStripeId') customerStripeId: string,
+  ) {
+    return this.paymentService.getCustumerStripeStatus(customerStripeId);
+  }
+
+  @ApiOperation({
+    summary: 'get stripe company account status',
+  })
   @ApiProperty({
     description: 'return status of stripe company account',
   })
@@ -78,6 +132,9 @@ export class PaymentsController {
     return this.paymentService.getStripeStatusAccount(companyId);
   }
 
+  @ApiOperation({
+    summary: 'Handle Stripe Webhook Events',
+  })
   @Post('webhook')
   async handleStripeWebhook(
     @Headers('stripe-signature') signature: string,
@@ -93,8 +150,16 @@ export class PaymentsController {
   }
 
   /** Para desenvolvimento */
+  @ApiOperation({
+    summary: 'Delete all test Stripe accounts (Development only)',
+  })
   @Get('test-accounts')
   async deleteAllTestAccounts() {
+    if (process.env.NODE_ENV !== 'development') {
+      throw new BadRequestException(
+        'This endpoint is only available in development mode.',
+      );
+    }
     return this.paymentService.deleteAllTestAccounts();
   }
 }

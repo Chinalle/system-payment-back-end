@@ -5,14 +5,12 @@ import {
   IsOptional,
   IsString,
   IsUrl,
-  MaxLength,
 } from 'class-validator';
 
 export class CreateCompanyDto {
   @ApiProperty({ example: 'Nexus' })
   @IsString({ message: 'Property name must be a string.' })
   @IsNotEmpty({ message: 'Property name must not be empty.' })
-  @MaxLength(45, { message: 'Property name must have up to 45 characters.' })
   name: string;
 
   @ApiProperty({ example: '4546549875646' })
@@ -70,6 +68,5 @@ export class CreateCompanyDto {
 
   @ApiProperty({ example: '102030506080' })
   @IsString()
-  // @IsNotEmpty()
   stripeAccountId?: string;
 }

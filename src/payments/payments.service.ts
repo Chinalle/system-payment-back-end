@@ -199,6 +199,10 @@ export class PaymentsService {
    * - stripeClientId
    * - name
    * - email
+   * No caso de marketplace, no momento de criação do usuário no banco,
+   * já deve ser criado o customer no stripe e salvo o stripeCustomerId no banco
+   * um aviso deve ser exibido para o usuário informando que sua conta para
+   * pagamentos de serviços está sendo criada
    * **/
   async createClientAccountLink(userId: string) {
     if (!userId) throw new BadRequestException('');
@@ -209,7 +213,7 @@ export class PaymentsService {
       throw new NotFoundException('User Not Found');
     }
 
-    const data = await this.stripe.customers.create({
+    const account = await this.stripe.customers.create({
       name: user.fullName,
       email: user.email,
       metadata: {
@@ -218,15 +222,61 @@ export class PaymentsService {
       },
     });
 
-    const accountLink = this.stripe.accountLinks.create({
-      account: data.id,
-      type: 'account_onboarding',
+    return { customerId: account.id };
+  }
+
+  /**
+   * @Param customerStripeId: string
+   * retorna o client secret do setup intent para o frontend
+   * criar o formulário seguro do stripe
+   * o frontend usará este client secret para renderizar o formulário
+   * do stripejs elements -> <CheckoutForm />
+   * docs -> https://stripe.com/docs/payments/setup-intents
+   * **/
+  async createCustomerPaymentIntent(customerStripeId: string) {
+    const setupIntent = await this.stripe.setupIntents.create({
+      customer: customerStripeId,
+      usage: 'off_session',
+      automatic_payment_methods: {
+        enabled: true,
+      },
     });
 
     return {
-      data,
-      accountLink,
+      clientSecret: setupIntent.client_secret,
     };
+  }
+
+  /**Retorna a lista de cartões de crédito salvos do cliente no stripe
+   * @Param customerStripeId
+   * **/
+  async listCustomerPaymentMethods(customerStripeId: string) {
+    const paymentMethods = await this.stripe.paymentMethods.list({
+      customer: customerStripeId,
+      type: 'card',
+    });
+
+    const safeCardList = paymentMethods.data.map((card) => {
+      return {
+        id: card.id,
+        brand: card.card?.brand,
+        last4: card.card?.last4,
+        exp_month: card.card?.exp_month,
+        exp_year: card.card?.exp_year,
+      };
+    });
+
+    return safeCardList;
+  }
+
+  async getCustumerStripeStatus(customerStripeId: string) {
+    const customer = await this.stripe.customers.retrieve(customerStripeId);
+
+    if (!customer) {
+      throw new NotFoundException('Customer Not Found');
+    }
+
+    return customer;
   }
 
   async deleteCustomerStripeAccount(userCustumerId: string) {
@@ -236,6 +286,7 @@ export class PaymentsService {
     return deletedUser;
   }
 
+  /* Private Methods */
   private handleAccountUpdated(account: Stripe.Account) {
     const { id, charges_enabled, payouts_enabled } = account;
 

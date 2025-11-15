@@ -1,23 +1,23 @@
 import {
-  Entity,
-  PrimaryColumn,
   Column,
-  OneToMany,
   CreateDateColumn,
-  UpdateDateColumn,
+  Entity,
   JoinColumn,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Address } from './address.entity';
-import { Services } from './services.entity';
 import { CompanyMember } from './company-member.entity';
 import { PortfolioImages } from './portfolio_images.entity';
+import { Services } from './services.entity';
 
 @Entity('company')
 export class Company {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column({ length: 45 })
+  @Column({ type: 'text', unique: true })
   name: string;
 
   @Column({ type: 'varchar', unique: true })

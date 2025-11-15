@@ -6,7 +6,6 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  MaxLength,
 } from 'class-validator';
 
 export class Company {
@@ -19,10 +18,9 @@ export class Company {
   @IsString()
   id: string;
 
-  @ApiProperty({ example: '' })
+  @ApiProperty({ example: 'Company name' })
   @IsString({ message: 'Name must be a string' })
   @IsNotEmpty({ message: 'Name must not be empty' })
-  @MaxLength(45, { message: 'Name must be 45 characters' })
   name: string;
 
   @ApiProperty({ example: '576666665956/0001-81' })
@@ -51,7 +49,6 @@ export class Company {
 
   @ApiProperty({ example: '' })
   @IsString()
-  // @IsNotEmpty()
   stripeAccountId: string;
 
   @ApiProperty({
