@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import type { IUserRepository } from './user.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityManager } from 'typeorm';
-import { User } from 'src/entities/user.entity';
 import type { CreateUserDTO } from 'src/dtos/users/create-user.dto';
 import type { UpdateUserDto } from 'src/dtos/users/update-user.dto';
+import { User } from 'src/entities/user.entity';
+import { EntityManager, Repository } from 'typeorm';
 import type { UpdateResult } from 'typeorm/browser';
+import type { IUserRepository } from './user.repository.interface';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -83,7 +83,12 @@ export class UserRepository implements IUserRepository {
   }
 
   async update(user: UpdateUserDto): Promise<User> {
-    return await this.userRepository.save(user);
+    const updatedUser = await this.userRepository.save(user);
+    const userWithRelations = await this.userRepository.findOne({
+      where: { id: updatedUser.id },
+      relations: ['addresses'],
+    });
+    return userWithRelations!;
   }
 
   async softDelete(id: string): Promise<void> {
