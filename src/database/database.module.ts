@@ -8,23 +8,28 @@ import { join } from 'path';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('POSTGRESQL_HOST'),
-        port: configService.get<number>('POSTGRESQL_PORT'),
-        username: configService.get<string>('POSTGRESQL_USERNAME'),
-        password: configService.get<string>('POSTGRESQL_PASSWORD'),
-        database: configService.get<string>('POSTGRESQL_DATABASE'),
+      useFactory: (configService: ConfigService) => {
+        const useSSL =
+          configService.get<string>('USE_SSL') === 'true' ? true : false;
+        return {
+          type: 'postgres',
+          host: configService.get<string>('POSTGRESQL_HOST'),
+          port: configService.get<number>('POSTGRESQL_PORT'),
+          username: configService.get<string>('POSTGRESQL_USERNAME'),
+          password: configService.get<string>('POSTGRESQL_PASSWORD'),
+          database: configService.get<string>('POSTGRESQL_DATABASE'),
+          ssl: useSSL ? { rejectUnauthorized: false } : false,
 
-        entities: [join(__dirname, '../**/**/*entity{.ts,.js}')],
-        autoLoadEntities: true,
+          entities: [join(__dirname, '../**/**/*entity{.ts,.js}')],
+          autoLoadEntities: true,
 
-        migrations: [join(__dirname, '../database/migrations/**/*{.ts,.js}')],
-        migrationsTableName: 'migrations',
-        synchronize: false,
-        logging: true,
-        logger: 'file',
-      }),
+          migrations: [join(__dirname, '../database/migrations/**/*{.ts,.js}')],
+          migrationsTableName: 'migrations',
+          synchronize: false,
+          logging: true,
+          logger: 'file',
+        };
+      },
     }),
   ],
 })
